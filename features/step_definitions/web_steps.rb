@@ -80,6 +80,11 @@ When /^(?:|I )go to (.+)$/ do |page_name|
   visit path_to(page_name)
 end
 
+Then /^(?:|I )should be taken to the google authentication page$/ do 
+  # pending
+  # visit path_to(https://accounts.google.com)
+end
+
 When /^(?:|I )press "([^"]*)"$/ do |button|
   click_button(button)
 end
@@ -88,6 +93,10 @@ When /^(?:|I )press on the text "([^"]*)"$/ do |text|
   find("#heading" + text).click
 end
 
+When /^(?:|I )press on the icon "([^"]*)"$/ do |text|
+  # pending
+  # find(text).click
+end
 
 When /^(?:|I )follow "([^"]*)"$/ do |link|
   click_link(link)

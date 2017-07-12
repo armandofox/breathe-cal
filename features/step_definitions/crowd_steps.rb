@@ -6,6 +6,10 @@ Given(/^I click on the map$/) do
   page.find("#map").click # Write code here that turns the phrase above into concrete actions
 end
 
+Given(/^"(.*)" users reported "(.*)" in "(.*)"$/) do |number, allergen, place|
+  # pending
+end
+  
 Then(/^I should see "([^"]*)" when it loads$/) do |arg1|
   wait_for_ajax
   wait_until { page.has_content?(arg1)}
@@ -33,4 +37,14 @@ end
 
 def finished_all_ajax_requests?
     page.evaluate_script('jQuery.active').zero?
+end
+
+
+Then /^(?:|I )should see "([^"]*)" as a global marker$/ do |text|
+  # pending
+  # if page.respond_to? :should
+  #   page.should have_content(text)
+  # else
+  #   assert page.has_content?(text)
+  # end
 end
