@@ -7,23 +7,26 @@ class MarkersController < ApplicationController
       render :json => marker
     else 
       render :nothing => true
-    end
-    #i assume i get some JSON from the post 
+    end 
   end
   
   def show
-    up = bound_params[:uplat]
-    down = bound_params[:downlat]
-    left = bound_params[:leftlong]
-    right = bound_params[:rightlong]
-    markers = Marker.find_all_within_bounds(up,down,left,right)
-    # markers.each do |marker|
-    #   if marker.client_id == session[:client_id]
-    #     output << marker 
-    #   end
-    # end
-    render :json => markers
+    global_number_show = 5
+    current_user_id = session[:client_id]
+    coords = {top: bound_params[:uplat], bottom: bound_params[:downlat], 
+              left: bound_params[:leftlong], right: bound_params[:rightlong]}
+    # search_allergen = params[:allergen] 
+    search_allergen = ''
+    
+    markers = Marker.find_all_in_bounds(coords,"client_id = #{current_user_id}",search_allergen)
+    global_markers = Marker.get_global_markers(markers,global_number_show,coords,search_allergen)
+
+    marker_container = [markers, global_markers]
+    # pass collection to gmaps.js
+    render :json => marker_container
+            
   end
+  
   
   private 
   

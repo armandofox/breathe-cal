@@ -6,11 +6,12 @@
 // This example requires the Places library. Include the libraries=places
 // parameter when you first load the API. For example:
 // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+
 var fetchedMarkers = {};
+var heatmapData = [];
 
 function initAutocomplete() {
-  
-  var labelNum = 0;
   
   function point2LatLng(point, map) {
     var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
@@ -22,7 +23,6 @@ function initAutocomplete() {
   
   function fetchMarkers(){
     deleteMarkers();
-    labelNum = 0;
     var bounds = map.getBounds();
     var NECorner = bounds.getNorthEast();
     var SWCorner = bounds.getSouthWest();
@@ -32,33 +32,52 @@ function initAutocomplete() {
       url: "markers",
       data: {bounds :{uplat:NECorner.lat(),downlat:SWCorner.lat(),rightlong:NECorner.lng(),leftlong:SWCorner.lng()}},
       success: function(data){
-        for(var i=0;i<data.length; i++){
-          var id = data[i].id;
-          if (true){
-            var location = {};
-            location.lat = parseFloat(data[i].lat);
-            location.lng = parseFloat(data[i].lng);
-            labelNum += 1;
-            var marker = new google.maps.Marker({
-                  label: labelNum.toString(),
-                  position: location,
-                  map: map,
-                  draggable: false,
-                  });
-            var newContent = createContentString(data[i]);      
-            marker.info = new google.maps.InfoWindow();
-            marker.info.setContent(newContent[0]);
-            google.maps.event.addListener(marker, 'click', function(){
-              this.info.open(map, this);
-            });
-            markers.push(marker);
+        heatmapData = [];
+        // if (data.length > 1){
+          // var client_id = data[0].client_id;
+          for(var i=0;i<data[1].length; i++){
+            var heatmap_marker = data[1][i];
+            heatmapData.push(new google.maps.LatLng(heatmap_marker.lat, heatmap_marker.lng));
           }
-        }
+          
+          for(var i=0;i<data[0].length; i++){
+            var user_marker = data[0][i];
+            if (true){
+              // if (id != client_id){
+              // } else {
+                var location = {};
+                location.lat = parseFloat(user_marker.lat);
+                location.lng = parseFloat(user_marker.lng);
+                var labelClientId = user_marker.client_id
+                var marker = new google.maps.Marker({
+                      label: labelClientId.toString(),
+                      position: location,
+                      map: map,
+                      draggable: false,
+                      });
+                var newContent = createContentString(user_marker);      
+                marker.info = new google.maps.InfoWindow();
+                marker.info.setContent(newContent[0]);
+                google.maps.event.addListener(marker, 'click', function(){
+                  this.info.open(map, this);
+                });
+              // }
+              markers.push(marker);
+            }
+          }
+        // }
+          var heatmap = new google.maps.visualization.HeatmapLayer({
+            data: heatmapData,
+            radius: 50,
+            opacity: 0.4,
+            map:map
+          });
+
       }
     })
   }
   
-  
+    
   var map = new google.maps.Map(document.getElementById('map'), {
     center: {
       lat: 37.8716,
@@ -68,12 +87,31 @@ function initAutocomplete() {
     mapTypeId: 'roadmap'
   });
   
-  var geocoder = new google.maps.Geocoder();
+  var infowindow = new google.maps.InfoWindow;
+    
+  // Reverse lat/lon city lookup
+  var reverseGC = new google.maps.Geocoder;
+
   
+    // Handle location finder error
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+     infoWindow.setPosition(pos);
+     infoWindow.setContent(browserHasGeolocation ?
+              'Error: Could not find location' :
+              'Error: Browswer does not support location.');
+     infoWindow.open(map);
+     }
+  
+
   google.maps.event.addDomListener(window, "resize", function() {
    var center = map.getCenter();
    google.maps.event.trigger(map, "resize");
    map.setCenter(center); 
+  });
+  
+  var heatmap = new google.maps.visualization.HeatmapLayer({
+    data: heatmapData,
+    map: map
   });
   
   $('#marker-cta').css('cursor','pointer');
@@ -82,13 +120,35 @@ function initAutocomplete() {
   $('#right-col').css('height', (window.innerHeight).toString());
   $('#detail-box').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
   $('#detail-box-mask').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
+    
+    
+  
+  
   // Create the search box and link it to the UI element.
   var input = document.getElementById('pac-input');
+  var searchBtn = document.getElementById('search-button');
   var searchBox = new google.maps.places.SearchBox(input);
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+  var myLocationBtn = document.getElementById('find-my-location');
+
   
-  var markerEnabler = document.getElementById('marker-cta');
-  map.controls[google.maps.ControlPosition.LEFT_TOP].push(markerEnabler);
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(searchBtn);
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(myLocationBtn);
+
+
+  //var markerEnabler = document.getElementById('marker-cta');
+  //map.controls[google.maps.ControlPosition.LEFT_TOP].push(markerEnabler);
+  
+  // Added Sign in and profile icon buttons
+  var signIn = document.getElementById('log-in')
+  map.controls[google.maps.ControlPosition.TOP_RIGHT].push(signIn);
+  
+  var dropdown = document.getElementById('profile-click')
+  map.controls[google.maps.ControlPosition.TOP_RIGHT].push(dropdown)
+  
+  
+  var profile = document.getElementById('profile-icon')
+  map.controls[google.maps.ControlPosition.TOP_RIGHT].push(profile)
 
 
   // Bias the SearchBox results towards current map's viewport.
@@ -107,17 +167,16 @@ function initAutocomplete() {
   searchBox.addListener('places_changed', function() {
     var places = searchBox.getPlaces();
 
-
     if (places.length === 0) {
       return;
     }
 
-
     markers.forEach(function(marker) {
       marker.setMap(null);
     });
+    heatmap.setMap(null);
     markers = [];
-
+    heatmapData = [];
 
     var bounds = new google.maps.LatLngBounds();
     places.forEach(function(place) {
@@ -160,7 +219,93 @@ function initAutocomplete() {
     });
     map.fitBounds(bounds);
     fetchMarkers();
+    
   });
+  
+  
+  searchBtn.onclick = function () {
+    var searchText = document.getElementById('pac-input');
+    
+    // Trigerring a search as if enter key pressed
+    google.maps.event.trigger(searchText, 'focus');
+    google.maps.event.trigger(searchText, 'keydown', {
+        keyCode: 13
+    });
+  }
+  
+  
+  myLocationBtn.onclick = function () {
+    var reverseGC = new google.maps.Geocoder;
+    
+    // Finding user location using google's geolocation
+    if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+        
+        // Getting current location
+        var pos = {lat: position.coords.latitude, lng: position.coords.longitude};
+        var loc_curr = {'location': pos};
+        
+        // infowindow.setPosition(pos);
+        // infowindow.setContent('Location found.');
+        // infowindow.open(map);
+        // map.setCenter(pos);
+        
+        reverseGC.geocode(loc_curr, function(results, status) {
+      
+          if (status === 'OK') {
+            if (results[1]) {
+              
+              var specific_address = results[1].formatted_address;
+              var city_address = results[1].address_components[1].short_name;
+    
+              if (!((specific_address == false) || (specific_address.length == 0))) {
+                document.getElementById("pac-input").value = specific_address;
+                document.getElementById("search-button").onclick();
+                document.getElementById("pac-input").value = "";
+                
+                
+                var image = {
+                  url: 'https://www.vshoo.com/img/general/login/loading.gif',
+                  scaledSize : new google.maps.Size(60, 60)  
+                }; 
+    
+    
+                setTimeout( function() {
+                  var marker = new google.maps.Marker({
+                  position: new google.maps.LatLng(pos.lat, pos.lng),
+                  map: map,
+                  optimized: false,
+                  icon: image,
+                  // animation: google.maps.Animation.DROP
+                })
+    
+                setTimeout(function() {
+                    marker.setMap(null);
+                }, 4000);
+                
+          
+                
+                }, 800);
+                
+                
+              }
+            } else {
+              return ('No results found');
+            }
+          } else {
+            return ('Geocoder failed due to: ' + status);
+          }
+        });
+        
+        // handling errors
+      }, function() {
+        handleLocationError(true, infowindow, map.getCenter());
+      });
+    } else {
+      handleLocationError(false, infowindow, map.getCenter());
+    }
+  }
+
   
   var canMark = false;
   
@@ -183,10 +328,12 @@ function initAutocomplete() {
     });
   }
  
+ // CHANGE TO SEARCH BOX
+ 
   // allow user to put down a marker
-  $("#marker-cta").click(function(){
+  $('body').delegate('#marker-cta', 'click', function(){
     loggedIn();
-    $("#marker-cta span").text("Click map to place marker")
+    // $("#marker-cta span").text("Click map to place marker, BUT NOW PLACE MARKER ON MAP")
   });
 
 
@@ -202,7 +349,7 @@ function initAutocomplete() {
       canMark = false;
       map.setOptions({ draggableCursor :"auto"});
       $("#marker-cta").css("cursor", "pointer");
-      $("#marker-cta span").text("Click here to add an allergen");
+      $("#marker-cta span").text("SEARCH BOX, BUT NOW CLICK HERE TO ADD ALLERGEN");
     }
   });
   
@@ -237,9 +384,7 @@ function initAutocomplete() {
   }
   
   function placeMarker(location) {
-    labelNum += 1;
     var marker = new google.maps.Marker({
-      label: labelNum.toString() ,
       position: location,
       map: map,
       draggable: true,
@@ -279,7 +424,6 @@ function initAutocomplete() {
     recentMarker = marker;
     
     var listenerHandle = google.maps.event.addListener(infowindow, 'closeclick', function(){
-      labelNum -=1;
       recentMarker.setMap(null);
       recentMarker = null;
     });
@@ -329,6 +473,7 @@ function initAutocomplete() {
     for (var i = 0; i < markers.length; i++) {
       markers[i].setMap(map);
     }
+    heatmap.setMap(map);
   }
   
   function clearMarkers() {
@@ -346,7 +491,6 @@ function initAutocomplete() {
 $(document).ready(initAutocomplete);
 $(document).on('page:load', initAutocomplete);
 $(document).on('page:change', initAutocomplete);
-
 
 
 
