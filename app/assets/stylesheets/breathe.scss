@@ -15,9 +15,19 @@
 
 /* Always set the map height explicitly to define the size of the div
  * element that contains the map. */
+
+@media screen and (min-width: 1500px) {
+    #containsAll {
+        width: 111%;
+    }
+}
+
+
+
 #map {
   height: 50%;
   width: 50%;
+  // z-index: 0;
 }
 /* Optional: Makes the sample page fill the window. */
 html, body {
@@ -36,6 +46,7 @@ html, body {
 #spare_alert {
   position:relative;
   font-weight:bold;
+  color: white;
 }
 
 .controls {
@@ -87,14 +98,21 @@ html, body {
   font-family: Roboto;
   font-size: 15px;
   font-weight: 300;
-  margin-left: 12px;
-  padding: 0 11px 0 13px;
+  margin-left: -2px;
+  // text-indent: 5px;
+  // padding: 0 11px 0 0px;
   text-overflow: ellipsis;
   width: 300px;
+  height: 29px;
+  opacity: 0.95;
+  // z-index: 1000;
+  left: 113px !important;
 }
 
 #pac-input:focus {
-  border-color: #4d90fe;
+  border-color: white;
+  opacity: 1;
+  left: 113px !important;
 }
 
 .pac-container {
@@ -143,7 +161,6 @@ html, body {
 #left-col {
     background-color: #FFFFFF;
     box-shadow: 2px 2px 2px rgba(0,0,0,0.09), 0 2px 0 rgba(0,0,0,0.1);
-  
 }
 
 .gmail_icon {
@@ -152,18 +169,83 @@ html, body {
   // border-radius: 50%;
 }
 
-#marker-cta {
-  background-color: #5299a4;
-  font-family: Roboto;
-  font-size: 15px;
-  font-weight: 500;
-  margin-left: 12px;
-  padding: 0 11px 0 13px;
-  text-overflow: ellipsis;
-  width: 240px;
-  color: white;
 
+
+button[id="search-button"] {
+  border-color: transparent;
+  background-color: transparent;
+  box-shadow: none;
+  font-family: Roboto;
+  font-size: 16px;
+  font-weight: 300;
+  margin-left: -31px;
+  padding: 0 11px 0 0px;
+  text-overflow: ellipsis;
+  width: 30px;
+  height: 29px;
+  opacity: 0.5;
+  left: 411px !important;
 }
+
+button[id="search-button"]:hover {
+  opacity: 0.9;
+  left: 411px !important;
+}
+
+button[id="find-my-location"] {
+  border-color: transparent;
+  background-color: white;
+  opacity: 0.9;
+  box-shadow: 0 3px 2px rgba(0, 0, 0, 0.2);
+  font-family: Roboto;
+  font-size: 16px;
+  margin-top: 10px;
+  margin-left: 10px;
+  font-weight: 300;
+  padding: 1 11px 0 0px;
+  text-overflow: ellipsis;
+  width: 30px;
+  height: 29px;
+  outline: none; // this one
+  left: 410px !important;
+}
+
+button[id="find-my-location"]:hover {
+  left: 410px !important;
+}
+
+
+
+#loc-img {
+  margin-left: -8px;
+  margin-top: -4px;  
+  opacity: 0.5;
+}
+
+#loc-img:hover {
+  margin-left: -8px;
+  margin-top: -4px;  
+  opacity: 0.8;
+}
+
+#marker-cta {
+  border-bottom-color: transparent;
+  background-color: white;
+  box-shadow: none;
+  color: #3672B2;
+  // font-family: Roboto;
+  // font-size: 14px;
+  // font-weight: 600;
+  // padding: 0 0px 0 0px;
+  text-overflow: ellipsis;
+  width: 60px;
+  height: 40px;
+}
+
+#marker-cta:hover {
+    text-decoration: underline;
+}
+
 #marker-cta-mobile {
   background-color: #5299a4;
   font-family: Roboto;
@@ -177,8 +259,7 @@ html, body {
 
 }
 #wrap {
-  width:180px;
-  margin:0 auto;
+  
 }
 
 #left_col {
@@ -223,3 +304,226 @@ html, body {
 .center-col {
   text-align: center;
 }
+
+#log-in {
+    background-color: #4387fd; /* Blue */
+    border: none;
+    color: white;
+    margin-right: 12px;
+    margin-top: 12px;
+    padding: 10px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 4px;
+    
+}
+
+#profile-icon {
+  	border-radius: 50%;
+	  width: 40px;
+	  height: 40px; 
+    margin-right: 32px;
+    margin-top: 10px;
+}
+
+.button:hover {
+    text-decoration: none;
+    color: white;
+    box-shadow: 0 10px 16px 0 rgba(0,0,0,0.24),0 10px 16px 0 rgba(0,0,0,0.19);
+}
+
+
+.img-circle {
+	border-radius: 50%;
+	width: 40px;
+	height: 40px; 
+
+}
+#profile-icon:hover {
+    box-shadow: 0 3px 2px rgba(0, 0, 0, 0.3);
+}
+
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+    background-color: #3e8e41;
+}
+
+.dropdown {
+    float: right;
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 250px;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    right: 0;
+    z-index: 1;
+    border-radius:4px;
+    border:1px
+}
+
+.dropdown-content a {
+  
+    background-color: white;
+    color: black;
+    padding: 12px 20px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #1DA1F2;
+  color: white;
+}
+
+
+.drop-allign {
+    margin-right: 5px;
+    margin-top: 8px;
+}
+
+#profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #512DA8;
+  text-align: center;
+  color: white;
+  font-size: 20px;
+
+  line-height: 1;
+  padding-top: 10px;
+}
+
+#profile-image:hover {
+    box-shadow: 0 3px 2px rgba(0, 0, 0, 0.3);
+}
+
+#profile-image-header {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #512DA8;
+  text-align: center;
+  color: white;
+  font-size: 25px;
+  line-height: 2;
+  padding-top: 1px;
+  
+  margin-top: 5px;
+  margin-left: 5px;
+  
+}
+
+.profile-custom-header {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-top: 5px;
+  margin-left: 5px;
+
+}
+
+#user-name-header {
+  margin-left: 25px;
+  margin-top: 5px;
+  z-index: 1;
+  font-size: 18px;
+  padding-left: 55px;
+  padding-top: 12px;
+  position: fixed;
+
+}
+
+.arrow-up {
+  display: none;
+  height: 0;
+  width: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #f9f9f9;
+  position: fixed;
+}
+
+#spacing {
+  padding-top: 5px;
+}
+
+.dropdown-sub-title {
+  font-size: 14px;
+}
+
+#fox-box {
+  background: #1DA1F2;
+  background: linear-gradient(141deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%); /* Standard syntax */
+}
+
+.marker-backdrop {
+  background-color: blue;
+  opacity: 0.5;
+}
+
+#input-title {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  color: white;
+  padding-left: 18px;
+  
+}
+
+.text-box {
+  width: 100px;
+
+}
+
+input[type="submit"]{
+    /* change these properties to whatever you want */
+    background-color: #FF851B;
+    font-size: 10px;
+    color: #FFFFFF;
+    border-radius: 40%;
+    
+}
+
+.marker-title {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  text-align: center;
+  padding-bottom: 5px;
+  color: white;
+  width: 75px;
+ 
+}
+#edit-delete {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 10px;
+
+  border: none;
+  color: blue;
+  position: absolute;
+  background-color: white;
+  text-align: center;
+  width: 50px;
+}
+
+.scrollFix {
+    line-height: 1.35;
+    overflow: hidden !important;
+    white-space: nowrap;
+}
+

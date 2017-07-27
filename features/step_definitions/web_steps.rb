@@ -58,9 +58,9 @@ end
 Then(/^the center of the map should not be approximately "([^"]*)"$/) do |place|  
   not find('#fox-box').has_text?(place)
 end  
+
 And(/^my location is set to "([^"]*)"$/) do |place| 
   find('#pac-input').set(place)
-  find('#pac-input').native.send_keys(:Enter)
 end
 
 Then (/^I should see "(.*)" next to "(.*)"$/) do |rating, category|
@@ -88,6 +88,9 @@ When /^(?:|I )press on the text "([^"]*)"$/ do |text|
   find("#heading" + text).click
 end
 
+When /^(?:|I )press on the icon "([^"]*)"$/ do |text|
+  click_link(text)
+end
 
 When /^(?:|I )follow "([^"]*)"$/ do |link|
   click_link(link)
@@ -275,6 +278,16 @@ Then /^(?:|I )should be on (.+)$/ do |page_name|
   end
 end
 
+Then /^(?:|I )should be at the web address (.+)$/ do |page_address|
+  current_path = URI.parse(current_url).hostname
+  page_address = page_address.slice(1..-2)
+  if current_path.respond_to? :should
+    current_path.should == page_address
+  else
+    assert_equal page_address, current_path
+  end
+end
+
 Then /^(?:|I )should have the following query string:$/ do |expected_pairs|
   query = URI.parse(current_url).query
   actual_params = query ? CGI.parse(query) : {}
@@ -330,6 +343,9 @@ And(/^I should see an icon "(.+)"$/) do |image|
   page.should have_xpath("//img[contains(@src, \"#{image.split('-')[0]}\")]")
 end
 
+And(/^I should see a profile icon "(.+)"$/) do |image|
+  find("#profile-icon")
+end
 
 And(/^I should see a weather icon inside/) do 
   page.should have_xpath("//img[contains(@src, \"#{"-s".split('-')[0]}\")]")
@@ -355,11 +371,22 @@ Then(/^I should see a map$/) do
   page.evaluate_script('map') 
 end
 
-Then /^(?:|I )should see the text on the side "([^"]*)"$/ do |text|
+Then(/^(?:|I )should see the text on the side "([^"]*)"$/) do |text|
   if page.respond_to? :should
     page.should have_content(text)
   else
-    assert page.has_content?(text)
+    assert page.evaluate_script("$('#{text}').is(':hidden');")
   end
 end
 
+Then(/^there should be hidden text on the side "([^"]*)"$/) do |text|
+  if page.respond_to? :should
+    page.evaluate_script("$('#{text}').is(':hidden');")
+  else
+    assert page.evaluate_script("$('#{text}').is(':hidden');")
+  end
+end
+
+Given(/^pending holder$/) do
+  pending
+end

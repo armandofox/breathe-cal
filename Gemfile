@@ -26,12 +26,13 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'haml'
 gem 'figaro'
 gem 'httparty'
-gem 'feedjira'
-
+gem 'nokogiri'
+# gem 'open-uri'
 
 gem 'geocoder'
 gem 'gmaps4rails'
-gem 'phantomjs', '1.9.8'
+# Use Phantomjs - a WebKit scriptable with a JavaScript API
+gem 'phantomjs', '1.9.8.0' 
 gem 'poltergeist'
 gem 'selenium-webdriver'
 
@@ -81,4 +82,4 @@ group :development do
   gem 'spring'
 end
 
-ruby "2.3.0"
+ruby '2.3.0'
