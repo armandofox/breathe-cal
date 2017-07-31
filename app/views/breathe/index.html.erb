@@ -1,22 +1,311 @@
 <div style="height: 100%;">
-  <div class="col-md-8 col-ms-12" style="padding-left: 0; padding-right: 0; z-index: 10; height: 100%;" id="left-col">
-    <input id="pac-input" class="controls" type="text" placeholder="Enter a location to learn allergens">
-    <div id="map" style="height: 100%; width: 100%;"></div>
-    <div id="marker-cta" class = "controls" style="margin-top: -40px !important; margin-left: 440px !important; position: absolute !important;">
-      <%= render 'marker_cta' %>
+
+<!-- profile sign in and profile icon START -->
+  <% if current_client %>
+    <% p asset_path("images/bee_marker.png")%>
+    <% resp = HTTParty.get('https://www.googleapis.com/plus/v1/people/'+current_client.uid+'?fields=image&key=AIzaSyD5n5xHL4TbbHjVE_gxkVw6f-CRVyN8npc').body%>
+    <% result = JSON.parse resp%>
+    <% begin; source = result['image']['url']; custom = true; rescue Exception; custom = false; end%>
+    <% begin; is_default =  result['image']['isDefault']; rescue Exception; is_default = "true"; end%>
+    <%userName = current_client.name%>
+    <%uID = current_client.id%>
+    
+    <%firstLetter = userName[0]%>
+  
+    <div onclick= "profileClick()" id = "profile-icon" class = "round-hover">
+      <% if is_default%>
+        <div  id = "profile-image">
+          <%= firstLetter %>
+        </div>
+      <% else %>
+        <img class= "img-circle round" src=<%=source%>>
+      <% end %>
+      <div id="arrow" class = "arrow-up"></div> 
+      <div id="myDropdown" class="dropdown-content drop-allign">
+        <div id="user-name-header">
+          <%=current_client.name %>
+        </div>
+        <% if !is_default %>
+          <img class= "profile-custom-header"src=<%=source%>>
+        <% else %>
+          <div  id = "profile-image-header">
+            <%= firstLetter %>
+          </div>
+        <% end %>
+        <div id = "spacing"></div>
+        <a href="#friends" class="dropdown-sub-title">Friends</a>
+        <div onclick= "settingsClick()", class="dropdown-sub-title">
+          <a>Settings</a>
+        </div>
+        <%= link_to 'Sign Out', signout_path, id: "sign_out", class: "dropdown-sub-title" %>
+      </div>
+      
+      <div id="settingsDropdown" class="dropdown-content drop-allign">
+        <div id="user-name-header">
+          <%=current_client.name %>
+        </div>
+        <% if !is_default %>
+          <img class= "profile-custom-header"src=<%=source%>>
+        <% else %>
+          <div  id = "profile-image-header">
+            <%= firstLetter %>
+          </div>
+        <% end %>
+        <div id = "spacing"></div>
+       
+        <div class="dropdown-sub-title-settings">
+          <div id = 'location-icon'></div>
+          Location preferences
+        </div>
+        <div class="dropdown-sub-title-content">
+          Default Location:   </br> 
+        </div> 
+       <% location_placeholder = current_client.location || "no location saved"%>
+        <div class="dropdown-sub-title-content">  
+          <input id="autocomplete2" placeholder='<%= location_placeholder %>' onchange='$("#location_updated_text").show()' type="text"></input>
+           <!--<button id='location-btn' onClick='fillInAddress("")' class='settings-btn' type="submit" value="Reset" style="float: right">Reset</button>-->
+          <div class="dropdown-sub-title-update" id="location_updated_text">Location updated</div> 
+        </div> 
+        
+        <div class="dropdown-sub-title-settings"> 
+          <div id="language-icon"></div>
+          Language preferences
+        </div>
+
+
+   <div id="google_translate_element"></div>
+
+
+    <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL}, 'google_translate_element');
+    }
+    
+    
+
+    </script>
+    
+    <script type="text/javascript">
+      (function(){var gtConstEvalStartTime = new Date();
+      function d(b){var a=document.getElementsByTagName("head")[0];
+      a||(a=document.body.parentNode.appendChild(document.createElement("head")));
+      a.appendChild(b)}function _loadJs(b){var a=document.createElement("script");
+      a.type="text/javascript";
+      a.charset="UTF-8";a.src=b;
+      d(a)}function _loadCss(b){var a=document.createElement("link");
+      a.type="text/css";
+      a.rel="stylesheet";
+      a.charset="UTF-8";
+      a.href=b;d(a)}function _isNS(b){b=b.split(".");
+      for(var a=window,c=0;c<b.length;++c)if(!(a=a[b[c]]))return!1;return!0}
+      function _setupNS(b){b=b.split(".");
+      for(var a=window,c=0;c<b.length;++c)a.hasOwnProperty?a.hasOwnProperty(b[c])?a=a[b[c]]:a=a[b[c]]={}:a=a[b[c]]||(a[b[c]]={});return a}window.addEventListener&&"undefined"==typeof document.readyState&&window.addEventListener("DOMContentLoaded",function(){document.readyState="complete"},!1);
+      if (_isNS('google.translate.Element')){return}(function(){var c=_setupNS('google.translate._const');
+      c._cest = gtConstEvalStartTime;
+      gtConstEvalStartTime = undefined;
+      c._cl='en';
+      c._cuc='googleTranslateElementInit';
+      c._cac='';
+      c._cam='';
+      c._ctkk=eval('((function(){var a\x3d3921954090;var b\x3d141747986;return 417011+\x27.\x27+(a+b)})())');
+      var h='translate.googleapis.com';
+      var s=(true?'https':window.location.protocol=='https:'?'https':'http')+'://';
+      var b=s+h;
+      c._pah=h;
+      c._pas=s;
+      c._pbi=b+'/translate_static/img/te_bk.gif';
+      c._pci=b+'/translate_static/img/te_ctrl3.gif';
+      c._pli=b+'/translate_static/img/loading.gif';
+      c._plla=h+'/translate_a/l';
+      c._pmi=b+'/translate_static/img/mini_google.png';
+      c._ps=b+'/translate_static/css/translateelement.css';
+      c._puh='translate.google.com';
+      _loadCss(c._ps);
+      _loadJs(b+'/translate_static/js/element/main.js');})();})();
+    </script>
+
+
+
+
+          
+          
+          <!--<div class="dropdown-sub-title-update" id="language_updated_text">Language updated</div> -->
+
+          
+          
+        
+        <div class="dropdown-sub-title-settings"> 
+          <div id="email-icon"></div>
+          Email preferences
+        </div>
+        <div class="dropdown-sub-title-content">
+          Email address: </br>
+          </br>
+          <% email_placeholder = "no email saved"%>
+          <% email_value = ""%>
+          <% unless current_client.email.nil? %>
+            <% email_placeholder = "" %>
+            <% email_value = current_client.email %>
+          <% end %>  
+          <input type="text" style="width: 65%;" placeholder='<%= email_placeholder %>' value='<%= email_value %>' id="saved_email_text"/>
+          <button id='email-btn' onclick=fillInEmail() class='settings-btn' type="submit" value="Save" style="float: right">Save</button>
+          <div class="dropdown-sub-title-update" id="email_updated_text">Email updated</div>
+          </br>
+        </div> 
+        <div class="dropdown-sub-title-content" id="accordion">
+          Receive alert emails? 
+            <label class="switch" style="float: right" data-toggle="collapse" data-target="#collapseAlertEmails">
+              <input type="checkbox">
+              <span class="slider round"></span>
+            </label>
+          </br>
+          <div id="collapseAlertEmails" class="dropdown-sub-title collapse out">
+              
+            <div>
+              <ul class="checkbox"> 
+                <li><input type="checkbox" id="cb1" value="Cats" /><label for="cb1">Cats</label></li> 
+                <li><input type="checkbox" id="cb2" value="Bees" /><label for="cb2">Bees</label></li> 
+                <li><input type="checkbox" id="cb3" value="Perfume" /><label for="cb3">Perfume</label></li> 
+                <li><input type="checkbox" id="cb4" value="Oak" /><label for="cb4">Oak</label></li> 
+                <li><input type="checkbox" id="cb5" value="Peanut" /><label for="cb5">Peanut</label></li> 
+              </ul> 
+            </div>
+            
+            <div >
+              <ul class="checkbox"> 
+                <li><input type="checkbox" id="cb6" value="Gluten" /><label for="cb6>">Gluten</label></li> 
+                <li><input type="checkbox" id="cb7" value="Dog" /><label for="cb7>">Dog</label></li> 
+                <li><input type="checkbox" id="cb8" value="Dust" /><label for="cb8>">Dust</label></li> 
+                <li><input type="checkbox" id="cb9" value="Smoke" /><label for="cb9>">Smoke</label></li> 
+                <li><input type="checkbox" id="cb10" value="Mold" /><label for="cb10>">Mold</label></li> 
+              </ul> 
+            </div>
+            
+          </div>
+        </div> 
+        
+        
+        <div class="dropdown-sub-title-content" id="accordion">
+          Receive daily update? 
+            <label class="switch" style="float: right" data-toggle="collapse" data-target="#collapseDailyUpdate">
+              <input type="checkbox">
+              <span class="slider round"></span>
+            </label>
+          </br>
+          <div id="collapseDailyUpdate" class="dropdown-sub-title-collapse collapse out">
+              
+            <div>
+              <ul class="checkbox"> 
+                <li><input type="checkbox" id="cb1" value="Cats" /><label for="cb1">Cats</label></li> 
+                <li><input type="checkbox" id="cb2" value="Bees" /><label for="cb2">Bees</label></li> 
+                <li><input type="checkbox" id="cb3" value="Perfume" /><label for="cb3">Perfume</label></li> 
+                <li><input type="checkbox" id="cb4" value="Oak" /><label for="cb4">Oak</label></li> 
+                <li><input type="checkbox" id="cb5" value="Peanut" /><label for="cb5">Peanut</label></li> 
+              </ul> 
+            </div>
+            
+            <div >
+              <ul class="checkbox"> 
+                <li><input type="checkbox" id="cb6" value="Gluten" /><label for="cb6>">Gluten</label></li> 
+                <li><input type="checkbox" id="cb7" value="Dog" /><label for="cb7>">Dog</label></li> 
+                <li><input type="checkbox" id="cb8" value="Dust" /><label for="cb8>">Dust</label></li> 
+                <li><input type="checkbox" id="cb9" value="Smoke" /><label for="cb9>">Smoke</label></li> 
+                <li><input type="checkbox" id="cb10" value="Mold" /><label for="cb10>">Mold</label></li> 
+              </ul> 
+            </div>
+            
+          </div>
+        </div> 
+        
+        
+        <div onclick= "backClick()", class="dropdown-sub-title">
+          <a>Back</a>
+        </div>
+      </div>
+      
     </div>
-  </div>
+  <% else %>
+    <%= link_to "Sign in", "/auth/google_oauth2", id: "log-in", class: "button"%>
+  <% end %>    
+  
+
+<script>
+
+  function profileClick() {
+    if (document.getElementById("myDropdown").style.display == "none"){
+      document.getElementById("arrow").classList.toggle("show")
+      
+      console.log(document.getElementById("myDropdown").style.visibility);
+      document.getElementById("settingsDropdown").classList.toggle("show");
+    } else{
+      console.log(document.getElementById("myDropdown").style.visibility);
+      document.getElementById("myDropdown").classList.toggle("show");
+    }
+  }
+
+  function settingsClick() {
+    document.getElementById("myDropdown").classList.toggle("show");
+    document.getElementById("arrow").classList.toggle("show");
+    document.getElementById("settingsDropdown").classList.toggle("show");
+  }
+  
+  function backClick() {
+    document.getElementById("settingsDropdown").classList.toggle("show");
+    document.getElementById("arrow").classList.toggle("show");
+    document.getElementById("myDropdown").classList.toggle("show");
+    document.getElementById("location_updated_text").style.display = "none"
+    document.getElementById("language_updated_text").style.display = "none"
+    document.getElementById("email_updated_text").style.display = "none"
+  }
+  
+  function fillInAddress(place) {
+    
+    $.ajax({
+        type: "PUT",
+        url: "client/" + $('uID'),
+        data: JSON.stringify({location: place, id: $('uID')}),
+        contentType: "application/json; charset=utf-8",
+        dataType: 'json',
+        success: function(data) {
+            console.log(data);
+        }
+    });    
+  }  
+  
+  function fillInEmail(email) {
+    document.getElementById("email_updated_text").style.display = "block"
+    
+    $.ajax({
+        type: "PUT",
+        url: "client/" + $('uID'),
+        data: JSON.stringify({email: $('#saved_email_text').val(), id: $('uID')}),
+        contentType: "application/json; charset=utf-8",
+        dataType: 'json',
+        success: function(data) {
+            console.log(data);
+        }
+    });    
+  }
+
+  function deleteMarker(id) {
+    $.ajax({
+        type: "DELETE",
+        contentType: "application/json; charset=utf-8",
+        url: "markers",
+        data: JSON.stringify({id: id}),
+        success: function() {
+          
+        }
+    });
+  }
+</script>
+<!-- profile sign in and profile icon END -->
+
   <div class="col-md-4 col-ms-12" style="padding-left: 0; padding-right: 0; max-width: 500px;" id="right-col">
-    <div style="text-align: right; font-size: 15px; padding: 10px 15px; border-bottom-width: 1px; border-bottom-color: #eee; border-bottom-style: solid;">
-          <% if current_client %>
-            <strong><%=current_client.name %></strong>!
-            <%= link_to 'Sign Out', signout_path, id: "sign_out", class:"signout_link" %>
-          <% else %>
-            <%= link_to "Sign in with Google+", "/auth/google_oauth2", id: "sign_in" %>
-          <% end %>    
-    </div>
-    <div class="datetime-box" style="padding: 20px; font-size: 20px; font-family: 'Open Sans', sans-serif; height: 65px;">Today is <%= @dt %>
-    </div>
+    <!--<div style="text-align: right; font-size: 15px; padding: 10px 15px; border-bottom-width: 1px; border-bottom-color: #eee; border-bottom-style: solid;">-->
+    <!--</div>-->
+   
+  
     
 
     
@@ -30,33 +319,52 @@
     </div>
     <div id="detail-box-mask" style="margin-left: 500px; background-color: white; position: absolute; width: 100%; overflow-x: hidden; overflow-y: scroll; z-index: 10;"></div>
     <br>
-    <div style="text-align: center; position: absolute; width: 100%; bottom: 10px; z-index: 5;">
-      <%= image_tag('bcal.jpg', :style => "width: 160px;") %>
+    <div id="logo" style="text-align: center; position: absolute; width: 100%; bottom: 10px; z-index: 5;">
+      <%= link_to(image_tag('bcal.jpg', :style => "width: 160px;"), "http://www.breathebayarea.org") %>
           <div type="button" data-toggle="modal" data-target="#myModal">
             <a>Learn more about this project</a>
           </div>
-    <div class = "welcome" > <%= "Today's " + @welcome_message + ":" %> 
-      <div id = "spare_alert" > <%= @alert %> </div>
     </div>
     </div>
     
     
 
   </div>  
+  
+    <div class="col-md-8 col-ms-12" style="padding-left: 0; padding-right: 0; z-index: 10; height: 100%;" id="left-col">
+    <input id="pac-input" class="controls" type="text" placeholder="Search">
+    <button id="search-button" class="controls">🔍</button>
+    <button id="find-my-location"> <img id = "loc-img" height="30" width="30" src="https://cdn3.iconfinder.com/data/icons/glypho-travel/64/map-pin-marker-circle-512.png"> </button>
+   
+   
+       <button id="clean-air-button" class="controls"></button>
+  
+    <div id="clean-air" class="onoffswitch">
+        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+        <label class="onoffswitch-label" for="myonoffswitch">
+            <span class="onoffswitch-inner"></span>
+            <span class="onoffswitch-switch"></span>
+        </label>
+    </div>
+    
+  
+    <div id="map" style="height: 100%; width: 100%;"></div>
+  
+  </div>
 <!-- Button trigger modal -->
 
-
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-body" style="padding: 20px;">
-        <%= render 'about' %>
-      </div>
-    </div>
-  </div>
-</div>
+ <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+   <div class="modal-dialog" role="document">
+     <div class="modal-content">
+       <div class="modal-body" style="padding: 20px;">
+         <%= render 'about' %>
+       </div>
+     </div>
+   </div>
+ </div>
+ 
+
   <%= javascript_include_tag "application", "data-turbolinks-track" => "reload" %>
 <!--<script src="//nmp.newsgator.com/NGBuzz/buzz.ashx?buzzId=146282&apiToken=C8A8F8F5025D418F8AACB0A7FB2A799A&trkP=6d55b36b-8f3d-4003-b27d-ab20d60a3e6f%2Ceb799aa0-ab4c-4906-9d8f-19aaa62a99eb&trkM=29FA7D07-CEE9-C94B-3CF2-BA83A24ABFAC" type="text/javascript"></script>-->
 </div>
-

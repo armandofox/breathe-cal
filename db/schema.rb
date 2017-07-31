@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161117071607) do
+ActiveRecord::Schema.define(version: 20170730003252) do
 
   create_table "cities", force: :cascade do |t|
     t.string   "name"
@@ -41,22 +41,22 @@ ActiveRecord::Schema.define(version: 20161117071607) do
     t.string   "uid"
     t.string   "oauth_token"
     t.datetime "oauth_expires_at"
+    t.string   "location"
+    t.boolean  "email_digest"
+    t.boolean  "email_alert"
+  end
+
+  create_table "email_managers", force: :cascade do |t|
+    t.string   "alert"
+    t.string   "previous_alert"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
   create_table "markers", force: :cascade do |t|
     t.string   "lng"
     t.string   "lat"
     t.string   "title"
-    t.boolean  "dog"
-    t.boolean  "cat"
-    t.boolean  "mold"
-    t.boolean  "bees"
-    t.boolean  "perfume"
-    t.boolean  "oak"
-    t.boolean  "dust"
-    t.boolean  "smoke"
-    t.boolean  "gluten"
-    t.boolean  "peanut"
     t.integer  "client_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

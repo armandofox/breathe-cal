@@ -22,16 +22,17 @@ gem 'jquery-turbolinks'
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
-
+gem 'mailgun'
 gem 'haml'
 gem 'figaro'
 gem 'httparty'
-gem 'feedjira'
-
+gem "nokogiri", ">= 1.6.7.rc"
+# gem 'open-uri'
 
 gem 'geocoder'
 gem 'gmaps4rails'
-gem 'phantomjs', '1.9.8'
+# Use Phantomjs - a WebKit scriptable with a JavaScript API
+gem 'phantomjs', '1.9.8.0' 
 gem 'poltergeist'
 gem 'selenium-webdriver'
 
@@ -81,4 +82,4 @@ group :development do
   gem 'spring'
 end
 
-ruby "2.3.0"
+ruby '2.3.0'
