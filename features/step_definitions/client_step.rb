@@ -67,3 +67,10 @@ Given /^(?:|I )am logged in as "([^"]*)"$/ do |name|
   visit auth_test_path(:name => name, :test_check => true)
 end 
 
+Then /^(?:|I )should see "([^"]*)" or "([^"]*)"$/ do |text1, text2|
+  if page.respond_to? :should
+    page.should have_content(text)
+  else
+    assert page.has_content?(text1) || page.has_content?(text2)
+  end
+end
