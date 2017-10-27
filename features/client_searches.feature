@@ -6,27 +6,55 @@ Feature: client searches
 @javascript   
 Scenario: I should see a blank search history before having searched for anything
     Given I am on the landing page
-    # Then I should see the text on the side "Recent Searches"
+    Then I should see the text on the side "No recent searches"
 
 @javascript   
 Scenario: Having searched for a city I should see it displayed on the page
-    When I go to the landing page
+    Given I go to the landing page
     And my location is set to "Berkeley"
     And I follow "Recent Searches" 
     Then I should see the text on the side "Berkeley"
-    And I should not see "Vancouver"
-    And I should not see "Boston"
+    Then I should not see "Vancouver"
+    Then I should not see "Boston"
+    And I follow "Berkeley"
+    Then I should see the details of "Berkeley"
+    
 
 @javascript   
 Scenario: Having searched for two cities I should see the most recent one on top
-    When I go to the landing page
+    Given I go to the landing page
     And my location is set to "Berkeley"
     And I follow "Recent Searches"
     And my location is set to "Albany"
     And I follow "Recent Searches"
-    Then I should see the text on the side "Berkeley"
-    Then I should see the text on the side "Albany"
-    And I should see "Berkeley" above "Albany"    
+    Then I should see "Albany" before "Berkeley"
+    # Then I should see the text on the side "Berkeley"
+    # Then I should see the text on the side "Albany"
+    # And I should see "Berkeley" above "Albany"    
+    
+@javascript
+Scenario: Having searched for cities, I should retain my recent searches even if I go to the details page
+    Given I go to the landing page
+    And my location is set to "Berkeley"
+    And my location is set to "New York"
+    And I follow "Recent Searches"
+    Then I should see "New York"
+    Then I should see "Berkeley"
+    And I follow "New York"
+    And I follow "Back"
+    Then I should see "New York"
+    Then I should see "Berkeley"
+
+@javascript    
+Scenario: Having searched for more than 5 cities I should only see the last 5 ones displayed
+    Given I go to the landing page
+    And visit multiple locations: Berkeley, Albany, Oakland, Richmond, San Jose, Los Angeles
+    And I follow "Recent Searches"
+    Then I should see "Albany"
+    Then I should see "Oakland"
+    Then I should see "Richmond"
+    Then I should see "San Jose"
+    Then I should see "Los Angeles"
 
 # @javascript   
 # Scenario: Having searched for more than 5 cities I should only see the last 5 ones displayed
