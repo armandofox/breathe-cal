@@ -3,7 +3,7 @@ class City < ActiveRecord::Base
   serialize :daily_data, JSON
   
   def self.get_accuweather_key()
-    ENV['WEATHER_KEY']
+    Rails.application.secrets.WEATHER_KEY
   end
   
   def self.get_resonse(resp, url, query)
