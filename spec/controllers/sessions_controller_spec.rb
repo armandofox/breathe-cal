@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe SessionsController, type: :controller do
     
     # before :each do
-    #     @current_client = Factory :client_id
+    #     @current_client = Factory :user_id
     # end
     # before { controller.instance_variable_set(:@authauth, nil) } 
 
@@ -20,20 +20,20 @@ RSpec.describe SessionsController, type: :controller do
     end
 
     describe "#destroy" do
-        it "delete the current client" do
+        it "delete the current user" do
             delete :destroy
             response.should redirect_to root_path
         end
     end
     
     describe "#checklogged" do 
-        context "session client_id is not nil" do 
+        context "session user_id is not nil" do 
             it "check log" do
-                request.session[:client_id] = "12334"
+                request.session[:user_id] = "12334"
                 get :checklogged
             end
         end
-        context "session client_id is nil" do 
+        context "session user_id is nil" do 
             it "check log" do
                 get :checklogged
             end

@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
 
     geocoded_by :address
     after_validation :geocode
+    serialize :searches, JSON
     
     def self.find_or_create_from_auth_hash(auth)
         find_by(provider: auth[:provider], uid: auth[:uid]) || create_user_from_omniauth(auth)

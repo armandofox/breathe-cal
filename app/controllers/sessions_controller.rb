@@ -3,10 +3,24 @@ class SessionsController < ApplicationController
 
   def create
     @user = User.find_or_create_from_auth_hash(auth_hash)
-    self.current_user = @user
-    session[:uid] = self.current_user.id
+    session[:user_id] = @user.id
     redirect_to root_path
   end
+  
+  # def create_dummy
+  #   if Rails.env.development?
+  #     @user = User.create({
+  #       provider: 'some_provider', 
+  #         uid: 101,
+  #         name: params[:name],
+  #         oauth_token: 'some_token',
+  #         expire_in_days: 10,
+  #         expire_days_ago: 0
+  #     })
+  #     session[:uid] = @user.uid
+  #   end
+  #   redirect_to root_path
+  # end
 
   # def create 
   #   test_check = params[:test_check]
@@ -20,18 +34,18 @@ class SessionsController < ApplicationController
   #   else
   #     client = Client.from_omniauth(env["omniauth.auth"])
   #   end 
-  #   session[:client_id] = client.id
+  #   session[:user_id] = client.id
   #   redirect_to root_path
   # end
   
   def destroy
-    session[:client_id] = nil
+    session[:user_id] = nil
     redirect_to root_path
   end
   
   def checklogged
     data = {}
-    if session[:client_id] != nil
+    if session[:user_id] != nil
       data["authorized"] = true;
     end      
     render :json => data

@@ -57,12 +57,12 @@ ActiveRecord::Schema.define(version: 20171026170753) do
     t.boolean  "smoke"
     t.boolean  "gluten"
     t.boolean  "peanut"
-    t.integer  "client_id"
+    t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  add_index "markers", ["client_id"], name: "index_markers_on_client_id"
+  add_index "markers", ["user_id"], name: "index_markers_on_user_id"
 
   create_table "users", force: :cascade do |t|
     t.float    "latitude"
@@ -70,10 +70,14 @@ ActiveRecord::Schema.define(version: 20171026170753) do
     t.string   "address"
     t.text     "description"
     t.string   "title"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
     t.string   "provider"
     t.string   "uid"
+    t.string   "oauth_token"
+    t.datetime "oauth_expires_at"
+    t.string   "name"
+    t.string   "searches"
   end
 
 end

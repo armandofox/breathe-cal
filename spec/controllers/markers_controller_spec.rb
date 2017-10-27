@@ -5,7 +5,7 @@ RSpec.describe MarkersController, type: :controller do
   describe "POST #create" do
     context"with valid attr" do
       it "renders marker as json" do
-        post :create  , {marker: {cat: true, lat: 10, lng: 10}}, {client_id: 1}
+        post :create  , {marker: {cat: true, lat: 10, lng: 10}}, {user_id: 1}
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(200)
       end
@@ -13,7 +13,7 @@ RSpec.describe MarkersController, type: :controller do
     
     context "while not logged in " do
       it "renders nothing" do
-        post :create  , {marker: {cat: true, lat: 10, lng: 10}}, {client_id: nil}
+        post :create  , {marker: {cat: true, lat: 10, lng: 10}}, {user_id: nil}
         expect(response.body).to be_empty
       end
     end
@@ -22,7 +22,7 @@ RSpec.describe MarkersController, type: :controller do
   
   describe "get #show" do
     it "renders json if stuff legit" do
-      get :show  , {bounds: {uplat: 20, downlat: 10, rightlong: 20, leftlong: 10}}, {client_id: 1}
+      get :show  , {bounds: {uplat: 20, downlat: 10, rightlong: 20, leftlong: 10}}, {user_id: 1}
       expect(response.content_type).to eq("application/json")
       expect(response).to have_http_status(200)
     end

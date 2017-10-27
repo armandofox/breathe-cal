@@ -49,7 +49,10 @@ When /^(?:|I )press the icon "([^"]*)"$/ do |icon|
 end
 
 Given /^(?:|I )successfully authenticated with Google as "([^"]*)"$/ do |name|
-  visit auth_test_path(:name => name, :test_check => true)
+  # Adding info to google mock that is set in /breathe-cal/features/support/hooks.rb
+  OmniAuth.config.add_mock(:google_oauth2, {:info => {:email=>"test@xxxx.com", :name=>name}})
+  visit auth_path(:provider => "google_oauth2")
+  # visit auth_test_path(:name => name, :test_check => true)
 end
 
 Given /^(?:|I )am logged in as "([^"]*)"$/ do |name|
