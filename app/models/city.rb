@@ -9,6 +9,14 @@ class City < ActiveRecord::Base
   def self.get_resonse(resp, url, query)
     return resp
   end
+  
+  def has_valid_data
+    val = self.daily_data['Code']
+    if val == 'Unauthorized'
+      return false
+    end
+    return true
+  end
       
       
   def update_city_data
