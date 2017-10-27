@@ -44,7 +44,7 @@ class City < ActiveRecord::Base
   def self.get_loc_key(lat,lng, name)
     puts name, lat, lng
     city = City.find_by(lat: lat, lng: lng)
-    if city
+    if city and !city.location_key.nil?
       return city.location_key
     end
     url = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search"
