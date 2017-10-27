@@ -8,9 +8,9 @@ RSpec.describe SessionsController, type: :controller do
     # before { controller.instance_variable_set(:@authauth, nil) } 
 
     describe "POST create" do
-        context "test check is true" do
+        context "crateing dummy user" do
             it "create" do
-                post :create, test_check: '1'
+                post :create_dummy
             end
         end
         context "text check is false" do 

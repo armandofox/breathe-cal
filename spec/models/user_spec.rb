@@ -46,21 +46,20 @@ RSpec.describe User, type: :model do
         end
     end
     
-    describe '#from_omniauth' do
+    describe '#find_or_create_from_auth_hash' do
         describe 'when proper credentials are passed to the method' do
             before :each do
                 @proper_user_credentials = {provider:'google_oauth2', credentials: {token: 'some token', expires_at: Time.new(2017, 10, 31)}, info: {name: 'James Bond'}, email: 'jamesbond@gmail.com'}
             end
             
             it 'calling the method creates a user' do
-                user = User.from_omniauth(@proper_user_credentials)
-                byebug
+                user = User.find_or_create_from_auth_hash(@proper_user_credentials)
                 expect(user).to be_an_instance_of User
             end
             
             describe 'after the method has been called' do
                 before :each do
-                    @user = User.from_omniauth(@proper_user_credentials)
+                    @user = User.find_or_create_from_auth_hash(@proper_user_credentials)
                 end
                 
                 it 'has a provider' do
