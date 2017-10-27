@@ -11,11 +11,11 @@ class City < ActiveRecord::Base
   end
   
   def has_valid_data
-    val = self.daily_data['Code']
-    if val == 'Unauthorized'
-      return false
+    val = self.daily_data[:Code]
+    if val.nil?
+      return true
     end
-    return true
+    return false
   end
       
       
