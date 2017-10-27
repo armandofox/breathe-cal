@@ -32,6 +32,7 @@ class City < ActiveRecord::Base
   end
   
   def self.get_loc_key(lat,lng, name)
+    puts name, lat, lng
     city = City.find_by(lat: lat, lng: lng)
     if city
       return city.location_key
@@ -41,6 +42,7 @@ class City < ActiveRecord::Base
     response = City.get_resonse(HTTParty.get(url, query: query), url, query)
     location_key = response["Key"]
     City.create(lat: "#{lat}", lng: "#{lng}", location_key: location_key, name: name)
+    puts location_key
     return location_key
   end
 
