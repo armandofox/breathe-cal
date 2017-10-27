@@ -7,20 +7,25 @@ class SessionsController < ApplicationController
     redirect_to root_path
   end
   
-  # def create_dummy
-  #   if Rails.env.development?
-  #     @user = User.create({
-  #       provider: 'some_provider', 
-  #         uid: 101,
-  #         name: params[:name],
-  #         oauth_token: 'some_token',
-  #         expire_in_days: 10,
-  #         expire_days_ago: 0
-  #     })
-  #     session[:uid] = @user.uid
-  #   end
-  #   redirect_to root_path
-  # end
+  def create_dummy
+    if Rails.env.test?
+      user_hash = {
+        provider: 'some_provider', 
+        uid: 101,
+        name: "test user",
+        oauth_token: 'some_token',
+        expire_in_days: 10,
+        expire_days_ago: 0
+      }
+      #params hash has string keys. we must convert them to symbol keys
+      #https://stackoverflow.com/questions/800122/best-way-to-convert-strings-to-symbols-in-hash
+      symparams = params.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
+      user_hash = user_hash.merge(symparams)
+      @user = User.create_test_user(user_hash)
+      session[:user_id] = @user.id
+    end
+    redirect_to root_path
+  end
 
   # def create 
   #   test_check = params[:test_check]

@@ -17,4 +17,13 @@ class User < ActiveRecord::Base
                oauth_expires_at: Time.at(auth[:credentials][:expires_at])
                )
     end
+    
+    def self.create_test_user(user_info)
+        create(provider: user_info[:provider],
+        uid: user_info[:uid],
+        name: user_info[:name],
+        oauth_token: user_info[:token],
+        oauth_expires_at: (Time.now + user_info[:expire_in_days].day - user_info[:expire_days_ago].day))
+    end
+    
 end 

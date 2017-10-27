@@ -33,7 +33,7 @@ gem 'geocoder'
 gem 'gmaps4rails'
 gem 'phantomjs', '1.9.8'
 gem 'poltergeist'
-gem 'selenium-webdriver'
+gem 'selenium-webdriver', '>=3.0'
 
 gem 'omniauth-facebook'
 
