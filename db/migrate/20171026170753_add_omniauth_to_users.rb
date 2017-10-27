@@ -6,5 +6,6 @@ class AddOmniauthToUsers < ActiveRecord::Migration
     add_column :users, :oauth_expires_at, :datetime
     add_column :users, :name, :string
     add_column :users, :searches, :string
+    add_column :users, :email, :string
   end
 end

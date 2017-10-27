@@ -15,7 +15,8 @@ class SessionsController < ApplicationController
         name: "test user",
         oauth_token: 'some_token',
         expire_in_days: 10,
-        expire_days_ago: 0
+        expire_days_ago: 0,
+        email: "test@xxxx.com"
       }
       #params hash has string keys. we must convert them to symbol keys
       #https://stackoverflow.com/questions/800122/best-way-to-convert-strings-to-symbols-in-hash
@@ -26,22 +27,6 @@ class SessionsController < ApplicationController
     end
     redirect_to root_path
   end
-
-  # def create 
-  #   test_check = params[:test_check]
-  #   if test_check
-  #     client = Client.new()
-  #     client.name = params[:name]
-  #     client.provider = 'some provider'
-  #     client.oauth_token = 'some token'
-  #     client.oauth_expires_at = Time.at(Time.new(2017, 10, 30))
-  #     client.save!
-  #   else
-  #     client = Client.from_omniauth(env["omniauth.auth"])
-  #   end 
-  #   session[:user_id] = client.id
-  #   redirect_to root_path
-  # end
   
   def destroy
     session[:user_id] = nil

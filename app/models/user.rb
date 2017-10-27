@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
         create(provider: auth[:provider], 
                uid: auth[:uid],
                name: auth[:info][:name],
+               email: auth[:info][:email],
                oauth_token: auth[:credentials][:token],
                oauth_expires_at: Time.at(auth[:credentials][:expires_at])
                )
@@ -22,6 +23,7 @@ class User < ActiveRecord::Base
         create(provider: user_info[:provider],
         uid: user_info[:uid],
         name: user_info[:name],
+        email: user_info[:email],
         oauth_token: user_info[:token],
         oauth_expires_at: (Time.now + user_info[:expire_in_days].day - user_info[:expire_days_ago].day))
     end

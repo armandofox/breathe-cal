@@ -2,9 +2,9 @@ Given /the following clients exist/ do |users_table|
   users_table.hashes.each do |user|
     # each returned element will be a hash whose key is the table header.
     # you should arrange to add that movie to the database here.
-  Client.create!(user)
-  end
-  # fail "Unimplemented"
+  # Client.create!(user)
+  # end
+  fail "Unimplemented"
 end
 
 Given /I as "(.*)" have searched for "(.*)"$/ do |user, city|
@@ -64,7 +64,7 @@ Given /skip/ do
 end
 
 Given /^(?:|I )am logged in as "([^"]*)"$/ do |name|
-  visit auth_test_path(:name => name, :test_check => true)
+  visit auth_test_path(:name => name)
 end 
 
 Then /^(?:|I )should see "([^"]*)" or "([^"]*)"$/ do |text1, text2|
