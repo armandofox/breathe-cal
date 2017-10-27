@@ -29,6 +29,7 @@ class City < ActiveRecord::Base
       self.update_attribute("daily_data" , response)
     end
     puts "Updating city Data!"
+    puts self.daily_data
   end
   
   def self.get_loc_key(lat,lng, name)
