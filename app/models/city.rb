@@ -3,7 +3,7 @@ class City < ActiveRecord::Base
   serialize :daily_data, JSON
   
   def self.get_accuweather_key()
-    Rails.application.secrets.WEATHER_KEY
+    ENV['WEATHER_KEY']
   end
   
   def self.get_resonse(resp, url, query)
@@ -13,24 +13,14 @@ class City < ActiveRecord::Base
       
   def update_city_data
     location_key = self.location_key
-    puts "Before --- !!!!!!!!"
-    puts self.updated_at
-    puts Date.today.to_time.beginning_of_day
-    puts self.daily_data.nil?
-    puts City.get_accuweather_key()
     if self.updated_at <= Date.today.to_time.beginning_of_day or self.daily_data.nil?
       url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/#{location_key}"
       query = {apikey: City.get_accuweather_key(), language:"en-us", details: "true"}
       response = City.get_resonse(HTTParty.get(url, query: query), url, query)
-<<<<<<< HEAD
       # puts response
-=======
-      puts response == nil
->>>>>>> test logs
       self.update_attribute("daily_data" , response)
     end
     puts "Updating city Data!"
-    puts self.daily_data
   end
   
   def self.get_loc_key(lat,lng, name)
