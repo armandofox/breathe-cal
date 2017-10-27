@@ -2,8 +2,8 @@ class MarkersController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def create
-    if session[:client_id] != nil 
-      marker = Marker.create!(marker_params.merge(:client_id => session[:client_id]))
+    if session[:user_id] != nil 
+      marker = Marker.create!(marker_params.merge(:user_id => session[:user_id]))
       render :json => marker
     else 
       render :nothing => true
@@ -18,7 +18,7 @@ class MarkersController < ApplicationController
     right = bound_params[:rightlong]
     markers = Marker.find_all_within_bounds(up,down,left,right)
     # markers.each do |marker|
-    #   if marker.client_id == session[:client_id]
+    #   if marker.user_id == session[:user_id]
     #     output << marker 
     #   end
     # end

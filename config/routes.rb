@@ -13,9 +13,9 @@ Rails.application.routes.draw do
   get '/favorite_city' => 'cities#favorite_city'
   get '/display_favorite_cities' => 'cities#display_favorite_cities'
   
-  get 'auth/:provider/callback', to: "sessions#create"
+  get 'auth/:provider/callback', to: "sessions#create", as: 'auth'
 
-  get 'authentication_test/:name' => "sessions#create", as: 'auth_test'
+  get 'authentication_test' => "sessions#create_dummy", as: 'auth_test'
 
   get 'auth/failure', to: redirect('/')
 
@@ -29,9 +29,7 @@ Rails.application.routes.draw do
   post '/markers' => 'markers#create'
   get '/markers' => 'markers#show'
   
-  resources :cities, :clients
-  
-  get '/sessions/dashboard' => 'sessions#show', as: 'profile'
+  resources :cities, :users
   
   
   # You can have the root of your site routed with "root"

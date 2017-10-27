@@ -1,5 +1,5 @@
 class Marker < ActiveRecord::Base
-  belongs_to :client
+  belongs_to :user
   
   
   def self.find_all_within_bounds(top, bottom, left, right)
