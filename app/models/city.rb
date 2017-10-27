@@ -30,7 +30,7 @@ class City < ActiveRecord::Base
     puts self.daily_data.nil?
     puts City.get_accuweather_key()
     puts self.location_key
-    if self.updated_at <= Date.today.to_time.beginning_of_day or self.has_valid_data
+    if self.updated_at <= Date.today.to_time.beginning_of_day or !self.has_valid_data
       url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/#{location_key}"
       query = {apikey: City.get_accuweather_key(), language:"en-us", details: "true"}
       response = City.get_resonse(HTTParty.get(url, query: query), url, query)
@@ -42,7 +42,6 @@ class City < ActiveRecord::Base
   end
   
   def self.get_loc_key(lat,lng, name)
-    puts name, lat, lng
     city = City.find_by(lat: lat, lng: lng)
     if city and !city.location_key.nil?
       return city.location_key
