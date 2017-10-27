@@ -19,9 +19,6 @@
 !/log/.keep
 /tmp
 
-# Ignore secret api keys
-/config/secrets.yml
-
 # Ignore application configuration
 /config/application.yml
 /coverage
