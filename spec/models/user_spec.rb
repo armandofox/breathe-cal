@@ -42,7 +42,7 @@ RSpec.describe User, type: :model do
         end
         
         it 'does not pass the validity check' do
-            expect(@invalid_user.valid?).to be_falsy
+            expect(@invalid_user.is_valid?).to be_falsy
         end
     end
     
@@ -54,6 +54,7 @@ RSpec.describe User, type: :model do
             
             it 'calling the method creates a user' do
                 user = User.from_omniauth(@proper_user_credentials)
+                byebug
                 expect(user).to be_an_instance_of User
             end
             

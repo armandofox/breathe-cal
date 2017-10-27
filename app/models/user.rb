@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-    has_many :cities 
+    has_many :cities
 
     geocoded_by :address
     after_validation :geocode
@@ -26,6 +26,10 @@ class User < ActiveRecord::Base
         email: user_info[:email],
         oauth_token: user_info[:token],
         oauth_expires_at: (Time.now + user_info[:expire_in_days].day - user_info[:expire_days_ago].day))
+    end
+    
+    def is_valid?
+        provider && oauth_token && oauth_expires_at && oauth_expires_at > Time.now
     end
     
 end 
