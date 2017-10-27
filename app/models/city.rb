@@ -11,6 +11,9 @@ class City < ActiveRecord::Base
   end
   
   def has_valid_data
+    if self.daily_data.nil?
+      return false
+    end
     val = self.daily_data[:Code]
     if val.nil?
       return true
@@ -26,11 +29,12 @@ class City < ActiveRecord::Base
     puts Date.today.to_time.beginning_of_day
     puts self.daily_data.nil?
     puts City.get_accuweather_key()
+    puts self.location_key
     if self.updated_at <= Date.today.to_time.beginning_of_day or self.has_valid_data
       url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/#{location_key}"
       query = {apikey: City.get_accuweather_key(), language:"en-us", details: "true"}
       response = City.get_resonse(HTTParty.get(url, query: query), url, query)
-      puts response == nil
+      
       self.update_attribute("daily_data" , response)
     end
     puts "Updating city Data!"
