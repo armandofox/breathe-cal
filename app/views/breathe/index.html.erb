@@ -1,8 +1,8 @@
 <div style="height: 100%;">
   <div class="col-md-4 col-ms-12" style="padding-left: 0; padding-right: 0; max-width: 500px;" id="left-col">
     <div style="text-align: right; font-size: 15px; padding: 10px 15px; border-bottom-width: 1px; border-bottom-color: #eee; border-bottom-style: solid;">
-          <% if current_client %>
-            <strong><%=current_client.name %></strong>!
+          <% if current_user %>
+            <strong><%=current_user.name %></strong>!
             <%= link_to 'Sign Out', signout_path, id: "sign_out", class:"signout_link" %>
           <% else %>
             <%= link_to "Sign in with Google+", "/auth/google_oauth2", id: "sign_in" %>

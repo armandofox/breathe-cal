@@ -14,7 +14,7 @@ class CreateMarkers < ActiveRecord::Migration
       t.boolean :smoke
       t.boolean :gluten
       t.boolean :peanut
-      t.belongs_to :client, index: true
+      t.belongs_to :user, index: true
       t.timestamps null: false
     end
   end

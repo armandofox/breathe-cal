@@ -37,13 +37,13 @@ RSpec.describe CitiesController, type: :controller do
         describe 'favorite_cities' do
             context 'the user is signed in' do
                 before :each do
-                    @client =  Client.new(name: 'Joseph Brodsky', provider: 'google_oauth2', oauth_token: 'some_token', oauth_expires_at: 'July 1 2017')
-                    @client.save!
+                    @user =  User.new(name: 'Joseph Brodsky', provider: 'google_oauth2', oauth_token: 'some_token', oauth_expires_at: 'July 1 2017')
+                    @user.save!
                 end 
                 
                 describe 'the user has added favorites before' do
                     it 'favorites contains this city' do
-                        request.session[:client_id] = @client.id
+                        request.session[:user_id] = @user.id
                         request.session[:favorites] = [{"name" => 'Berkeley'}]
                         controller.instance_variable_set(:@quality, 'something')
                         get :favorite_city, name: @city.name, format: 'js'
@@ -51,7 +51,7 @@ RSpec.describe CitiesController, type: :controller do
                     end
                     
                     it 'favorites do not contain this city' do
-                        request.session[:client_id] = @client.id
+                        request.session[:user_id] = @user.id
                         request.session[:favorites] = [{"name" => 'not Berkeley'}]
                         controller.instance_variable_set(:@quality, 'something')
                         get :favorite_city, name: @city.name, format: 'js'
@@ -73,7 +73,7 @@ RSpec.describe CitiesController, type: :controller do
                     end
                     
                     it 'no favorites yet but signed in' do
-                        request.session[:client_id] = @client.id
+                        request.session[:user_id] = @user.id
                         request.session[:favorites] = nil
                         controller.instance_variable_set(:@quality, 'something')
                         get :favorite_city, name: @city.name, format: 'js'
@@ -85,7 +85,7 @@ RSpec.describe CitiesController, type: :controller do
             
             context 'the user is not signed in' do
                 it 'he can not add a favorite this way' do
-                    request.session[:client_id] = nil
+                    request.session[:user_id] = nil
                     get :favorite_city, name: @city.name, format: 'js'
                     expect(response).to render_template('cities/city_data.js.erb')
                 end

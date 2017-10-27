@@ -1,15 +1,15 @@
-Given /the following clients exist/ do |clients_table|
-  clients_table.hashes.each do |client|
+Given /the following clients exist/ do |users_table|
+  users_table.hashes.each do |user|
     # each returned element will be a hash whose key is the table header.
     # you should arrange to add that movie to the database here.
-  Client.create!(client)
-  end
-  # fail "Unimplemented"
+  # Client.create!(user)
+  # end
+  fail "Unimplemented"
 end
 
-Given /I as "(.*)" have searched for "(.*)"$/ do |client, city|
+Given /I as "(.*)" have searched for "(.*)"$/ do |user, city|
     #we will implement this model method later
-    Client.addToClient(client, city)
+    User.addToUser(user, city)
 end
 
 And /I should see "(.*)" above "(.*)"$/ do |city1, city2|
@@ -35,6 +35,10 @@ Given /I am on the sign_up page/ do
   #pending
 end 
 
+Then /I print the page/ do
+  print page.html
+end
+
 Then /^(?:|I )should see the button "([^"]*)"$/ do |text|
   #pending
 end
@@ -49,10 +53,24 @@ When /^(?:|I )press the icon "([^"]*)"$/ do |icon|
 end
 
 Given /^(?:|I )successfully authenticated with Google as "([^"]*)"$/ do |name|
-  visit auth_test_path(:name => name, :test_check => true)
+  # Adding info to google mock that is set in /breathe-cal/features/support/hooks.rb
+  # OmniAuth.config.add_mock(:google_oauth2, {:info => {:email=>"test@xxxx.com", :name=>name}})
+  visit auth_test_path(:name => name)
+  # visit auth_test_path(:name => name, :test_check => true)
+end
+
+Given /skip/ do
+  skip_this_scenario
 end
 
 Given /^(?:|I )am logged in as "([^"]*)"$/ do |name|
-  visit auth_test_path(:name => name, :test_check => true)
+  visit auth_test_path(:name => name)
 end 
 
+Then /^(?:|I )should see "([^"]*)" or "([^"]*)"$/ do |text1, text2|
+  if page.respond_to? :should
+    page.should have_content(text)
+  else
+    assert page.has_content?(text1) || page.has_content?(text2)
+  end
+end
