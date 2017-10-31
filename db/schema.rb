@@ -64,10 +64,7 @@ ActiveRecord::Schema.define(version: 20171026170753) do
     t.datetime "oauth_expires_at"
     t.string   "name"
     t.string   "searches"
-<<<<<<< HEAD
-=======
     t.string   "email"
->>>>>>> beadb4403dd6d5e03a6a452e42acb2f37c9f48c8
   end
 
 end
