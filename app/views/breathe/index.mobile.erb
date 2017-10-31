@@ -2,8 +2,8 @@
   <div data-toggle="modal" data-target="#myModal"><%= image_tag('bcal', :style => "width: 100px; float: left; margin-left: 5px; margin-top: 5px;") %></div>
     
     <ul class="navbar navbar-nav navbar-right" style="position: absolute; right: 30px; padding: 2px;">
-      <% if current_client %>
-        <strong><%=current_client.name %></strong>!
+      <% if current_user %>
+        <strong><%=current_user.name %></strong>!
         <%= link_to 'Sign Out', signout_path, id: "sign_out", class:"signout_link" %>
       <% else %>
         <%= link_to "Sign in with Google+", "/auth/google_oauth2", id: "sign_in" %>

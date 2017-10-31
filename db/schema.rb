@@ -25,23 +25,9 @@ ActiveRecord::Schema.define(version: 20171026170753) do
     t.string   "lat"
     t.string   "lng"
     t.integer  "user_id"
-    t.integer  "client_id"
   end
 
-  add_index "cities", ["client_id"], name: "index_cities_on_client_id"
   add_index "cities", ["user_id"], name: "index_cities_on_user_id"
-
-  create_table "clients", force: :cascade do |t|
-    t.string   "name"
-    t.string   "email"
-    t.text     "searches"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-    t.string   "provider"
-    t.string   "uid"
-    t.string   "oauth_token"
-    t.datetime "oauth_expires_at"
-  end
 
   create_table "markers", force: :cascade do |t|
     t.string   "lng"
@@ -78,6 +64,10 @@ ActiveRecord::Schema.define(version: 20171026170753) do
     t.datetime "oauth_expires_at"
     t.string   "name"
     t.string   "searches"
+<<<<<<< HEAD
+=======
+    t.string   "email"
+>>>>>>> beadb4403dd6d5e03a6a452e42acb2f37c9f48c8
   end
 
 end

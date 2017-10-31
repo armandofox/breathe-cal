@@ -7,7 +7,7 @@ Background:
   Given I successfully authenticated with Google as "James Jones"
   Then I should be on the landing page
   
-Scenario:
+Scenario: I should see my credentials on the user profile page
   
     
       
