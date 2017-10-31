@@ -109,7 +109,7 @@ jQuery.fn = jQuery.prototype = {
 	// Get the Nth element in the matched element set OR
 	// Get the whole matched element set as a clean array
 	get: function( num ) {
-		return num != null ?
+		return num !== null ?
 
 			// Return just the one element from the set
 			( num < 0 ? this[ num + this.length ] : this[ num ] ) :
@@ -203,7 +203,7 @@ jQuery.extend = jQuery.fn.extend = function() {
 	for ( ; i < length; i++ ) {
 
 		// Only deal with non-null/undefined values
-		if ( ( options = arguments[ i ] ) != null ) {
+		if ( ( options = arguments[ i ] ) !== null ) {
 
 			// Extend the base object
 			for ( name in options ) {
@@ -269,7 +269,7 @@ jQuery.extend( {
 
 	isWindow: function( obj ) {
 		/* jshint eqeqeq: false */
-		return obj != null && obj == obj.window;
+		return obj !== null && obj === obj.window;
 	},
 
 	isNumeric: function( obj ) {
@@ -330,7 +330,7 @@ jQuery.extend( {
 	},
 
 	type: function( obj ) {
-		if ( obj == null ) {
+		if ( obj === null ) {
 			return obj + "";
 		}
 		return typeof obj === "object" || typeof obj === "function" ?
@@ -385,7 +385,7 @@ jQuery.extend( {
 
 	// Support: Android<4.1, IE<9
 	trim: function( text ) {
-		return text == null ?
+		return text === null ?
 			"" :
 			( text + "" ).replace( rtrim, "" );
 	},
@@ -394,7 +394,7 @@ jQuery.extend( {
 	makeArray: function( arr, results ) {
 		var ret = results || [];
 
-		if ( arr != null ) {
+		if ( arr !== null ) {
 			if ( isArrayLike( Object( arr ) ) ) {
 				jQuery.merge( ret,
 					typeof arr === "string" ?
@@ -415,7 +415,6 @@ jQuery.extend( {
 			if ( indexOf ) {
 				return indexOf.call( arr, elem, i );
 			}
-
 			len = arr.length;
 			i = i ? i < 0 ? Math.max( 0, len + i ) : i : 0;
 
@@ -484,7 +483,7 @@ jQuery.extend( {
 			for ( ; i < length; i++ ) {
 				value = callback( elems[ i ], i, arg );
 
-				if ( value != null ) {
+				if ( value !== null ) {
 					ret.push( value );
 				}
 			}
