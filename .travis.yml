@@ -16,5 +16,6 @@ addons:
     repo_token: 41a1224e82b9ba47225786a59e5a3d986789d83f110549417a2e76cc86a98573
 after_success:
   - bundle exec codeclimate-test-reporter
+  - sed -i.backup 's/\.build\/ckeditor5\/[^\/]*/src/g' .build/coverage/lcov.info
 # uncomment and edit the following line if your project needs to run something other than `rake`:
 # script: bundle exec rspec spec
