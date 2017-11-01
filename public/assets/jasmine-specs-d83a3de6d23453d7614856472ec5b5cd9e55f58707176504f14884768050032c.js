@@ -11982,4 +11982,3 @@ function moveScroller() {
     move();
 }
 ;
-

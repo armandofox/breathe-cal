@@ -141,7 +141,8 @@ jQuery.extend = jQuery.fn.extend = function() {
 		if ( ( options = arguments[ i ] ) !== null ) {
 
 			// Extend the base object
-			for ( name in options ) {
+			for(var i = 0; i<options.length; i++) {
+				name = options[ i ];
 				src = target[ name ];
 				copy = options[ name ];
 
@@ -219,10 +220,7 @@ jQuery.extend( {
 
 	isEmptyObject: function( obj ) {
 		var name;
-		for ( name in obj ) {
-			return false;
-		}
-		return true;
+		return obj.length == 0;
 	},
 
 	isPlainObject: function( obj ) {
@@ -252,14 +250,14 @@ jQuery.extend( {
 		// Support: IE<9
 		// Handle iteration over inherited properties before own properties.
 		if ( !support.ownFirst ) {
-			for ( key in obj ) {
+			for (var i = 0; i<obj.length; i++) {
+				key = obj [ i ];
 				return hasOwn.call( obj, key );
 			}
 		}
 
 		// Own properties are enumerated firstly, so to speed up,
 		// if last one is own, then all properties are own.
-		for ( key in obj ) {}
 
 		return key === undefined || hasOwn.call( obj, key );
 	},
