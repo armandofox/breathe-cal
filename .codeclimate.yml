@@ -46,4 +46,6 @@ exclude_paths:
 - script/
 - spec/
 - vendor/
+- public/
+- app/assets/
 - app/helpers/breathe_helper.rb
