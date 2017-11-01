@@ -16,13 +16,6 @@
 (function( global, factory ) {
 
 	if ( typeof module === "object" && typeof module.exports === "object" ) {
-		// For CommonJS and CommonJS-like environments where a proper `window`
-		// is present, execute the factory and get jQuery.
-		// For environments that do not have a `window` with a `document`
-		// (such as Node.js), expose a factory as module.exports.
-		// This accentuates the need for the creation of a real `window`.
-		// e.g. var jQuery = require("jquery")(window);
-		// See ticket #14549 for more info.
 		module.exports = global.document ?
 			factory( global, true ) :
 			function( w ) {
@@ -35,115 +28,59 @@
 		factory( global );
 	}
 
-// Pass this if window is not defined yet
 }(typeof window !== "undefined" ? window : this, function( window, noGlobal ) {
 
-// Support: Firefox 18+
-// Can't be in strict mode, several libs including ASP.NET trace
-// the stack via arguments.caller.callee and Firefox dies if
-// you try to trace through "use strict" call chains. (#13335)
-//"use strict";
 var deletedIds = [];
-
 var document = window.document;
-
 var slice = deletedIds.slice;
-
 var concat = deletedIds.concat;
-
 var push = deletedIds.push;
-
 var indexOf = deletedIds.indexOf;
-
 var class2type = {};
-
 var toString = class2type.toString;
-
 var hasOwn = class2type.hasOwnProperty;
-
 var support = {};
 
+var	version = "1.12.4",
 
-
-var
-	version = "1.12.4",
-
-	// Define a local copy of jQuery
 	jQuery = function( selector, context ) {
-
-		// The jQuery object is actually just the init constructor 'enhanced'
-		// Need init if jQuery is called (just allow error to be thrown if not included)
 		return new jQuery.fn.init( selector, context );
 	},
-
-	// Support: Android<4.1, IE<9
-	// Make sure we trim BOM and NBSP
 	rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,
-
-	// Matches dashed string for camelizing
 	rmsPrefix = /^-ms-/,
 	rdashAlpha = /-([\da-z])/gi,
-
-	// Used by jQuery.camelCase as callback to replace()
 	fcamelCase = function( all, letter ) {
 		return letter.toUpperCase();
 	};
 
 jQuery.fn = jQuery.prototype = {
-
-	// The current version of jQuery being used
 	jquery: version,
-
 	constructor: jQuery,
-
-	// Start with an empty selector
 	selector: "",
-
-	// The default length of a jQuery object is 0
 	length: 0,
-
 	toArray: function() {
 		return slice.call( this );
 	},
-
-	// Get the Nth element in the matched element set OR
-	// Get the whole matched element set as a clean array
+	
 	get: function( num ) {
 		return num !== null ?
-
-			// Return just the one element from the set
 			( num < 0 ? this[ num + this.length ] : this[ num ] ) :
-
-			// Return all the elements in a clean array
 			slice.call( this );
 	},
-
-	// Take an array of elements and push it onto the stack
-	// (returning the new matched element set)
 	pushStack: function( elems ) {
-
-		// Build a new jQuery matched element set
 		var ret = jQuery.merge( this.constructor(), elems );
-
-		// Add the old object onto the stack (as a reference)
 		ret.prevObject = this;
 		ret.context = this.context;
-
-		// Return the newly-formed element set
 		return ret;
 	},
-
-	// Execute a callback for every element in the matched set.
 	each: function( callback ) {
 		return jQuery.each( this, callback );
 	},
-
 	map: function( callback ) {
 		return this.pushStack( jQuery.map( this, function( elem, i ) {
 			return callback.call( elem, i, elem );
 		} ) );
 	},
-
 	slice: function() {
 		return this.pushStack( slice.apply( this, arguments ) );
 	},
@@ -166,8 +103,6 @@ jQuery.fn = jQuery.prototype = {
 		return this.prevObject || this.constructor();
 	},
 
-	// For internal use only.
-	// Behaves like an Array's method, not like a jQuery method.
 	push: push,
 	sort: deletedIds.sort,
 	splice: deletedIds.splice
@@ -4211,8 +4146,6 @@ jQuery.fn.extend( {
 		return this.queue( type || "fx", [] );
 	},
 
-	// Get a promise resolved when queues of a certain type
-	// are emptied (fx is the type by default)
 	promise: function( type, obj ) {
 		var tmp,
 			count = 1,
@@ -4243,7 +4176,6 @@ jQuery.fn.extend( {
 	}
 } );
 
-
 ( function() {
 	var shrinkWrapBlocksVal;
 
@@ -4251,66 +4183,38 @@ jQuery.fn.extend( {
 		if ( shrinkWrapBlocksVal != null ) {
 			return shrinkWrapBlocksVal;
 		}
-
-		// Will be changed later if needed.
 		shrinkWrapBlocksVal = false;
-
-		// Minified: var b,c,d
 		var div, body, container;
-
 		body = document.getElementsByTagName( "body" )[ 0 ];
 		if ( !body || !body.style ) {
-
-			// Test fired too early or in an unsupported environment, exit.
 			return;
 		}
 
-		// Setup
 		div = document.createElement( "div" );
 		container = document.createElement( "div" );
 		container.style.cssText = "position:absolute;border:0;width:0;height:0;top:0;left:-9999px";
 		body.appendChild( container ).appendChild( div );
-
-		// Support: IE6
-		// Check if elements with layout shrink-wrap their children
 		if ( typeof div.style.zoom !== "undefined" ) {
-
-			// Reset CSS: box-sizing; display; margin; border
 			div.style.cssText =
-
-				// Support: Firefox<29, Android 2.3
-				// Vendor-prefix box-sizing
 				"-webkit-box-sizing:content-box;-moz-box-sizing:content-box;" +
 				"box-sizing:content-box;display:block;margin:0;border:0;" +
 				"padding:1px;width:1px;zoom:1";
 			div.appendChild( document.createElement( "div" ) ).style.width = "5px";
 			shrinkWrapBlocksVal = div.offsetWidth !== 3;
 		}
-
 		body.removeChild( container );
-
 		return shrinkWrapBlocksVal;
 	};
-
 } )();
 var pnum = ( /[+-]?(?:\d*\.|)\d+(?:[eE][+-]?\d+|)/ ).source;
-
 var rcssNum = new RegExp( "^(?:([+-])=|)(" + pnum + ")([a-z%]*)$", "i" );
-
-
 var cssExpand = [ "Top", "Right", "Bottom", "Left" ];
-
 var isHidden = function( elem, el ) {
-
-		// isHidden might be called from jQuery#filter function;
-		// in that case, element will be second argument
 		elem = el || elem;
 		return jQuery.css( elem, "display" ) === "none" ||
 			!jQuery.contains( elem.ownerDocument, elem );
 	};
-
-
-
+	
 function adjustCSS( elem, prop, valueParts, tween ) {
 	var adjusted,
 		scale = 1,
@@ -4320,43 +4224,24 @@ function adjustCSS( elem, prop, valueParts, tween ) {
 			function() { return jQuery.css( elem, prop, "" ); },
 		initial = currentValue(),
 		unit = valueParts && valueParts[ 3 ] || ( jQuery.cssNumber[ prop ] ? "" : "px" ),
-
-		// Starting value computation is required for potential unit mismatches
 		initialInUnit = ( jQuery.cssNumber[ prop ] || unit !== "px" && +initial ) &&
 			rcssNum.exec( jQuery.css( elem, prop ) );
 
 	if ( initialInUnit && initialInUnit[ 3 ] !== unit ) {
-
-		// Trust units reported by jQuery.css
 		unit = unit || initialInUnit[ 3 ];
-
-		// Make sure we update the tween properties later on
 		valueParts = valueParts || [];
-
-		// Iteratively approximate from a nonzero starting point
 		initialInUnit = +initial || 1;
-
 		do {
-
-			// If previous iteration zeroed out, double until we get *something*.
-			// Use string for doubling so we don't accidentally see scale as unchanged below
 			scale = scale || ".5";
-
-			// Adjust and apply
 			initialInUnit = initialInUnit / scale;
 			jQuery.style( elem, prop, initialInUnit + unit );
-
-		// Update scale, tolerating zero or NaN from tween.cur()
-		// Break the loop if scale is unchanged or perfect, or if we've just had enough.
 		} while (
 			scale !== ( scale = currentValue() / initial ) && scale !== 1 && --maxIterations
 		);
 	}
-
+	
 	if ( valueParts ) {
 		initialInUnit = +initialInUnit || +initial || 0;
-
-		// Apply relative offset (+=/-=) if specified
 		adjusted = valueParts[ 1 ] ?
 			initialInUnit + ( valueParts[ 1 ] + 1 ) * valueParts[ 2 ] :
 			+valueParts[ 2 ];
@@ -4369,37 +4254,24 @@ function adjustCSS( elem, prop, valueParts, tween ) {
 	return adjusted;
 }
 
-
-// Multifunctional method to get and set values of a collection
-// The value/s can optionally be executed if it's a function
 var access = function( elems, fn, key, value, chainable, emptyGet, raw ) {
 	var i = 0,
 		length = elems.length,
 		bulk = key == null;
-
-	// Sets many values
 	if ( jQuery.type( key ) === "object" ) {
 		chainable = true;
 		for ( i in key ) {
 			access( elems, fn, i, key[ i ], true, emptyGet, raw );
 		}
-
-	// Sets one value
 	} else if ( value !== undefined ) {
 		chainable = true;
-
 		if ( !jQuery.isFunction( value ) ) {
 			raw = true;
 		}
-
 		if ( bulk ) {
-
-			// Bulk operations run against the entire set
 			if ( raw ) {
 				fn.call( elems, value );
 				fn = null;
-
-			// ...except when executing function values
 			} else {
 				bulk = fn;
 				fn = function( elem, key, value ) {
@@ -4407,7 +4279,6 @@ var access = function( elems, fn, key, value, chainable, emptyGet, raw ) {
 				};
 			}
 		}
-
 		if ( fn ) {
 			for ( ; i < length; i++ ) {
 				fn(
@@ -4421,8 +4292,6 @@ var access = function( elems, fn, key, value, chainable, emptyGet, raw ) {
 
 	return chainable ?
 		elems :
-
-		// Gets
 		bulk ?
 			fn.call( elems ) :
 			length ? fn( elems[ 0 ], key ) : emptyGet;
@@ -4460,15 +4329,8 @@ function createSafeFragment( document ) {
 	var div = document.createElement( "div" ),
 		fragment = document.createDocumentFragment(),
 		input = document.createElement( "input" );
-
-	// Setup
 	div.innerHTML = "  <link/><table></table><a href='/a'>a</a><input type='checkbox'/>";
-
-	// IE strips leading whitespace when .innerHTML is used
 	support.leadingWhitespace = div.firstChild.nodeType === 3;
-
-	// Make sure that tbody elements aren't automatically inserted
-	// IE will insert them into empty tables
 	support.tbody = !div.getElementsByTagName( "tbody" ).length;
 
 	// Make sure that link elements get serialized correctly by innerHTML
