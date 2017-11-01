@@ -1,3 +1,46 @@
+
+
+
+Given(/^I touch the add marker CTA$/) do
+  find("#marker-cta").click
+end
+
+Given(/^I click on the map$/) do
+  page.find("#map").click # Write code here that turns the phrase above into concrete actions
+end
+
+Then(/^I should see "([^"]*)" when it loads$/) do |arg1|
+  wait_for_ajax
+  wait_until { page.has_content?(arg1)}
+  if page.respond_to? :should
+    page.should have_content(arg1)
+  else
+    assert page.has_content?(arg1)
+  end
+end
+
+
+def wait_until
+  require "timeout"
+  Timeout.timeout(Capybara.default_max_wait_time) do
+    sleep(0.1) until value = yield
+    value
+  end
+end
+
+def wait_for_ajax
+  Timeout.timeout(Capybara.default_max_wait_time) do
+    loop until finished_all_ajax_requests?
+  end
+end
+
+def finished_all_ajax_requests?
+    page.evaluate_script('jQuery.active').zero?
+end
+
+
+
+
 Given /^I am signed in$/ do
   # pending
 end
@@ -149,8 +192,68 @@ Given /^that I press X on city “.*?”$/ do |arg1|
   # pending
 end
 
+Then(/^I should see a "map"$/) do
+  assert page.find("#map")
+end
+
+Then(/^I should see an "search box" in the map$/) do
+  assert page.find("#pac-input")
+end
+
+Then(/^I should see the right toolbar with the text "([^"]*)"$/) do |arg1|
+  assert_equal(page.find("#pac-input").text, arg1)
+end
+
+When(/^I should see a "(.+)"$/) do |image|
+  page.should have_xpath("//img[contains(@src, \"#{image.split('-')[0]}\")]")
+end
 
 
+When(/^I should see a "date"$/) do
+  
+end
+
+Given(/^I have searched for "([^"]*)"$/) do |arg1|
+  pending # Write code here that turns the phrase above into concrete actions
+end
+
+When(/^I should see a "(.+)"$/) do |image|
+  page.should have_xpath("//img[contains(@src, \"#{image.split('-')[0]}\")]")
+end
+
+And(/^I should see an icon "(.+)"$/) do |image|
+  page.should have_xpath("//img[contains(@src, \"#{image.split('-')[0]}\")]")
+end
 
 
+And(/^I should see a weather icon inside/) do 
+  page.should have_xpath("//img[contains(@src, \"#{"-s".split('-')[0]}\")]")
+end
 
+And(/^I should see the weather section/) do 
+  page.should have_css('div#weather-box')
+end
+
+And(/^I should see the greeting section/) do 
+  page.should have_css('div#fox-box')
+end
+
+And(/^I should see the alert section/) do 
+  page.should have_css('div#fox-box')
+end
+
+And(/^I should see the date/) do 
+  page.should have_css('div.datetime-box')
+end
+
+Then(/^I should see a map$/) do
+  page.evaluate_script('map') 
+end
+
+Then /^(?:|I )should see the text on the side "([^"]*)"$/ do |text|
+  if page.respond_to? :should
+    page.should have_content(text)
+  else
+    assert page.has_content?(text)
+  end
+end
