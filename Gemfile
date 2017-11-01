@@ -33,7 +33,7 @@ gem 'geocoder'
 gem 'gmaps4rails'
 gem 'phantomjs', '1.9.8'
 gem 'poltergeist'
-gem 'selenium-webdriver'
+gem 'selenium-webdriver', '>=3.0'
 
 gem 'omniauth-facebook'
 
@@ -52,10 +52,10 @@ group :development, :test do
   gem 'sqlite3'
   gem 'byebug'
   gem 'jasmine-rails' # if you plan to use JavaScript/CoffeeScript
+  gem 'rspec-rails'
 end
 # setup Cucumber, RSpec, Guard support
 group :test do
-  gem 'rspec-rails'
   gem 'guard-rspec'
   gem 'simplecov', :require => false
   gem 'cucumber-rails', :require => false

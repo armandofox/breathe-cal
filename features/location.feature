@@ -6,15 +6,15 @@ Feature: Locations
     
 Background: 
 
-@javascript
-Scenario: I should be able to open the page on a desktop understand the purpose of the page 
-    Given I am on the landing page
-	Then I should see a map
-	And I should see the date 
-	And I should see the greeting section
-	And I should see the text on the side "Hello guest! find important allergy information here!"
-	And I should see the text on the side "Today is"
-	And I should see an icon "bcal"
+# @javascript
+# Scenario: I should be able to open the page on a desktop understand the purpose of the page 
+#     Given I am on the landing page
+# 	Then I should see a map
+# 	And I should see the date 
+# 	And I should see the greeting section
+# 	And I should see the text on the side "Hello guest! find important allergy information here!"
+# 	And I should see the text on the side "Today is"
+# 	And I should see an icon "bcal"
 
 	
 @javascript

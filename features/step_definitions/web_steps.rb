@@ -356,10 +356,15 @@ Then(/^I should see a map$/) do
 end
 
 Then /^(?:|I )should see the text on the side "([^"]*)"$/ do |text|
-  if page.respond_to? :should
-    page.should have_content(text)
-  else
-    assert page.has_content?(text)
-  end
+  print(text)
+  expect(page).to have_content(text)
 end
+
+# Then /^(?:|I )should see the text on the side "([^"]*)"$/ do |text|
+#   if page.respond_to? :should
+#     page.should have_content(text)
+#   else
+#     assert page.has_content?(text)
+#   end
+# end
 

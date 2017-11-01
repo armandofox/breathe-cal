@@ -4,7 +4,8 @@ RSpec.describe City, type: :model do
   describe "city#get_location_key" do
   
     it "gets the location key" do 
-      expect(City.get_loc_key("37.8716", "-122.2727", "Berkeley")).to eq "332044"
+      # byebug
+      expect(City.get_loc_key("37.8716", "-122.2727", "Berkeley")).to eq("332044")
     end
     
     
