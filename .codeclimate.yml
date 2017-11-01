@@ -48,4 +48,3 @@ exclude_paths:
 - vendor/
 - public/
 - app/assets/
-- app/helpers/breathe_helper.rb
