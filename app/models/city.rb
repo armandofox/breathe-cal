@@ -17,7 +17,7 @@ class City < ActiveRecord::Base
       url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/#{location_key}"
       query = {apikey: City.get_accuweather_key(), language:"en-us", details: "true"}
       response = City.get_resonse(HTTParty.get(url, query: query), url, query)
-      puts response
+      # puts response
       self.update_attribute("daily_data" , response)
     end
   end
