@@ -3,7 +3,8 @@ Feature: user profile
   in order to personalize my experience with the application, 
   I should be able to see and modify my user profile.
   
-Background:
+Background: 
+  Given We skip this scenario: PLEASE IMPLEMENT ME
   Given I successfully authenticated with Google as "James Jones"
   Then I should be on the landing page
   

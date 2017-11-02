@@ -39,7 +39,9 @@ def finished_all_ajax_requests?
 end
 
 
-
+Given /skip/ do
+  skip_this_scenario
+end
 
 Given /^I am signed in$/ do
   # pending

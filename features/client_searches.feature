@@ -3,6 +3,9 @@ Feature: client searches
   in order to know what cities I have recently searched for, 
   I should see the last 5 cities I searched for at the bottom of the sidebar on the landing page.
 
+Background: 
+    Given We skip this scenario: PLEASE IMPLEMENT ME
+
 @javascript   
 Scenario: I should see a blank search history before having searched for anything
     Given I am on the landing page
