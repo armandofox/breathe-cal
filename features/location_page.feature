@@ -4,6 +4,9 @@ Feature: Locations
     I need to be able to see nearby locations, 
     search for a location, and add locations as favorites. 
 
+Background: 
+    Given We skip this scenario: PLEASE IMPLEMENT ME
+
 @javascript
 Scenario: Searching for a location  
     Given I am on the landing page

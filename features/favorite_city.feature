@@ -4,6 +4,9 @@ Feature: Favorite Locations
     I need to be able to favorite locations,
     and access information for them by clicking on a button
 
+Background: 
+    Given We skip this scenario: PLEASE IMPLEMENT ME
+
 #happy path, favoriting a city 
 @javascript 
 Scenario: Once I sign in, I should be able to favorite cities 

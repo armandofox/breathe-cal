@@ -3,6 +3,7 @@ Feature: Locations Details
       the allergen and what each level actually stands for.    
       
 Background: 
+    Given We skip this scenario: PLEASE IMPLEMENT ME
 
 @javascript
 Scenario: I should be able to click on an allergen and key main points about allergen
