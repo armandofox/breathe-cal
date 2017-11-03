@@ -152,10 +152,6 @@ Then /^I should see information about “.*?”$/ do |arg1|
   # pending
 end
 
-Then /^I should not see “.*?”$/ do |arg1|
-  # pending
-end
-
 Then /^I should see “.*?”$/ do |arg1|
   # pending
 end
