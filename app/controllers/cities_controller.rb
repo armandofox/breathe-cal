@@ -41,6 +41,7 @@ class CitiesController < ApplicationController
       @data = [city.name, city.daily_data]
       unless a_in_b_as_c?(city.name, session[:cities], "name")
         if (@quality.nil?)
+          puts city.daily_data.nil?
           @quality = city.daily_data["DailyForecasts"][0]["AirAndPollen"][0]["Category"]
         end
         session[:cities] << { "name" => city.name, "quality" => @quality }

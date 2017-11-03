@@ -143,8 +143,9 @@ Then /^(?:|I )should see "([^\"]*)"$/ do |text|
   if defined?(Spec::Rails::Matchers)
     response.should contain(text)
   else
-    assert_contain text
+    assert page.has_content?(text)
   end
+  
 end
 
 Then /^(?:|I )should see "([^\"]*)" within "([^\"]*)"$/ do |text, selector|
@@ -259,3 +260,10 @@ end
 Then /^show me the page$/ do
   save_and_open_page
 end
+
+When(/^my location is set to "([^"]*)"$/) do |place| 
+  find('#pac-input').set(place)
+  find('#pac-input').native.send_keys(:Enter)
+end
+
+
