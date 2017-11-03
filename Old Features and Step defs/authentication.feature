@@ -3,12 +3,9 @@ Feature: authentication
     in order to personalize my experience with the application, 
     I should be able to create/sign-in to my personal account
 
-<<<<<<< HEAD
-=======
 Background: 
   Given We skip this scenario: PLEASE IMPLEMENT ME
 
->>>>>>> moved old feature files to Old Features and Step Defs folder
 Scenario: I should see a google plus sign-in icon on the landing page
   Given I am on the landing page
   Then I should see the text on the side "Sign in with Google+"
