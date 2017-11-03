@@ -74,7 +74,7 @@ class CitiesController < ApplicationController
     
     def display_favorite_cities
       @text = "Favorite Cities"
-      if session[:client_id]
+      if session[:user_id]
         @cities = session[:favorites]
       if @cities == nil || @cities.empty? 
           @no_cities = "You currently have no favorite cities!"
@@ -88,13 +88,12 @@ class CitiesController < ApplicationController
           render :template => "cities/city_data_back.js.erb"
         }
         end
-      end
-
+    end
 
     def favorite_city
       city = City.find_by(name: params[:name])
-      if session[:client_id]
-        client = Client.find_by(id: session[:client_id])
+      if session[:user_id]
+        user = User.find_by(id: session[:user_id])
         if (@quality.nil?)
           @quality = city.daily_data["DailyForecasts"][0]["AirAndPollen"][0]["Category"]
         end
@@ -105,14 +104,14 @@ class CitiesController < ApplicationController
             session[:favorites].each do |favorite_city| 
                 if favorite_city['name'] == params[:name]
                   session[:favorites].delete(favorite_city)
-                  client.cities.delete(city)
+                  user.cities.delete(city)
                 end
             end
             flash.now[:notice] = "Removed " + params[:name] + " from your favorite cities!"
           else
             unless a_in_b_as_c?(city.name, session[:favorites], "name")
               session[:favorites] << { "name" => city.name, "quality" => @quality }
-              client.cities << city
+              user.cities << city
               flash.now[:notice] = "Added " + params[:name] + " to your favorite cities!"
             else
               flash.now[:notice] = params[:name] + " is already one of your favorite cities!"
@@ -121,7 +120,7 @@ class CitiesController < ApplicationController
         else
           session[:favorites] = []
           session[:favorites] << { "name" => city.name, "quality" => @quality }
-          client.cities << city
+          user.cities << city
           flash.now[:notice] = "Added " + params[:name] + " to your favorite cities!"
         end
       else
@@ -135,8 +134,7 @@ class CitiesController < ApplicationController
         }
         end
     end
-      
-
+    
     
     def create
       # if params[:city]
