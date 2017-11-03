@@ -40,6 +40,11 @@ class SessionsController < ApplicationController
     end      
     render :json => data
   end
+  
+  def auth_failure
+    flash[:auth_failure] = params[:message] 
+    redirect_to root_path
+  end
 
   protected
 

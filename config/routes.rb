@@ -17,7 +17,7 @@ Rails.application.routes.draw do
 
   get 'authentication_test' => "sessions#create_dummy", as: 'auth_test'
 
-  get 'auth/failure', to: redirect('/')
+  get 'auth/failure' => "sessions#auth_failure", as: 'auth_failure'
 
   get 'signout', to: 'sessions#destroy', as: 'signout'
 

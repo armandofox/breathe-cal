@@ -12,6 +12,9 @@ Scenario: If I click on the google plus icon I should
   # Given I am on the landing page
   # When I follow "Sign in with Google+"
   # Then I should be taken to the google authentication page
+  
+Scenario: If I input invalid google credentials I should be taken to the homepage with an error message
+  Given I skip this and save it for later
 
 Scenario: If I input legitimate google credentials I should be taken to the homepage as a user
   Given I successfully authenticated with Google as "James Jones"
@@ -27,4 +30,6 @@ Scenario: As a logged in user I should be able to logout when I press the sign o
   Then I should be on the landing page
   And I should not see "James Jones"
   And I should see the text on the side "Sign in with Google+"
+  
+
   
