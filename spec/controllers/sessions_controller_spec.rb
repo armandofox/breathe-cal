@@ -11,6 +11,7 @@ RSpec.describe SessionsController, type: :controller do
         context "crateing dummy user" do
             it "create" do
                 post :create_dummy
+                # expect(assigns(:current_user)).to eq("test user")
             end
         end
         context "text check is false" do 

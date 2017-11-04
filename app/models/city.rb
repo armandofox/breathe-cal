@@ -5,8 +5,14 @@ class City < ActiveRecord::Base
   def self.get_accuweather_key()
     Rails.application.secrets.WEATHER_KEY
   end
+<<<<<<< HEAD
 
   def self.get_resonse(resp, _url, _query)
+=======
+  
+  def self.get_resonse(resp, _url, _query)
+    # JS: I found args url and query unused so added in _ to improve test coverage
+>>>>>>> fixed a few tests + maintain
     return resp
   end
   
