@@ -57,7 +57,6 @@ When /^(?:|I )follow "([^"]*)"$/ do |link|
   click_link(link)
 end
 
-<<<<<<< HEAD
 # TODO Implement method to follow cache'd data
 When /^(?:|I )follow a recently searched link: "([^\"]*)"$/ do |name|
   visit(cached_city_data_path(:name => name))
@@ -68,9 +67,6 @@ When /^(?:|I )follow "([^\"]*)" within "([^\"]*)"$/ do |link, parent|
 end
 
 When /^(?:|I )fill in "([^\"]*)" with "([^\"]*)"$/ do |field, value|
-=======
-When /^(?:|I )fill in "([^"]*)" with "([^"]*)"$/ do |field, value|
->>>>>>> master
   fill_in(field, :with => value)
 end
 
@@ -115,11 +111,13 @@ When /^(?:|I )attach the file "([^"]*)" to "([^"]*)"$/ do |path, field|
   attach_file(field, File.expand_path(path))
 end
 
-Then /^(?:|I )should see "([^"]*)"$/ do |text|
+Then /^(?:|I )should see "(.*)"$/ do |text|
   if page.respond_to? :should
-    page.should have_content(text)
+    page.should have_xpath('//*', :text => text)
+    # page.html.should have_content(text)
   else
-    assert page.has_content?(text)
+    assert page.has_xpath?('//*', :text => regexp)
+    # assert page.html.has_content?(text)
   end
 end
 
@@ -133,13 +131,13 @@ Then /^(?:|I )should see "([^\"]*)" within "([^\"]*)"$/ do |text, selector|
   end
 end
 
-# Then /^(?:|I )should not see "([^"]*)"$/ do |text|
-#   if page.respond_to? :should
-#     page.should have_no_content(text)
-#   else
-#     assert page.has_no_content?(text)
-#   end
-# end
+Then /^(?:|I )should not see "([^"]*)"$/ do |text|
+  if page.respond_to? :should
+    page.should have_no_content(text)
+  else
+    assert page.has_no_content?(text)
+  end
+end
 
 # Then /^(?:|I )should see \/([^\/]*)\/$/ do |regexp|
 #   regexp = Regexp.new(regexp)
@@ -284,21 +282,3 @@ Then /^show me the page$/ do
   save_and_open_page
 end
 
-When(/^my location is set to "([^"]*)"$/) do |place| 
-  puts place
-  find('#pac-input').set(place)
-  find('#pac-input').native.send_keys(:Enter)
-end
-
-
-Given /^I visit multiple locations:(.*)$/ do |cities|
-  city_list = cities.split(',')
-  city_list.each do |city|
-    find('#pac-input').set(city)
-    find('#pac-input').native.send_keys(:Enter)
-  end
-end
-
-Then /I should see the details of "(.*)"/ do |city_name|
-  pending
-end

@@ -14,8 +14,8 @@ class City < ActiveRecord::Base
     if self.daily_data.nil?
       return false
     end
-    val = self.daily_data[:Code]
-    if val.nil?
+    val = self.daily_data.key?("Code")
+    if !val
       return true
     end
     return false

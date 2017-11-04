@@ -4,6 +4,29 @@
 #   end
 # end
 
+When /^my location is set to "(.*)"$/ do |place| 
+  find('#pac-input').set(place)
+  find('#pac-input').native.send_keys(:Enter)
+end
+
+
+And /^I visit multiple locations:(.*)$/ do |cities|
+  city_list = cities.split(',')
+  city_list.each do |city|
+    steps %Q{When my location is set to "#{city}"}
+  end
+end
+
+Then /I should see the details of "(.*)"/ do |city_name|
+  pending
+end
+
+Then /I expect to see "(.*)" before "(.*)"/ do |e1, e2|
+  #  ensure that that e1 occurs before e2.
+  #  page.body is the entire content of the page as a string.
+  expect(page.body.index(e1) < page.body.index(e2))
+end
+
 Given(/^I touch the add marker CTA$/) do
   find("#marker-cta").click
 end
@@ -12,7 +35,7 @@ Given(/^I click on the map$/) do
   page.find("#map").click # Write code here that turns the phrase above into concrete actions
 end
 
-Then(/^I should see "([^"]*)" when it loads$/) do |arg1|
+Then(/^I should see "([^"]*)", when it loads$/) do |arg1|
   wait_for_ajax
   wait_until { page.has_content?(arg1)}
   if page.respond_to? :should
@@ -42,10 +65,9 @@ def finished_all_ajax_requests?
 end
 
 
-And /I should see "(.*)" above "(.*)"$/ do |city1, city2|
+Then /I should see "(.*)" above "(.*)"$/ do |city1, city2|
   #  ensure that that city1 occurs before city2.
   #  page.body is the entire content of the page as a string.
-  #fail "Unimplemented"
   expect page.body.match ("^.*#{city1}.*#{city2}")
 end
 
