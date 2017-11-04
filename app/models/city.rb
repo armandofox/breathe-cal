@@ -12,7 +12,7 @@ class City < ActiveRecord::Base
   
   def has_valid_data
     if self.daily_data.nil?
-      return true
+      return false
     end
     val = self.daily_data[:Code]
     if val.nil?
@@ -31,7 +31,6 @@ class City < ActiveRecord::Base
       # puts response
       self.update_attribute("daily_data" , response)
     end
-    puts self.daily_data
   end
   
   def self.get_loc_key(lat,lng, name)

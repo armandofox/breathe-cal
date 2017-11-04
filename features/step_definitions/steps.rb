@@ -1,5 +1,8 @@
-
-
+# Given /database is loaded with dummy cities/ do |cities_table|
+#   cities_table.hashes.each do |city|
+#     Movie.create movie
+#   end
+# end
 
 Given(/^I touch the add marker CTA$/) do
   find("#marker-cta").click
@@ -37,9 +40,6 @@ end
 def finished_all_ajax_requests?
     page.evaluate_script('jQuery.active').zero?
 end
-
-
-
 
 Given /^I am signed in$/ do
   # pending
@@ -161,13 +161,6 @@ And /^ user is on the “.*?” details page $/ do
   # pending
 end
 
-
-
-
-
-
-
-
 And /^that the cities that have been added: "(.*?)", "(.*?)", "(.*?)"$/ do |arg1, arg2, arg3|
   # pending
 end
@@ -250,10 +243,3 @@ Then(/^I should see a map$/) do
   page.evaluate_script('map') 
 end
 
-Then /^(?:|I )should see the text on the side "([^"]*)"$/ do |text|
-  if page.respond_to? :should
-    page.should have_content(text)
-  else
-    assert page.has_content?(text)
-  end
-end
