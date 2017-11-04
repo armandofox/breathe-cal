@@ -3,8 +3,11 @@ Feature: Spare the Air Alert System
   in order to receive emergency alert notifications for the Bay Area    
   I should see an alert box at the top of the application's home page 
 
+Background: 
+    Given We skip this scenario: PLEASE IMPLEMENT ME
+
 @javascript   
 Scenario: I should see alerts for San Francisco
     Given I am on the landing page
     Then I should see "Today's Air Alerts for the San Francisco Bay Area:"
-    And I should see "No Alert"
+    And I should see "No Alert" or "Alert In Effect"

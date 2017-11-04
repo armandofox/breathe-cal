@@ -5,11 +5,11 @@ class ApplicationController < ActionController::Base
   
   before_filter :prepare_for_mobile
   
-  helper_method :current_client
+  helper_method :current_user
 
   
-  def current_client
-    @current_client ||= Client.find_by_id(session[:client_id]) if session[:client_id]
+  def current_user
+    @current_user ||= User.find_by_id(session[:user_id]) if session[:user_id]
   end
 
   private

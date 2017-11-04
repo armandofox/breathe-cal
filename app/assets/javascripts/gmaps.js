@@ -140,7 +140,7 @@ function initAutocomplete() {
         data: JSON.stringify({geo: place.geometry.location, name: place.name}),
         success: function(data){
           $("#city-info").text(JSON.stringify(data));
-          console.log("hello");
+          console.log(place.name);
         }
       });
       

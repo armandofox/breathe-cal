@@ -4,6 +4,7 @@ Feature: crowd sourcing
   I should be able to place a marker on the map that provides information about a place.
 
 Background:
+  Given We skip this scenario: PLEASE IMPLEMENT ME
   Given I am on the landing page
 
 @javascript  

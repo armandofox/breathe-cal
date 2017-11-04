@@ -1,16 +1,17 @@
 class CitiesController < ApplicationController
     
     skip_before_action :verify_authenticity_token
-
     
     def index
     end
     
     def new
     end
-  
+    
+    # Start storing city data and send city data to be rendered. 
     def cached_city_data
       city = City.find_by(name: params[:name])
+      # Calls AccuWeather API
       city.update_city_data
       @geo = [city.lat, city.lng]
       @data = [city.name, city.daily_data]
@@ -22,6 +23,7 @@ class CitiesController < ApplicationController
       end
     end
     
+    # Boolean method to check if a city is in b. Helper method.
     def a_in_b_as_c?(a, b, c) # a in b as c
       b.each do |i|
         if i[c] == a
@@ -31,6 +33,7 @@ class CitiesController < ApplicationController
       return false
     end
     
+    # Making a cookie to store all data of cities being searched.
     def city_data
       if params[:geo]
         latlng = params[:geo]
@@ -54,12 +57,18 @@ class CitiesController < ApplicationController
       # render :json => city.daily_data.to_json
     end
     
+    # Cookie for recently searched cities. Shows at most 5 city.
     def city_data_back
       @text = "Recent Searches"
       if session[:cities]
+        # Trim the list of cities. Max length of the list is 5.
         if session[:cities].length > 5
           session[:cities] = session[:cities][session[:cities].length - 5, session[:cities].length - 1]
         end 
+        # Used for debugging, prints all 5 city names to server.
+        #session[:cities].each do |city|
+          #puts city
+        #end 
         @cities = session[:cities].reverse
       else
         @cities = []
@@ -72,6 +81,7 @@ class CitiesController < ApplicationController
       end      
     end
     
+    # Display favorite cities.
     def display_favorite_cities
       @text = "Favorite Cities"
       if session[:client_id]
@@ -88,9 +98,9 @@ class CitiesController < ApplicationController
           render :template => "cities/city_data_back.js.erb"
         }
         end
-      end
+    end
 
-
+    # same as recent searched cities, create cookie for favorite city.
     def favorite_city
       city = City.find_by(name: params[:name])
       if session[:client_id]
@@ -135,8 +145,7 @@ class CitiesController < ApplicationController
         }
         end
     end
-      
-
+    
     
     def create
       # if params[:city]
@@ -152,7 +161,7 @@ class CitiesController < ApplicationController
       end
     end
   
-  
+    # Add all city forecasts to the cookie.(that's the reason why the cookie is big)
     def show
       @city = City.find(params[:id])
       @city.update_city_data
@@ -166,5 +175,4 @@ class CitiesController < ApplicationController
       d5 = forecasts[4]["AirAndPollen"]
       @forecasts = [d1,d2,d3,d4,d5]
     end
-  
 end
