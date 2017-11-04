@@ -3,6 +3,7 @@ Feature: Locations Details
     I want to see the Breathe California Logo
       
 Background: 
+    Given We skip this scenario: PLEASE IMPLEMENT ME
 
 @javascript
 Scenario: I should be able to see the lung logo when searching for a city's allergn 

@@ -13,7 +13,7 @@ after_script:
 
 addons:
   code_climate:
-    repo_token: 41a1224e82b9ba47225786a59e5a3d986789d83f110549417a2e76cc86a98573
+    repo_token: c5a16a919b9c5caf2ec3895fff4c147560f9033941bf408eaf33a818ca273fcb
 after_success:
   - bundle exec codeclimate-test-reporter
   - sed -i.backup 's/\.build\/ckeditor5\/[^\/]*/src/g' .build/coverage/lcov.info

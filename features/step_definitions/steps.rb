@@ -41,6 +41,14 @@ def finished_all_ajax_requests?
     page.evaluate_script('jQuery.active').zero?
 end
 
+
+And /I should see "(.*)" above "(.*)"$/ do |city1, city2|
+  #  ensure that that city1 occurs before city2.
+  #  page.body is the entire content of the page as a string.
+  #fail "Unimplemented"
+  expect page.body.match ("^.*#{city1}.*#{city2}")
+end
+
 Given /^I am signed in$/ do
   # pending
 end
@@ -74,10 +82,6 @@ Then /^I should see city ".*?"$/ do |arg1|
 end
 
 Then /^I should see information about “.*?”$/ do |arg1|
-  # pending
-end
-
-Then /^I should not see “.*?”$/ do |arg1|
   # pending
 end
 
@@ -242,4 +246,5 @@ end
 Then(/^I should see a map$/) do
   page.evaluate_script('map') 
 end
+
 
