@@ -1,16 +1,17 @@
 class CitiesController < ApplicationController
     
     skip_before_action :verify_authenticity_token
-
     
     def index
     end
     
     def new
     end
-  
+    
+    # Start storing city data and send city data to be rendered. 
     def cached_city_data
       city = City.find_by(name: params[:name])
+      # Calls AccuWeather API
       city.update_city_data
       @geo = [city.lat, city.lng]
       @data = [city.name, city.daily_data]
@@ -22,6 +23,7 @@ class CitiesController < ApplicationController
       end
     end
     
+    # Boolean method to check if a city is in b. Helper method.
     def a_in_b_as_c?(a, b, c) # a in b as c
       b.each do |i|
         if i[c] == a
@@ -31,6 +33,7 @@ class CitiesController < ApplicationController
       return false
     end
     
+    # Making a cookie to store all data of cities being searched.
     def city_data
       if params[:geo]
         latlng = params[:geo]
@@ -54,12 +57,18 @@ class CitiesController < ApplicationController
       # render :json => city.daily_data.to_json
     end
     
+    # Cookie for recently searched cities. Shows at most 5 city.
     def city_data_back
       @text = "Recent Searches"
       if session[:cities]
+        # Trim the list of cities. Max length of the list is 5.
         if session[:cities].length > 5
           session[:cities] = session[:cities][session[:cities].length - 5, session[:cities].length - 1]
         end 
+        # Used for debugging, prints all 5 city names to server.
+        #session[:cities].each do |city|
+          #puts city
+        #end 
         @cities = session[:cities].reverse
       else
         @cities = []
@@ -72,9 +81,10 @@ class CitiesController < ApplicationController
       end      
     end
     
+    # Display favorite cities.
     def display_favorite_cities
       @text = "Favorite Cities"
-      if session[:user_id]
+      if session[:client_id]
         @cities = session[:favorites]
       if @cities == nil || @cities.empty? 
           @no_cities = "You currently have no favorite cities!"
@@ -90,10 +100,11 @@ class CitiesController < ApplicationController
         end
     end
 
+    # same as recent searched cities, create cookie for favorite city.
     def favorite_city
       city = City.find_by(name: params[:name])
-      if session[:user_id]
-        user = User.find_by(id: session[:user_id])
+      if session[:client_id]
+        client = Client.find_by(id: session[:client_id])
         if (@quality.nil?)
           @quality = city.daily_data["DailyForecasts"][0]["AirAndPollen"][0]["Category"]
         end
@@ -104,14 +115,14 @@ class CitiesController < ApplicationController
             session[:favorites].each do |favorite_city| 
                 if favorite_city['name'] == params[:name]
                   session[:favorites].delete(favorite_city)
-                  user.cities.delete(city)
+                  client.cities.delete(city)
                 end
             end
             flash.now[:notice] = "Removed " + params[:name] + " from your favorite cities!"
           else
             unless a_in_b_as_c?(city.name, session[:favorites], "name")
               session[:favorites] << { "name" => city.name, "quality" => @quality }
-              user.cities << city
+              client.cities << city
               flash.now[:notice] = "Added " + params[:name] + " to your favorite cities!"
             else
               flash.now[:notice] = params[:name] + " is already one of your favorite cities!"
@@ -120,7 +131,7 @@ class CitiesController < ApplicationController
         else
           session[:favorites] = []
           session[:favorites] << { "name" => city.name, "quality" => @quality }
-          user.cities << city
+          client.cities << city
           flash.now[:notice] = "Added " + params[:name] + " to your favorite cities!"
         end
       else
@@ -150,7 +161,7 @@ class CitiesController < ApplicationController
       end
     end
   
-  
+    # Add all city forecasts to the cookie.(that's the reason why the cookie is big)
     def show
       @city = City.find(params[:id])
       @city.update_city_data
