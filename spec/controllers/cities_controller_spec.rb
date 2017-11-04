@@ -19,6 +19,15 @@ RSpec.describe CitiesController, type: :controller do
             it 'when a user searches for a city' do
                # attempt to query city
                # post map_search 
+               lat = "37.8716"
+               lng = "-122.2727"
+               post :map_search, {:lat => lat, :lng => lng}
+               expect(response.status).to eq(200)
+               
+               new_lat = "32.2332"
+               new_lng = "-42.3231"
+               post :map_search, {:lat => new_lat, :lng => new_lng}
+               expect(response.status).to eq(201)
                
                # create one if doesn't exist.
                 # ensure :name, :lat, :lng, :location_key
@@ -28,6 +37,10 @@ RSpec.describe CitiesController, type: :controller do
             end
             
             it 'when a user searches for a city, he/she has searched before' do
+               lat = "37.8716"
+               lng = "-122.2727"
+               post :map_search, {:lat => lat, :lng => lng}
+               expect(response.status).to eq(200)
                # ensure City object is valid, find by geo location
                 # valid_data
                 # get city_data {city_id}
