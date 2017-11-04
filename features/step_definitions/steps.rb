@@ -1,5 +1,31 @@
+# Given /database is loaded with dummy cities/ do |cities_table|
+#   cities_table.hashes.each do |city|
+#     Movie.create movie
+#   end
+# end
+
+When /^my location is set to "(.*)"$/ do |place| 
+  find('#pac-input').set(place)
+  find('#pac-input').native.send_keys(:Enter)
+end
 
 
+And /^I visit multiple locations:(.*)$/ do |cities|
+  city_list = cities.split(',')
+  city_list.each do |city|
+    steps %Q{When my location is set to "#{city}"}
+  end
+end
+
+Then /I should see the details of "(.*)"/ do |city_name|
+  pending
+end
+
+Then /I expect to see "(.*)" before "(.*)"/ do |e1, e2|
+  #  ensure that that e1 occurs before e2.
+  #  page.body is the entire content of the page as a string.
+  expect(page.body.index(e1) < page.body.index(e2))
+end
 
 Given(/^I touch the add marker CTA$/) do
   find("#marker-cta").click
@@ -9,7 +35,7 @@ Given(/^I click on the map$/) do
   page.find("#map").click # Write code here that turns the phrase above into concrete actions
 end
 
-Then(/^I should see "([^"]*)" when it loads$/) do |arg1|
+Then(/^I should see "([^"]*)", when it loads$/) do |arg1|
   wait_for_ajax
   wait_until { page.has_content?(arg1)}
   if page.respond_to? :should
@@ -38,82 +64,11 @@ def finished_all_ajax_requests?
     page.evaluate_script('jQuery.active').zero?
 end
 
-Given /the following clients exist/ do |users_table|
-  # users_table.hashes.each do |user|
-  #   # each returned element will be a hash whose key is the table header.
-  #   # you should arrange to add that movie to the database here.
-  # # Client.create!(user)
-  # # end
-  # fail "Unimplemented"
-  #pending
-end
 
-Given /I as "(.*)" have searched for "(.*)"$/ do |user, city|
-    #we will implement this model method later
-    User.addToUser(user, city)
-end
-
-And /I should see "(.*)" above "(.*)"$/ do |city1, city2|
+Then /I should see "(.*)" above "(.*)"$/ do |city1, city2|
   #  ensure that that city1 occurs before city2.
   #  page.body is the entire content of the page as a string.
-  #fail "Unimplemented"
   expect page.body.match ("^.*#{city1}.*#{city2}")
-end
-
-# Then /I should see an empty search history/ do
-#     #pending
-# end 
-
-Then /I should be on the user homepage/ do
-  #pending
-end
-
-Given /I am on the sign_in page/ do
-  #pending
-end 
-
-Given /I am on the sign_up page/ do
-  #pending
-end 
-
-Then /I print the page/ do
-  print page.html
-end
-
-Then /^(?:|I )should see the button "([^"]*)"$/ do |text|
-  #pending
-end
-
-
-Then /^(?:|I )should see the link "([^"]*)"$/ do |link|
-  find_link(link).visible?
-end
-
-When /^(?:|I )press the icon "([^"]*)"$/ do |icon|
-  find('img.gmail_icon').click
-end
-
-Given /^(?:|I )successfully authenticated with Google as "([^"]*)"$/ do |name|
-  # Adding info to google mock that is set in /breathe-cal/features/support/hooks.rb
-  # OmniAuth.config.add_mock(:google_oauth2, {:info => {:email=>"test@xxxx.com", :name=>name}})
-  visit auth_test_path(:name => name)
-  # visit auth_test_path(:name => name, :test_check => true)
-end
-
-Given /skip/ do
-  skip_this_scenario
-end
-
-Given /^(?:|I )am logged in as "([^"]*)"$/ do |name|
-  visit auth_test_path(:name => name)
-end 
-
-Then /^(?:|I )should see "([^"]*)" or "([^"]*)"$/ do |text1, text2|
-  if page.respond_to? :should
-    page.should have_content(text)
-  else
-    assert page.has_content?(text1) || page.has_content?(text2)
-  end
 end
 
 Given /^I am signed in$/ do
@@ -232,13 +187,6 @@ And /^ user is on the “.*?” details page $/ do
   # pending
 end
 
-
-
-
-
-
-
-
 And /^that the cities that have been added: "(.*?)", "(.*?)", "(.*?)"$/ do |arg1, arg2, arg3|
   # pending
 end
@@ -321,32 +269,4 @@ Then(/^I should see a map$/) do
   page.evaluate_script('map') 
 end
 
-Then /^(?:|I )should see the text on the side "([^"]*)"$/ do |text|
-  if page.respond_to? :should
-    page.should have_content(text)
-  else
-    assert page.has_content?(text)
-  end
-end
 
-And(/^my location is set to "([^"]*)"$/) do |place| 
-  find('#pac-input').set(place)
-  find('#pac-input').native.send_keys(:Enter)
-end
-
-Given(/^I press on the text "([^"]*)"$/) do |arg1|
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-And(/^(?:I expect a Google map to load|the map has been loaded)$/) do  
-  page.evaluate_script('map') 
-end  
-
-Then(/^the center of the map should be approximately "([^"]*)"$/) do |place|  
-  find('#fox-box').has_text?(place)
-end  
-
-
-Then(/^the center of the map should not be approximately "([^"]*)"$/) do |place|  
-  not find('#fox-box').has_text?(place)
-end  

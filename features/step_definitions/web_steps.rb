@@ -57,7 +57,16 @@ When /^(?:|I )follow "([^"]*)"$/ do |link|
   click_link(link)
 end
 
-When /^(?:|I )fill in "([^"]*)" with "([^"]*)"$/ do |field, value|
+# TODO Implement method to follow cache'd data
+When /^(?:|I )follow a recently searched link: "([^\"]*)"$/ do |name|
+  visit(cached_city_data_path(:name => name))
+end
+
+When /^(?:|I )follow "([^\"]*)" within "([^\"]*)"$/ do |link, parent|
+  click_link_within(parent, link)
+end
+
+When /^(?:|I )fill in "([^\"]*)" with "([^\"]*)"$/ do |field, value|
   fill_in(field, :with => value)
 end
 
@@ -102,21 +111,23 @@ When /^(?:|I )attach the file "([^"]*)" to "([^"]*)"$/ do |path, field|
   attach_file(field, File.expand_path(path))
 end
 
-Then /^(?:|I )should see "([^"]*)"$/ do |text|
+Then /^(?:|I )should see "(.*)"$/ do |text|
   if page.respond_to? :should
-    page.should have_content(text)
+    page.should have_xpath('//*', :text => text)
+    # page.html.should have_content(text)
   else
-    assert page.has_content?(text)
+    assert page.has_xpath?('//*', :text => regexp)
+    # assert page.html.has_content?(text)
   end
 end
 
-Then /^(?:|I )should see \/([^\/]*)\/$/ do |regexp|
-  regexp = Regexp.new(regexp)
-
-  if page.respond_to? :should
-    page.should have_xpath('//*', :text => regexp)
-  else
-    assert page.has_xpath?('//*', :text => regexp)
+Then /^(?:|I )should see "([^\"]*)" within "([^\"]*)"$/ do |text, selector|
+  within(selector) do |content|
+    if defined?(Spec::Rails::Matchers)
+      content.should contain(text)
+    else
+      assert content.include?(text)
+    end
   end
 end
 
@@ -127,6 +138,24 @@ Then /^(?:|I )should not see "([^"]*)"$/ do |text|
     assert page.has_no_content?(text)
   end
 end
+
+# Then /^(?:|I )should see \/([^\/]*)\/$/ do |regexp|
+#   regexp = Regexp.new(regexp)
+
+#   if page.respond_to? :should
+#     page.should have_xpath('//*', :text => regexp)
+#   else
+#     assert page.has_xpath?('//*', :text => regexp)
+#   end
+# end
+
+# Then /^(?:|I )should not see "([^"]*)"$/ do |text|
+#   if page.respond_to? :should
+#     page.should have_no_content(text)
+#   else
+#     assert page.has_no_content?(text)
+#   end
+# end
 
 Then /^(?:|I )should not see \/([^\/]*)\/$/ do |regexp|
   regexp = Regexp.new(regexp)
@@ -252,3 +281,4 @@ end
 Then /^show me the page$/ do
   save_and_open_page
 end
+
