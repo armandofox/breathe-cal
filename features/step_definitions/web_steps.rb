@@ -55,6 +55,7 @@ end
 
 When /^(?:|I )follow "([^"]*)"$/ do |link|
   click_link(link)
+  wait_for_ajax
 end
 
 # TODO Implement method to follow cache'd data

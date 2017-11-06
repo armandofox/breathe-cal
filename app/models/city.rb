@@ -5,8 +5,8 @@ class City < ActiveRecord::Base
   def self.get_accuweather_key()
     Rails.application.secrets.WEATHER_KEY
   end
-  
-  def self.get_resonse(resp, url, query)
+
+  def self.get_resonse(resp, _url, _query)
     return resp
   end
   
