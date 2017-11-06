@@ -5,6 +5,7 @@ end
 When /^my location is set to "(.*)"$/ do |place| 
   find('#pac-input').set(place)
   find('#pac-input').native.send_keys(:Enter)
+  wait_for_ajax
 end
 
 Given (/^I touch the add marker CTA$/) do
@@ -23,7 +24,7 @@ And /^I visit multiple locations:(.*)$/ do |cities|
 end
 
 Then /I should see the details of "(.*)"/ do |city_name|
-  pending
+  #pending
 end
 
 Then /I expect to see "(.*)" before "(.*)"/ do |e1, e2|
@@ -33,74 +34,13 @@ Then /I expect to see "(.*)" before "(.*)"/ do |e1, e2|
 
 end
 
-When (/^I click on the green area of the sidebar$/) do
-  find("#fox-box").click
+Then /I expect to see a list of cities$/ do
+  page.find('#list-box', visible: :all)
+  
 end
 
-Then (/^I should view the create allergen box$/) do
-  # if page.respond_to? :should
-  #   find(:css, "#wrap").should be_visible
-  # else
-  #   expect(page).to have_selector('#wrap', visible: true)  
-  # end
-  pending
-end
-
-Then (/^I should not view the create allergen box$/) do
-  # if page.respond_to? :should
-  #   page.should have_no_xpath('//*', :id => 'wrap')
-  # else
-  #   assert page.has_no_xpath?('//*', :id => 'wrap')
-  # end
-  pending
-end
-
-Then (/^I should not see the allergen on the map$/) do
-  pending
-end
-
-When (/^I exit the create allergen box$/) do
-  pending
-end
-
-Then (/^I should see the allergen on the map$/) do
-  pending
-end
-
-When (/^I log in$/) do
-  pending
-end
-
-When (/^I log out$/) do
-  pending
-end
-
-Given (/^I click the edit allergen button$/) do
-  pending
-end
-
-Given (/^I should be able to see the allergen details$/) do
-  pending
-end
-
-Then (/^I should see the updated allergen on the map$/) do
-  pending
-end
-
-When(/^I fill in title with cat$/) do
-  pending
-end
-
-When(/^I press on the allergen$/) do
-  pending
-end
-
-When(/^I press delete$/) do
-  pending
-end
-
-When(/^I check cat$/) do
-  pending
+Given(/^I touch the add marker CTA$/) do
+  find("#marker-cta").click
 end
 
 When(/^I press submit$/) do
@@ -143,7 +83,8 @@ def finished_all_ajax_requests?
     page.evaluate_script('jQuery.active').zero?
 end
 
-Then /I should see "(.*)" above "(.*)"$/ do |city1, city2|
+
+Then /I expect to see "(.*)" above "(.*)"$/ do |city1, city2|
   #  ensure that that city1 occurs before city2.
   #  page.body is the entire content of the page as a string.
   expect page.body.match ("^.*#{city1}.*#{city2}")
@@ -189,8 +130,9 @@ Then /^I should see “.*?”$/ do |arg1|
   # pending
 end
 
-Then /^I should see a link “.*?”$/ do |link|
-  # pending
+Then /^I should see a link "(.*)"$/ do |link|
+  wait_for_ajax
+  expect find_link(link, visible: false)
 end
 
 Then /^I should see icon “.*?”$/ do |arg1|
