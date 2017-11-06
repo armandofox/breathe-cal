@@ -7,6 +7,7 @@
 When /^my location is set to "(.*)"$/ do |place| 
   find('#pac-input').set(place)
   find('#pac-input').native.send_keys(:Enter)
+  wait_for_ajax
 end
 
 
@@ -18,13 +19,18 @@ And /^I visit multiple locations:(.*)$/ do |cities|
 end
 
 Then /I should see the details of "(.*)"/ do |city_name|
-  pending
+  #pending
 end
 
 Then /I expect to see "(.*)" before "(.*)"/ do |e1, e2|
   #  ensure that that e1 occurs before e2.
   #  page.body is the entire content of the page as a string.
   expect(page.body.index(e1) < page.body.index(e2))
+end
+
+Then /I expect to see a list of cities$/ do
+  page.find('#list-box', visible: :all)
+  
 end
 
 Given(/^I touch the add marker CTA$/) do
@@ -65,7 +71,7 @@ def finished_all_ajax_requests?
 end
 
 
-Then /I should see "(.*)" above "(.*)"$/ do |city1, city2|
+Then /I expect to see "(.*)" above "(.*)"$/ do |city1, city2|
   #  ensure that that city1 occurs before city2.
   #  page.body is the entire content of the page as a string.
   expect page.body.match ("^.*#{city1}.*#{city2}")
@@ -111,8 +117,9 @@ Then /^I should see “.*?”$/ do |arg1|
   # pending
 end
 
-Then /^I should see a link “.*?”$/ do |link|
-  # pending
+Then /^I should see a link "(.*)"$/ do |link|
+  wait_for_ajax
+  expect find_link(link, visible: false)
 end
 
 Then /^I should see icon “.*?”$/ do |arg1|
