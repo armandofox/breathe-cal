@@ -64,10 +64,9 @@ Scenario: Having searched for more than 5 cities I should only see the last 5 on
     And I follow "Back"
     Then I expect to see a list of cities
     And I go to the landing page
-    Then I should see a link "Albany"
+    Then I should see "Albany"
     Then I should see "Oakland"
     Then I should see "Richmond"
     Then I should see "San Jose"
     Then I should see "Los Angeles"
     Then I should not see "Berkeley"
-    
