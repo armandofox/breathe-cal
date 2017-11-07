@@ -12,7 +12,4 @@ class Marker < ActiveRecord::Base
     return between
     # markers = Marker.where("lng < (?) AND lat < (?) AND lng > (?) AND lat > (?) ", right, top, left, bottom)
   end
-      
-  
-  
 end
