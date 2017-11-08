@@ -84,5 +84,3 @@ Scenario: Having searched for more than 5 cities I should only see the last 5 on
     Then I should see "San Jose"
     Then I should see "Los Angeles"
     Then I should not see "Berkeley"
-
-    
