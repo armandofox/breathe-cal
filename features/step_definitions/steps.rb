@@ -4,8 +4,14 @@ end
 
 When /^my location is set to "(.*)"$/ do |place| 
   find('#pac-input').set(place)
+<<<<<<< HEAD
   find('#pac-input').native.send_keys(:Enter)
   wait_for_ajax
+=======
+  find('#pac-input').send_keys(:Enter)
+  wait_for_ajax
+  Capybara.ignore_hidden_elements = false
+>>>>>>> ignore jquery animations
 end
 
 Given (/^I touch the add marker CTA$/) do
@@ -56,7 +62,6 @@ end
 
 Then(/^I should see "([^"]*)" when it loads$/) do |arg1|
   wait_for_ajax
-  wait_until { page.has_content?(arg1)}
   if page.respond_to? :should
     page.should have_content(arg1)
   else
