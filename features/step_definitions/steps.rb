@@ -4,9 +4,20 @@ end
 
 When /^my location is set to "(.*)"$/ do |place| 
   find('#pac-input').set(place)
+<<<<<<< HEAD
   find('#pac-input').send_keys(:Enter)
   wait_for_ajax
   Capybara.ignore_hidden_elements = false
+=======
+<<<<<<< HEAD
+  find('#pac-input').native.send_keys(:Enter)
+  wait_for_ajax
+=======
+  find('#pac-input').send_keys(:Enter)
+  wait_for_ajax
+  Capybara.ignore_hidden_elements = false
+>>>>>>> ignore jquery animations
+>>>>>>> fixing merges
 end
 
 Given (/^I touch the add marker CTA$/) do
