@@ -269,4 +269,13 @@ Then(/^I should see a map$/) do
   page.evaluate_script('map') 
 end
 
+Given /^(?:|I )successfully authenticated with Google as "([^"]*)"$/ do |name|
+  # Adding info to google mock that is set in /breathe-cal/features/support/hooks.rb
+  # OmniAuth.config.add_mock(:google_oauth2, {:info => {:email=>"test@xxxx.com", :name=>name}})
+  visit auth_test_path(:name => name)
+  # visit auth_test_path(:name => name, :test_check => true)
+end
 
+Given /^(?:|I )fail to login$/ do 
+  visit auth_failure_path(:message => "Failed to Login")
+end

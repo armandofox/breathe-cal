@@ -42,7 +42,7 @@ class SessionsController < ApplicationController
   end
   
   def auth_failure
-    flash[:auth_failure] = params[:message] 
+    flash[:auth_failure] = params[:message] || "Failed to Login"
     redirect_to root_path
   end
 

@@ -6,33 +6,31 @@ Feature: authentication
 # Background: 
 #   Given We skip this scenario: PLEASE IMPLEMENT ME
 
-Scenario: I should see a google plus sign-in icon on the landing page
+Scenario: See option to login with Google
   Given I am on the landing page
   Then I should see "Sign in with Google+"
-
-Scenario: If I click on the google plus icon I should  
-  Given we shall skip this test because Capybara cannot access HTTP resources outside the rack application
-  # Given I am on the landing page
-  # When I follow "Sign in with Google+"
-  # Then I should be taken to the google authentication page
   
-Scenario: If I input invalid google credentials I should be taken to the homepage with an error message
-  Given I skip this and save it for later
-
-Scenario: If I input legitimate google credentials I should be taken to the homepage as a user
+Scenario: Login with Google
   Given I successfully authenticated with Google as "James Jones"
   Then I should be on the landing page
-  And I should see the text on the side "James Jones"
+  And I should see "James Jones"
   And I should not see "Some Guy"
-  And I should see the button "Sign Out"
+  And I should not see "Sign in with Google+"
+  And I should see "Sign Out"
   
-Scenario: As a logged in user I should be able to logout when I press the sign out link
-  Given I am logged in as "James Jones"
+Scenario: Logout
+  Given I successfully authenticated with Google as "James Jones"
   And I am on the landing page
   When I follow "Sign Out"
   Then I should be on the landing page
   And I should not see "James Jones"
-  And I should see the text on the side "Sign in with Google+"
+  And I should see "Sign in with Google+"
+  
+Scenario: Login Failure
+  Given I fail to login
+  Then I should be on the landing page
+  And I should see "Failed to Login"
+  And I should see "Sign in with Google+"
   
 
   
