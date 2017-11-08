@@ -48,7 +48,6 @@ Scenario: Having searched for cities, I should retain my recent searches even if
     #And I follow a recently searched link: "Berkeley" 
     #And I follow "Back"
 
-
     Then I should see a link "Albany"
     Then I should see "Oakland"
     Then I should see "Richmond"
@@ -74,4 +73,3 @@ Scenario: Having searched for more than 5 cities I should only see the last 5 on
     And my location is set to "Los Angeles"
     And I follow "Back"
     Then I expect to see a list of cities
-    And I go to the landing page

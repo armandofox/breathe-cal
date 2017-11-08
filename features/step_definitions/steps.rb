@@ -4,13 +4,6 @@ end
 
 When /^my location is set to "(.*)"$/ do |place| 
   find('#pac-input').set(place)
-  Capybara.ignore_hidden_elements = false
-  find('#pac-input').send_keys(:Enter)
-  wait_for_ajax
-end
-
-Given (/^I touch the add marker CTA$/) do
-  find("#marker-cta").click
   find('#pac-input').send_keys(:Enter)
   wait_for_ajax
   Capybara.ignore_hidden_elements = false
