@@ -23,7 +23,6 @@ Scenario: Having searched for a city I should see it displayed on the page
     Then I should not see "Boston"
     # When I follow a recently searched link: "Kansas City"
     # Then I should see the details of "Berkeley"
-    
 
 @javascript   
 Scenario: Having searched for two cities I should see the most recent one on top
@@ -54,7 +53,6 @@ Scenario: Having searched for more than 5 cities I should only see the last 5 on
     And I follow "Back"
     Then I expect to see a list of cities
     And I go to the landing page
-
     Then I should see "Albany"
     Then I should see "Oakland"
     Then I should see "Richmond"
