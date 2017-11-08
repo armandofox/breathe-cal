@@ -5,7 +5,10 @@
 # end
 
 When /^my location is set to "(.*)"$/ do |place| 
-  find('#pac-input').send_keys(:Enter)
+  fill_in 'pac-input', with: place
+
+  #find('#pac-input').set(place)
+  find('#pac-input').native.send_keys(:Enter)
   wait_for_ajax
   Capybara.ignore_hidden_elements = false
 # ignore jquery animations
@@ -15,7 +18,9 @@ end
 And /^I visit multiple locations:(.*)$/ do |cities|
   city_list = cities.split(',')
   city_list.each do |city|
+    puts city
     steps %Q{When my location is set to "#{city}"}
+    steps %Q{When I press "Back"}
   end
 end
 
