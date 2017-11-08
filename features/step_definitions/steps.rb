@@ -5,6 +5,7 @@
 # end
 
 When /^my location is set to "(.*)"$/ do |place| 
+  find('#pac-input').set(place)
   find('#pac-input').send_keys(:Enter)
   wait_for_ajax
   Capybara.ignore_hidden_elements = false
