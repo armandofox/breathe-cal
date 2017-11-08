@@ -3,12 +3,12 @@ Feature: authentication
     in order to personalize my experience with the application, 
     I should be able to create/sign-in to my personal account
 
-Background: 
-  Given We skip this scenario: PLEASE IMPLEMENT ME
+# Background: 
+#   Given We skip this scenario: PLEASE IMPLEMENT ME
 
 Scenario: I should see a google plus sign-in icon on the landing page
   Given I am on the landing page
-  Then I should see the text on the side "Sign in with Google+"
+  Then I should see "Sign in with Google+"
 
 Scenario: If I click on the google plus icon I should  
   Given we shall skip this test because Capybara cannot access HTTP resources outside the rack application
