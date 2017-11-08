@@ -21,8 +21,8 @@ Scenario: Having searched for a city I should see it displayed on the page
     Then I should see "Kansas City"
     Then I should not see "Vancouver"
     Then I should not see "Boston"
-    #When I follow a recently searched link: "Kansas City"
-    #Then I should see the details of "Berkeley"
+    # When I follow a recently searched link: "Kansas City"
+    # Then I should see the details of "Berkeley"
     
 
 @javascript   
@@ -47,6 +47,7 @@ Scenario: Having searched for cities, I should retain my recent searches even if
     #And I follow a recently searched link: "Berkeley" 
     #And I follow "Back"
 
+<<<<<<< HEAD
 @javascript    
 Scenario: Having searched for more than 5 cities I should only see the last 5 ones displayed
     Given I go to the landing page
@@ -60,6 +61,25 @@ Scenario: Having searched for more than 5 cities I should only see the last 5 on
     # Then I should see "San Jose"
     # Then I should see "Los Angeles"
     # Then I should not see "Berkeley"
+=======
+# @javascript    
+# Scenario: Having searched for more than 5 cities I should only see the last 5 ones displayed
+#     Given I go to the landing page
+#     And I visit multiple locations: Berkeley, Albany, Oakland, Richmond, San Jose, Los Angeles
+#     And my location is set to "Berkeley"
+#     And my location is set to "Albany"
+#     And my location is set to "Oakland"
+#     And my location is set to "Richmond"
+#     And my location is set to "San Jose"
+#     And my location is set to "Los Angeles"
+#     And I follow "Back"
+#     Then I should see "Recent Searches"
+#     Then I should see "Oakland"
+#     Then I should see "Richmond"
+#     Then I should see "San Jose"
+#     Then I should see "Los Angeles"
+#     Then I should not see "Berkeley"
+>>>>>>> ignore jquery animations
     
     
 # @javascript    
