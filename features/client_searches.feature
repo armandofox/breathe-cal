@@ -8,10 +8,10 @@ Feature: client searches
 # issues with capybara testing + asynchronous javascript
 
 
-@javascript   
-Scenario: I should see a blank search history before having searched for anything
-    Given I am on the landing page
-    Then I should see "No recent searches"
+# @javascript   
+# Scenario: I should see a blank search history before having searched for anything
+#     Given I am on the landing page
+#     Then I should see "No recent searches"
 
 @javascript   
 Scenario: Having searched for a city I should see it displayed on the page
@@ -63,21 +63,8 @@ Scenario: Having searched for cities, I should retain my recent searches even if
 @javascript    
 Scenario: Having searched for more than 5 cities I should only see the last 5 ones displayed
     Given I go to the landing page
-    #And I visit multiple locations: Berkeley, Albany, Oakland, Richmond, San Jose, Los Angeles
-    And my location is set to "Berkeley"
-    And I follow "Back"
-    And my location is set to "Albany"
-    And I follow "Back"
-    And my location is set to "Oakland"
-    And I follow "Back"
-    And my location is set to "Richmond"
-    And I follow "Back"
-    And my location is set to "San Jose"
-    And I follow "Back"
-    And my location is set to "Los Angeles"
-    And I follow "Back"
+    And I visit multiple locations: Berkeley, Albany, Oakland, Richmond, San Jose, Los Angeles
     Then I expect to see a list of cities
-    And I go to the landing page
     Then I should see "Albany"
     Then I should see "Oakland"
     Then I should see "Richmond"
