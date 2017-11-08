@@ -54,8 +54,8 @@ When /^(?:|I )press "([^"]*)"$/ do |button|
 end
 
 When /^(?:|I )follow "([^"]*)"$/ do |link|
-  # wait_for_ajax
-  # puts page.html
+  wait_for_ajax
+  Capybara.ignore_hidden_elements = false
   click_link(link)
   wait_for_ajax
 end

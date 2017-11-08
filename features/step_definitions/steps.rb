@@ -37,7 +37,9 @@ Then /I expect to see a list of cities$/ do
 end
 
 Then /I expect to see a list of cities$/ do
-  page.find('#list-box', visible: :all)
+  wait_for_ajax
+  list_box = page.find('#list-box', visible: :all)
+  puts list_box.text
 end
 
 Given(/^I touch the add marker CTA$/) do
@@ -131,8 +133,14 @@ Then /^I should see “.*?”$/ do |arg1|
 end
 
 Then /^I should see a link "(.*)"$/ do |link|
+  Capybara.ignore_hidden_elements = false
   wait_for_ajax
   expect find_link(link, visible: false)
+end
+
+Then /^I should not see a link "(.*)"$/ do |link|
+  wait_for_ajax
+  assert !find_link(link, visible: false)
 end
 
 Then /^I should see icon “.*?”$/ do |arg1|
