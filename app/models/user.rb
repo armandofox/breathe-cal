@@ -8,12 +8,13 @@ class User < ActiveRecord::Base
     def self.find_or_create_from_auth_hash(auth)
        user = find_by(provider: auth[:provider], uid: auth[:uid])
        if user
-           user.update_attributes({provider: auth[:provider], 
-               uid: auth[:uid],
-               name: auth[:info][:name],
-               email: auth[:info][:email],
-               oauth_token: auth[:credentials][:token],
-               oauth_expires_at: Time.at(auth[:credentials][:expires_at])})
+            user.assign_attributes(provider: auth[:provider], 
+                uid: auth[:uid],
+                name: auth[:info][:name],
+                email: auth[:info][:email],
+                oauth_token: auth[:credentials][:token],
+                oauth_expires_at: Time.at(auth[:credentials][:expires_at]))
+            user.save
        else
            create_user_from_omniauth(auth)
        end
