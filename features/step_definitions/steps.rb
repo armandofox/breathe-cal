@@ -269,13 +269,23 @@ Then(/^I should see a map$/) do
   page.evaluate_script('map') 
 end
 
+# TESTS THAT USE THIS STEP DEF MUST TAG SCENARIO WITH '@omniauth_google_login' set in /breathe-cal/features/support/hooks.rb
 Given /^(?:|I )successfully authenticated with Google as "([^"]*)"$/ do |name|
-  # Adding info to google mock that is set in /breathe-cal/features/support/hooks.rb
-  # OmniAuth.config.add_mock(:google_oauth2, {:info => {:email=>"test@xxxx.com", :name=>name}})
-  visit auth_test_path(:name => name)
+  @user_hash[:info][:name] = name
+  OmniAuth.config.add_mock(:google_oauth2, @user_hash)
+  steps %Q{
+    Given I am on the landing page
+    Then I follow "Sign in with Google+"
+  }
+  # visit auth_test_path(:info => {:name=>name})
   # visit auth_test_path(:name => name, :test_check => true)
 end
 
+# TESTS THAT USE THIS STEP DEF MUST TAG SCENARIO WITH '@omniauth_google_login' set in /breathe-cal/features/support/hooks.rb
 Given /^(?:|I )fail to login$/ do 
-  visit auth_failure_path(:message => "Failed to Login")
+  OmniAuth.config.mock_auth[:google_oauth2] = :Invalid_Credentials
+  steps %Q{
+    Given I am on the landing page
+    Then I follow "Sign in with Google+"
+  }
 end
