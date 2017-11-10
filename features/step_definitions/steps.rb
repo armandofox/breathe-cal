@@ -28,6 +28,10 @@ And /^I visit multiple locations:(.*)$/ do |cities|
   end
 end
 
+And /^I wait for page to load/ do
+  wait_for_ajax
+end
+
 Then /I should see the details of "(.*)"/ do |city_name|
   #pending
 end
@@ -129,12 +133,11 @@ end
 
 Then /^I should see a link "(.*)"$/ do |link|
   Capybara.ignore_hidden_elements = false
-  wait_for_ajax
   expect find_link(link, visible: false)
 end
 
 Then /^I should not see a link "(.*)"$/ do |link|
-  wait_for_ajax
+  Capybara.ignore_hidden_elements = false
   assert !find_link(link, visible: false)
 end
 

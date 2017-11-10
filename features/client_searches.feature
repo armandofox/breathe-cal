@@ -65,6 +65,7 @@ Scenario: Having searched for more than 5 cities I should only see the last 5 on
     And I follow "Back"
     And my location is set to "Los Angeles"
     And I follow "Back"
+    And I wait for page to load
     Then I expect to see a list of cities
 <<<<<<< HEAD
     And I go to the landing page
@@ -80,7 +81,7 @@ Scenario: Having searched for more than 5 cities I should only see the last 5 on
     Then I should see a link "Richmond"
     Then I should see a link "San jose"
     Then I should see a link "Los angeles"
-    Then I should not see "Berkeley"
+    Then I should not see a link "Berkeley"
     #Then I should not see a link "Berkeley"
     
     ## issue - capitalizing San Jose and Los Angeles in Then-statements causes issues with rendering
