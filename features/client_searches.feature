@@ -8,10 +8,10 @@ Feature: client searches
 # issues with capybara testing + asynchronous javascript
 
 
-# @javascript   
-# Scenario: I should see a blank search history before having searched for anything
-#     Given I am on the landing page
-#     Then I should see "No recent searches"
+@javascript   
+Scenario: I should see a blank search history before having searched for anything
+    Given I am on the landing page
+    Then I should see "No recent searches"
 
 @javascript   
 Scenario: Having searched for a city I should see it displayed on the page
@@ -71,3 +71,13 @@ Scenario: Having searched for more than 5 cities I should only see the last 5 on
     Then I should see "San Jose"
     Then I should see "Los Angeles"
     Then I should not see "Berkeley"
+    And I wait for page to load
+    Then I expect to see a list of cities
+    And I go to the landing page
+
+    Then I should see a link "Albany"
+    Then I should see a link "Oakland"
+    Then I should see a link "Richmond"
+    Then I should see a link "San jose"
+    Then I should see a link "Los angeles"
+    Then I should not see a link "Berkeley"
