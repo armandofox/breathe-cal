@@ -37,7 +37,7 @@ RSpec.describe CitiesController, type: :controller do
         describe 'favorite_cities' do
             context 'the user is signed in' do
                 before :each do
-                    @user =  User.new(name: 'Joseph Brodsky', provider: 'google_oauth2', oauth_token: 'some_token', oauth_expires_at: 'July 1 2017')
+                    @user =  User.new(name: 'Joseph Brodsky', provider: 'google_oauth2', oauth_token: 'some_token', oauth_expires_at: 'July 1 2017', email: "test@xxxx.com", uid: 101)
                     @user.save!
                 end 
                 
