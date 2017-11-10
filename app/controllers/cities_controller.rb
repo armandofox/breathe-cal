@@ -8,6 +8,14 @@ class CitiesController < ApplicationController
     def new
     end
     
+    def map_search
+      # route for map
+      # obtains a City object from our database
+      # creates a City object if it does not exist
+      
+      # reroute to city_data with city:id as parameter
+    end
+    
     # Start storing city data and send city data to be rendered. 
     def cached_city_data
       city = City.find_by(name: params[:name])
@@ -35,17 +43,28 @@ class CitiesController < ApplicationController
     
     # Making a cookie to store all data of cities being searched.
     def city_data
+      # TODO
+      # should expect city:id
+      # prepare city's accuweather data for rendering
+      
+      ## TODO -- REMOVE {
       if params[:geo]
         latlng = params[:geo]
         loc_key = City.get_loc_key(latlng["lat"], latlng["lng"], params[:name])
         city = City.find_by(location_key: loc_key)
       end
       city.update_city_data
+      ## TODO -- REMOVE }
+      
+      # City.find(params[:id])
       @data = [city.name, city.daily_data]
       unless a_in_b_as_c?(city.name, session[:cities], "name")
         if (@quality.nil?)
           @quality = city.daily_data["DailyForecasts"][0]["AirAndPollen"][0]["Category"]
         end
+        # possibly add city:id 
+        # -> secure route for when use follows recently_searched/fav_loc -> city_data
+        # ensures cities have been created <--> doesn't lazily rely on name
         session[:cities] << { "name" => city.name, "quality" => @quality }
       end
     
