@@ -120,8 +120,9 @@ function initAutocomplete() {
 
 
     var bounds = new google.maps.LatLngBounds();
-    places.forEach(function(place) {
-      if (!place.geometry) {
+    // place = google's best reccommended city
+    place = places[0];
+    if (!place.geometry) {
         console.log("Returned place contains no geometry");
         return;
       }
@@ -157,7 +158,6 @@ function initAutocomplete() {
       else {
         bounds.extend(place.geometry.location);
       }
-    });
     map.fitBounds(bounds);
     fetchMarkers();
   });
