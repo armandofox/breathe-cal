@@ -2,12 +2,9 @@ require 'rails_helper'
 
 RSpec.describe SessionsController, type: :controller do
     
+    # for documentation on OmniAuth Test mode visit https://github.com/omniauth/omniauth/wiki/Integration-Testing
     before :each do
-        # @current_client = Factory :user_id
         OmniAuth.config.test_mode = true
-        OmniAuth.config.on_failure = Proc.new { |env|
-            OmniAuth::FailureEndpoint.new(env).redirect_to_failure
-        }
         @user_hash = {
             provider: 'google_oauth2', 
             uid: 101,
