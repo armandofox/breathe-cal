@@ -3,8 +3,8 @@ Feature: authentication
     in order to personalize my experience with the application, 
     I should be able to create/sign-in to my personal account
 
-# Background: 
-#   Given We skip this scenario: PLEASE IMPLEMENT ME
+# '@omniauth_google_login' set in /breathe-cal/features/support/hooks.rb
+
 @omniauth_google_login
 Scenario: See option to login with Google
   Given I am on the landing page

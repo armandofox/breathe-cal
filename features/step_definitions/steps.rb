@@ -269,7 +269,12 @@ Then(/^I should see a map$/) do
   page.evaluate_script('map') 
 end
 
-# TESTS THAT USE THIS STEP DEF MUST TAG SCENARIO WITH '@omniauth_google_login' set in /breathe-cal/features/support/hooks.rb
+#-------------------------------------------------------------------------------
+# OMNIAUTH TESTING : https://github.com/omniauth/omniauth/wiki/Integration-Testing
+#-------------------------------------------------------------------------------
+
+# Scenario should be tagged with '@omniauth_google_login' set in /breathe-cal/features/support/hooks.rb
+# Logs in user using @user hash with name set to |name|
 Given /^(?:|I )successfully authenticated with Google as "([^"]*)"$/ do |name|
   @user_hash[:info][:name] = name
   OmniAuth.config.add_mock(:google_oauth2, @user_hash)
@@ -277,11 +282,10 @@ Given /^(?:|I )successfully authenticated with Google as "([^"]*)"$/ do |name|
     Given I am on the landing page
     Then I follow "Sign in with Google+"
   }
-  # visit auth_test_path(:info => {:name=>name})
-  # visit auth_test_path(:name => name, :test_check => true)
 end
 
-# TESTS THAT USE THIS STEP DEF MUST TAG SCENARIO WITH '@omniauth_google_login' set in /breathe-cal/features/support/hooks.rb
+# Scenario should be tagged with '@omniauth_google_login' set in /breathe-cal/features/support/hooks.rb
+# Causes login to be redirected to auth/failure with message "Invalid_Credentials"
 Given /^(?:|I )fail to login$/ do 
   OmniAuth.config.mock_auth[:google_oauth2] = :Invalid_Credentials
   steps %Q{
