@@ -43,6 +43,7 @@ class CitiesController < ApplicationController
         loc_key = City.get_loc_key(latlng["lat"], latlng["lng"], params[:name])
         city = City.find_by(location_key: loc_key)
       end
+
       city.update_city_data
 
       @data = [city.name, city.daily_data]
@@ -52,6 +53,9 @@ class CitiesController < ApplicationController
         end
 
         session[:cities] << { "name" => city.name, "quality" => @quality }
+        #puts city.name
+        # trim session[:cities] here
+        # ensure that 5 >= session[:cities].length >= 0 
       end
     
       respond_to do |format|
