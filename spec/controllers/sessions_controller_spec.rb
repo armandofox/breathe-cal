@@ -48,6 +48,11 @@ RSpec.describe SessionsController, type: :controller do
             post :create
             # expect(assigns(:current_user)).to eq("test user")
         end
+        it "sets the session hash to the user id" do
+            allow(User).to receive(:create_user_from_omniauth).with(OmniAuth.config.mock_auth[:google_oauth2]).and_return(@user)
+            post :create
+            expect(session[:user_id]).to eq(101)
+        end
     end
 
     describe "#destroy" do
