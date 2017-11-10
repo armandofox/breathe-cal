@@ -52,6 +52,10 @@ Scenario: Having searched for more than 5 cities I should only see the last 5 on
     And my location is set to "San Jose"
     And I follow "Back"
     And my location is set to "Los Angeles"
+    And I follow "Back"
+    And I wait for page to load
+    Then I expect to see a list of cities
+    And I go to the landing page
     Then I should see a link "Albany"
     Then I should see a link "Oakland"
     Then I should see a link "Richmond"
