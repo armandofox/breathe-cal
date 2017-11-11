@@ -57,6 +57,8 @@ RSpec.describe CitiesController, type: :controller do
                 # 
                 db_city = City.find(@city.id)
                 # expect to see the details of a city
+                # get city_data
+                # successful response
             end
         end
         
