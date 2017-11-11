@@ -1,6 +1,32 @@
-#NOTE WE MAY BE ABLE TO USE THIS LATER BUT FIRGGING CAPYBARA IS HAVING ISSUES WITH SELENIUM THAT I CANT FIX -JS
+#-------------------------------------------------------------------------------
+# OMNIAUTH TESTING : https://github.com/omniauth/omniauth/wiki/Integration-Testing
+#-------------------------------------------------------------------------------
 
-# require 'active_support/core_ext/numeric/time.rb'
+# Turns on OmniAuth testing mode for authentication
+# Ensures authentication failures are directed to auth/failure
+# Provides a default user_hash for creating new users
+Before('@omniauth_google_login') do
+    OmniAuth.config.test_mode = true
+    OmniAuth.config.on_failure = Proc.new { |env|
+        OmniAuth::FailureEndpoint.new(env).redirect_to_failure
+    }
+    @user_hash = {
+        provider: 'google_oauth2', 
+        uid: 101,
+        info: {name: "test user", email: "test@xxxx.com"},
+        credentials: {token: 'some_token', expires_at: Time.now + 10.day}
+      }
+end
+
+# Turns off OmniAuth testing mode for authentication
+# Reset's omniauth to a consistent state between tests
+After('@omniauth_google_login') do
+    OmniAuth.config.mock_auth[:google_oauth2] = nil
+    OmniAuth.config.test_mode = false
+end
+
+
+
 
 # # Ensures that valid credentials are returned if calls are made to any provider
 # Before('@omniauth_login_success') do

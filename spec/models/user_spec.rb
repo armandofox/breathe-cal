@@ -4,7 +4,7 @@ RSpec.describe User, type: :model do
     
     describe 'when working with a valid user' do
         before :each do 
-            @valid_user = User.new(name: 'Joseph Brodsky', provider: 'google_oauth2', oauth_token: 'some_token', oauth_expires_at: 'July 1 2017')
+            @valid_user = User.new(uid: 101, name: 'Joseph Brodsky', provider: 'google_oauth2', oauth_token: 'some_token', oauth_expires_at: Time.now + 10.day, email: 'jamesbond@gmail.com')
         end
         
         it 'has a provider' do
@@ -15,12 +15,8 @@ RSpec.describe User, type: :model do
             expect(@valid_user.oauth_token).to eq 'some_token'
         end
         
-        it 'has an authentication expiration date' do
-            expect(@valid_user.oauth_expires_at).to eq 'July 1 2017'
-        end
-        
         it 'passes the validity check' do
-            expect(@valid_user.valid?).to be_truthy
+            expect(@valid_user.save).to be_truthy
         end
     end
     
@@ -42,14 +38,14 @@ RSpec.describe User, type: :model do
         end
         
         it 'does not pass the validity check' do
-            expect(@invalid_user.is_valid?).to be_falsy
+            expect(@invalid_user.save).to be_falsey
         end
     end
     
     describe '#find_or_create_from_auth_hash' do
         describe 'when proper credentials are passed to the method' do
             before :each do
-                @proper_user_credentials = {provider:'google_oauth2', credentials: {token: 'some token', expires_at: Time.new(2017, 10, 31)}, info: {name: 'James Bond'}, email: 'jamesbond@gmail.com'}
+                @proper_user_credentials = {uid: 101, provider:'google_oauth2', credentials: {token: 'some token', expires_at: Time.now + 10.day}, info: {name: 'James Bond', email: 'jamesbond@gmail.com'}}
             end
             
             it 'calling the method creates a user' do
@@ -70,12 +66,8 @@ RSpec.describe User, type: :model do
                     expect(@user.oauth_token).to eq 'some token'
                 end
                 
-                it 'has an authentication expiration date' do
-                    expect(@user.oauth_expires_at).to eq Time.new(2017, 10, 31)
-                end
-                
                 it 'passes the validity check' do
-                    expect(@user.valid?).to be_truthy
+                    expect(@user.save).to be_truthy
                 end
             end
         end 
