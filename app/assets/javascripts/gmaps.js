@@ -133,6 +133,8 @@ function initAutocomplete() {
         anchor: new google.maps.Point(17, 34),
         scaledSize: new google.maps.Size(25, 25)
       };
+      
+      // TODO mapsearch_data = {geo: place.geometry.location, name:place.name}
 
       $.ajax({
         type: "POST",
@@ -141,7 +143,6 @@ function initAutocomplete() {
         data: JSON.stringify({geo: place.geometry.location, name: place.name}),
         success: function(data){
           $("#city-info").text(JSON.stringify(data));
-          console.log(place.name);
         }
       });
       
