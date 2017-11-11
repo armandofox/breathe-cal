@@ -18,10 +18,11 @@ RSpec.describe CitiesController, type: :controller do
         describe '#map_search' do
             it 'when a user searches for a city' do
                # attempt to query city
+               # post map_search 
                
                # create one if doesn't exist.
                 # ensure :name, :lat, :lng, :location_key
-               
+
                # get city_data, {city_id}
                # expect successful response
             end
