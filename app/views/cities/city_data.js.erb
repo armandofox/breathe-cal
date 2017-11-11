@@ -33,11 +33,12 @@ var marker = new google.maps.Marker({
       marker.setMap(null);
     });
     markers = [];
-
+    
+    // grab google's recommended place
+    place = places[0];
     // For each place, get the icon, name and location.
     var bounds = new google.maps.LatLngBounds();
-    places.forEach(function(place) {
-      if (!place.geometry) {
+    if (!place.geometry) {
         console.log("Returned place contains no geometry");
         return;
       }
@@ -81,7 +82,6 @@ var marker = new google.maps.Marker({
       else {
         bounds.extend(place.geometry.location);
       }
-    });
     map.fitBounds(bounds);
   });
 <% end %>

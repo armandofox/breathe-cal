@@ -1,5 +1,6 @@
 class City < ActiveRecord::Base
   belongs_to :user
+  # validates :name, :location_key, :lat, :lng, presence: true
   serialize :daily_data, JSON
   
   def self.get_accuweather_key()
@@ -25,7 +26,7 @@ class City < ActiveRecord::Base
       
   def update_city_data
     location_key = self.location_key
-    if self.updated_at <= Date.today.to_time.beginning_of_day or !self.daily_data
+    if self.updated_at <= Date.today.to_time.beginning_of_day or !has_valid_data()
       url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/#{location_key}"
       query = {apikey: City.get_accuweather_key(), language:"en-us", details: "true"}
       response = City.get_resonse(HTTParty.get(url, query: query), url, query)

@@ -4,7 +4,7 @@ RSpec.describe CitiesController, type: :controller do
     
     describe 'flow of one city' do
         before :each do
-            @city = City.new(name: "Berkeley", lat: "37.8716", lng: "-122.2727", location_key: "332044", daily_data: "")
+            @city = City.new(name: "Berkeley", lat: "37.8716", lng: "-122.2727", location_key: "332044")
             @city.save!
         end
    
@@ -14,6 +14,26 @@ RSpec.describe CitiesController, type: :controller do
                 expect(response).to render_template("cities/city_data.js.erb")
             end
         end 
+        
+        describe '#map_search' do
+            it 'when a user searches for a city' do
+               # attempt to query city
+               # post map_search 
+               
+               # create one if doesn't exist.
+                # ensure :name, :lat, :lng, :location_key
+
+               # get city_data, {city_id}
+               # expect successful response
+            end
+            
+            it 'when a user searches for a city, he/she has searched before' do
+               # ensure City object is valid, find by geo location
+                # valid_data
+                # get city_data {city_id}
+                # expect successful response
+            end
+        end
         
         describe '#city_data' do
             it 'when the recent searches does not contain the city being searched' do
@@ -31,6 +51,14 @@ RSpec.describe CitiesController, type: :controller do
                 controller.instance_variable_set(:@quality, 'something')
                 get :city_data, name: @city.name, geo: latlng, format: 'js'
                 expect(response).to render_template('cities/city_data.js.erb')
+            end
+            
+            it 'when a user requests to see the details of a certain city' do
+                # 
+                db_city = City.find(@city.id)
+                # expect to see the details of a city
+                # get city_data
+                # successful response
             end
         end
         
@@ -96,6 +124,11 @@ RSpec.describe CitiesController, type: :controller do
             it 'more than 5 cities have been searched for' do
                 request.session[:cities] = [{"name" => '1'}, {"name" => '2'}, {"name" => '3'}, {"name" => '4'}, {"name" => '5'}, {"name" => '6'}]
                 get :city_data_back, format: 'js'
+                x = 2
+                request.session[:cities].each do |city|
+                   expect(city["name"]).to eq(x.to_s) 
+                   x = x + 1
+                end
             end
             
             it 'less that 5 cities have been searched for' do

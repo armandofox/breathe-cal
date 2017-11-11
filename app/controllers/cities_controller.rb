@@ -8,6 +8,9 @@ class CitiesController < ApplicationController
     def new
     end
     
+    def map_search
+    end
+    
     # Start storing city data and send city data to be rendered. 
     def cached_city_data
       city = City.find_by(name: params[:name])
@@ -41,11 +44,13 @@ class CitiesController < ApplicationController
         city = City.find_by(location_key: loc_key)
       end
       city.update_city_data
+
       @data = [city.name, city.daily_data]
       unless a_in_b_as_c?(city.name, session[:cities], "name")
         if (@quality.nil?)
           @quality = city.daily_data["DailyForecasts"][0]["AirAndPollen"][0]["Category"]
         end
+
         session[:cities] << { "name" => city.name, "quality" => @quality }
       end
     
