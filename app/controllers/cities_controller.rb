@@ -9,6 +9,16 @@ class CitiesController < ApplicationController
     end
     
     def map_search
+      user_search = params[:input]
+      lat = params[:lat]
+      lat = params[:lng]
+      city = City.find_by(:lat => params[:lat], :lng => params[:lng])
+      if city.nil?
+        render :status => 201, :template => "cities/city_data.js.erb"
+        
+      else
+        render :status => 200, :template => "cities/city_data.js.erb"
+      end
     end
     
     # Start storing city data and send city data to be rendered. 
