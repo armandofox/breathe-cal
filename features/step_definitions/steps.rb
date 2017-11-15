@@ -5,14 +5,9 @@
 # end
 
 When /^my location is set to "(.*)"$/ do |place| 
-<<<<<<< HEAD
   fill_in 'pac-input', with: place
   #find('#pac-input').set(place)
   find('#pac-input').native.send_keys(:Enter)
-=======
-  find('#pac-input').set(place)
-  find('#pac-input').send_keys(:Enter)
->>>>>>> capybara ignore jquery animations
   wait_for_ajax
   Capybara.ignore_hidden_elements = false
 # ignore jquery animations
