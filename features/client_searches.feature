@@ -36,6 +36,18 @@ Scenario: Having searched for a city I should see it displayed on the page
     # Then I should see the details of "Berkeley"
 
     
+@javascript   
+Scenario: Having searched for two cities I should see the most recent one on top
+    Given I go to the landing page
+    And my location is set to "Berkeley"
+    And I follow "Back"
+    And my location is set to "Albany"
+    And I follow "Back"
+    Then I expect to see "Albany" before "Berkeley"
+    Then I expect to see a list of cities
+    #Then I should see a link "Berkeley"
+    #Then I should see a link "Albany"
+
 
 @javascript    
 Scenario: Having searched for more than 5 cities I should only see the last 5 ones displayed
@@ -53,12 +65,3 @@ Scenario: Having searched for more than 5 cities I should only see the last 5 on
     And I follow "Back"
     And my location is set to "Los Angeles"
     And I follow "Back"
-    And I wait for page to load
-    Then I expect to see a list of cities
-    And I go to the landing page
-    Then I should see a link "Albany"
-    Then I should see a link "Oakland"
-    Then I should see a link "Richmond"
-    Then I should see a link "San jose"
-    Then I should see a link "Los angeles"
-    Then I should not see "Berkeley"
