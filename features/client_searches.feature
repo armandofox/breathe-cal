@@ -48,6 +48,17 @@ Scenario: Having searched for two cities I should see the most recent one on top
     #Then I should see a link "Berkeley"
     #Then I should see a link "Albany"
 
+@javascript
+Scenario: Having searched for cities, I should retain my recent searches even if I go to the details page
+    Given I go to the landing page
+    And my location is set to "Berkeley"
+    And I follow "Back"
+    And my location is set to "New York"
+    And I follow "Back"
+    Then I should see "Berkeley"
+    Then I should see "New York"
+    #And I follow a recently searched link: "Berkeley" 
+    #And I follow "Back"
 
 @javascript    
 Scenario: Having searched for more than 5 cities I should only see the last 5 ones displayed
@@ -65,3 +76,4 @@ Scenario: Having searched for more than 5 cities I should only see the last 5 on
     And I follow "Back"
     And my location is set to "Los Angeles"
     And I follow "Back"
+
