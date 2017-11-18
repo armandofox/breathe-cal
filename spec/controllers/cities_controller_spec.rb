@@ -60,7 +60,7 @@ RSpec.describe CitiesController, type: :controller do
             it 'when the recent searches does not contain the city being searched' do
                 get :cached_city_data, name: @city.name, format:'js'
                 latlng = {"lng" => @city.lng, "lat" => @city.lat}
-                request.session[:cities] = [{"name" => "Albany"}]
+                request.session[:cities] = [{"name" => "not Berkeley"}]
                 controller.instance_variable_set(:@quality, 'something')
                 get :city_data, name: @city.name, geo: latlng,format: 'js'
                 expect(response).to render_template('cities/city_data.js.erb')
