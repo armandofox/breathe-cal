@@ -9,22 +9,19 @@ class CitiesController < ApplicationController
     end
     
     def map_search
-      place_name = params[:input]
+      place_name = params[:name]
       lat = params[:geo]["lat"]
       lng = params[:geo]["lng"]
-      puts lat, lng
       city = City.find_by(:lat => lat, :lng => lng)
       if city.nil?
-        puts "NOT IN DATABASE"
         location_key = City.obtain_loc_key(lat, lng)
         city = City.create(:lat => lat, :lng => lng, :name => place_name, :location_key => location_key)
         city.update_city_data
-        render template: "cities/index.html.erb"
+        # render template: "cities/index.html.erb"
         redirect_to city_data_path(:id => city.id, :format => "js"), :status => 201
       else
-        puts "CACHE EXISTS"
         city.update_city_data
-        render template: "cities/index.html.erb"
+        # render template: "cities/index.html.erb"
         redirect_to city_data_path(:id => city.id, :format => "js"), :status => 200
       end
     end
@@ -54,33 +51,31 @@ class CitiesController < ApplicationController
       return false
     end
     
-    # Making a cookie to store all data of cities being searched.
     def city_data
-      puts "IN CITY DATA" # redirect from map_search does not render
-      
-      city = City.find(params[:id])
+      if params[:geo]
+        latlng = params[:geo]
+        loc_key = City.get_loc_key(latlng["lat"], latlng["lng"], params[:name])
+        city = City.find_by(location_key: loc_key)
+      end
       city.update_city_data
 
       @data = [city.name, city.daily_data]
-      puts @data
       unless a_in_b_as_c?(city.name, session[:cities], "name")
         if (@quality.nil?)
           @quality = city.daily_data["DailyForecasts"][0]["AirAndPollen"][0]["Category"]
         end
 
         session[:cities] << { "name" => city.name, "quality" => @quality }
-        #puts city.name
-        # trim session[:cities] here
-        # ensure that 5 >= session[:cities].length >= 0 
       end
-      render :template => "cities/city_data.js.erb", format: :js
-      # respond_to do |format|
-      #   format.js {
-      #     render :template => "cities/city_data.js.erb", :layout => false
-      #   }
-      # end
+    
+      respond_to do |format|
+        format.js {
+          render :template => "cities/city_data.js.erb"
+        }
+      end
       # render :json => city.daily_data.to_json
     end
+
     
     # Cookie for recently searched cities. Shows at most 5 city.
     def city_data_back

@@ -155,7 +155,7 @@
       $.ajax({
         type: "POST",
         contentType: "application/json; charset=utf-8",
-        url: "map_search",
+        url: "city_data",
         data: JSON.stringify({geo: place.geometry.location, name: place.name}),
         success: function(data){
           $("#city-info").text(JSON.stringify(data));
