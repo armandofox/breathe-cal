@@ -6,8 +6,6 @@ RSpec.describe CitiesController, type: :controller do
         before :each do
             @city = City.new(name: "Berkeley", lat: "37.8716", lng: "-122.2727", location_key: "332044")
             @city.save!
-            @city2 = City.new(name: "Fort Lauderdale", lat: "26.1224", lng: "-80.1373", location_key: "328168")
-            @city2.save!
         end
    
         describe '#cached_city_data' do
