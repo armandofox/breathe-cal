@@ -78,6 +78,14 @@ RSpec.describe CitiesController, type: :controller do
                 # 
                 db_city = City.find(@city.id)
                 # expect to see the details of a city
+                puts db_city.name
+                puts @city.name
+                puts db_city.lat
+                puts @city.lat
+                puts db_city.lng
+                puts @city.lng
+                puts db_city.location_key
+                puts @city.location_key
                 expect(db_city.name).to eq(@city.name)
                 expect(db_city.lat).to eq(@city.lat)
                 expect(db_city.lng).to eq(@city.lng)
