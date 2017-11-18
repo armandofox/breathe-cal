@@ -1,6 +1,6 @@
 class City < ActiveRecord::Base
   belongs_to :user
-  validates :name, :location_key, :lat, :lng, presence: true
+  validates :name, :lat, :lng, presence: true
   serialize :daily_data, JSON
   
   def self.get_accuweather_key()
@@ -23,21 +23,9 @@ class City < ActiveRecord::Base
     return false
   end
       
-      
   def update_city_data
     location_key = self.location_key
-    # if location_key.nil?
-    #   puts "Updating key"
-    #   url = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search"
-    #   query = {apikey: City.get_accuweather_key(), q: "#{self.lat},#{self.lng}",language:"en-us" }
-    #   response = City.get_resonse(HTTParty.get(url, query: query), url, query)
-    #   puts self.lat
-    #   puts self.lng
-    #   puts response
-    #   puts City.get_accuweather_key()
-    #   self.location_key = response["Key"]
-    # end
-    puts self.location_key.nil?
+    puts location_key
     if self.updated_at.nil? or self.updated_at <= Date.today.to_time.beginning_of_day or !has_valid_data()
       url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/#{self.location_key}"
       query = {apikey: City.get_accuweather_key(), language:"en-us", details: "true"}
@@ -47,6 +35,7 @@ class City < ActiveRecord::Base
   end
   
   def self.obtain_loc_key(lat, lng)
+    # We want to avoid creating a City object when we get location key
     url = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search"
     query = {apikey: City.get_accuweather_key(), q: "#{lat},#{lng}",language:"en-us" }
     response = City.get_resonse(HTTParty.get(url, query: query), url, query)

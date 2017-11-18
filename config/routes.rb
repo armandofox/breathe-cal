@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   root 'breathe#index'
   
   post '/map_search' => 'cities#map_search'
-  get '/city_data' => 'cities#city_data'
+  post '/city_data' => 'cities#city_data'
   get '/cached_city_data' => 'cities#cached_city_data'
   get '/city_data_back' => 'cities#city_data_back'
 
