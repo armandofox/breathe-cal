@@ -9,15 +9,19 @@ class CitiesController < ApplicationController
     end
     
     def map_search
-      user_search = params[:input]
+      place_name = params[:input]
       lat = params[:lat]
-      lat = params[:lng]
-      city = City.find_by(:lat => params[:lat], :lng => params[:lng])
+      lng = params[:lng]
+      city = City.find_by(:lat => lat, :lng => lng)
       if city.nil?
-        render :status => 201, :template => "cities/city_data.js.erb"
-        
+        city = City.create(:lat => lat, :lng => lng, :name => place_name)
+        City.get_loc_key(lat, lng, place_name)
+        city.update_city_data
+        redirect_to city_data_path(:id => city.id), :status => 201
       else
-        render :status => 200, :template => "cities/city_data.js.erb"
+        City.get_loc_key(lat, lng, place_name)
+        city.update_city_data
+        redirect_to city_data_path(:id => city.id), :status => 200
       end
     end
     
@@ -48,15 +52,21 @@ class CitiesController < ApplicationController
     
     # Making a cookie to store all data of cities being searched.
     def city_data
-      if params[:geo]
-        latlng = params[:geo]
-        loc_key = City.get_loc_key(latlng["lat"], latlng["lng"], params[:name])
-        city = City.find_by(location_key: loc_key)
-      end
-
+      puts "IN CITY DATA" # redirect from map_search does not render
+      # expect a city
+      # if params[:geo]
+      #   latlng = params[:geo]
+      #   loc_key = City.get_loc_key(latlng["lat"], latlng["lng"], params[:name])
+      #   city = City.find_by(location_key: loc_key)
+      # end
+      
+      city = City.find(params[:id])
       city.update_city_data
+      
+      puts city.daily_data.nil? # daily_data is bad
 
       @data = [city.name, city.daily_data]
+      
       unless a_in_b_as_c?(city.name, session[:cities], "name")
         if (@quality.nil?)
           @quality = city.daily_data["DailyForecasts"][0]["AirAndPollen"][0]["Category"]
@@ -67,6 +77,8 @@ class CitiesController < ApplicationController
         # trim session[:cities] here
         # ensure that 5 >= session[:cities].length >= 0 
       end
+      
+      puts "RENDERING ---- REREEEEEE"
     
       respond_to do |format|
         format.js {

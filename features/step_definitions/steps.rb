@@ -3,14 +3,8 @@ Given (/^I click click here to add an allergen$/) do
 end
 
 When /^my location is set to "(.*)"$/ do |place| 
-<<<<<<< HEAD
   find('#pac-input').set(place)
   find('#pac-input').send_keys(:Enter)
-=======
-  fill_in 'pac-input', with: place
-  #find('#pac-input').set(place)
-  find('#pac-input').native.send_keys(:Enter)
->>>>>>> rebasing with master
   wait_for_ajax
   Capybara.ignore_hidden_elements = false
 # ignore jquery animations
@@ -47,9 +41,7 @@ Then /I expect to see a list of cities$/ do
 end
 
 Then /I expect to see a list of cities$/ do
-  wait_for_ajax
-  list_box = page.find('#list-box', visible: :all)
-  puts list_box.text
+  page.find('#list-box', visible: :all)
 end
 
 Given(/^I touch the add marker CTA$/) do

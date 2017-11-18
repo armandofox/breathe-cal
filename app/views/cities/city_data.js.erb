@@ -57,7 +57,7 @@ var marker = new google.maps.Marker({
       $.ajax({
         type: "POST",
         contentType: "application/json; charset=utf-8",
-        url: "city_data",
+        url: "map_search",
         data: JSON.stringify({geo: place.geometry.location, name: place.name}),
         success: function(data){
           // $("#city-info").text(JSON.stringify(data));

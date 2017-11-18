@@ -76,4 +76,3 @@ Scenario: Having searched for more than 5 cities I should only see the last 5 on
     And I follow "Back"
     And my location is set to "Los Angeles"
     And I follow "Back"
-
