@@ -10,18 +10,22 @@ class CitiesController < ApplicationController
     
     def map_search
       place_name = params[:input]
-      lat = params[:lat]
-      lng = params[:lng]
+      lat = params[:geo]["lat"]
+      lng = params[:geo]["lng"]
+      puts lat, lng
       city = City.find_by(:lat => lat, :lng => lng)
       if city.nil?
-        city = City.create(:lat => lat, :lng => lng, :name => place_name)
-        City.get_loc_key(lat, lng, place_name)
+        puts "NOT IN DATABASE"
+        location_key = City.obtain_loc_key(lat, lng)
+        city = City.create(:lat => lat, :lng => lng, :name => place_name, :location_key => location_key)
         city.update_city_data
-        redirect_to city_data_path(:id => city.id), :status => 201
+        render template: "cities/index.html.erb"
+        redirect_to city_data_path(:id => city.id, :format => "js"), :status => 201
       else
-        City.get_loc_key(lat, lng, place_name)
+        puts "CACHE EXISTS"
         city.update_city_data
-        redirect_to city_data_path(:id => city.id), :status => 200
+        render template: "cities/index.html.erb"
+        redirect_to city_data_path(:id => city.id, :format => "js"), :status => 200
       end
     end
     
@@ -53,20 +57,12 @@ class CitiesController < ApplicationController
     # Making a cookie to store all data of cities being searched.
     def city_data
       puts "IN CITY DATA" # redirect from map_search does not render
-      # expect a city
-      # if params[:geo]
-      #   latlng = params[:geo]
-      #   loc_key = City.get_loc_key(latlng["lat"], latlng["lng"], params[:name])
-      #   city = City.find_by(location_key: loc_key)
-      # end
       
       city = City.find(params[:id])
       city.update_city_data
-      
-      puts city.daily_data.nil? # daily_data is bad
 
       @data = [city.name, city.daily_data]
-      
+      puts @data
       unless a_in_b_as_c?(city.name, session[:cities], "name")
         if (@quality.nil?)
           @quality = city.daily_data["DailyForecasts"][0]["AirAndPollen"][0]["Category"]
@@ -77,14 +73,12 @@ class CitiesController < ApplicationController
         # trim session[:cities] here
         # ensure that 5 >= session[:cities].length >= 0 
       end
-      
-      puts "RENDERING ---- REREEEEEE"
-    
-      respond_to do |format|
-        format.js {
-          render :template => "cities/city_data.js.erb"
-        }
-      end
+      render :template => "cities/city_data.js.erb", format: :js
+      # respond_to do |format|
+      #   format.js {
+      #     render :template => "cities/city_data.js.erb", :layout => false
+      #   }
+      # end
       # render :json => city.daily_data.to_json
     end
     
