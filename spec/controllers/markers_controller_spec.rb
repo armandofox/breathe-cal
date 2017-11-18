@@ -28,7 +28,5 @@ RSpec.describe MarkersController, type: :controller do
     end
     
   end
-  
-
 
 end

@@ -39,13 +39,7 @@ Then /I expect to see "(.*)" before "(.*)"/ do |e1, e2|
 end
 
 Then /I expect to see a list of cities$/ do
-<<<<<<< HEAD
-  wait_for_ajax
-  list_box = page.find('#list-box', visible: :all)
-  puts list_box.text
-=======
   page.find('#list-box', visible: :all)
->>>>>>> 4da6a16a83d6a22bd2d0b9f226eee0d76b142213
 end
 
 Given(/^I touch the add marker CTA$/) do
@@ -132,7 +126,6 @@ Then /^I should see “.*?”$/ do |arg1|
 end
 
 Then /^I should see a link "(.*)"$/ do |link|
-<<<<<<< HEAD
   Capybara.ignore_hidden_elements = false
   expect find_link(link, visible: false)
 end
@@ -140,10 +133,6 @@ end
 Then /^I should not see a link "(.*)"$/ do |link|
   Capybara.ignore_hidden_elements = false
   assert !find_link(link, visible: false)
-=======
-  wait_for_ajax
-  expect find_link(link, visible: false)
->>>>>>> 4da6a16a83d6a22bd2d0b9f226eee0d76b142213
 end
 
 Then /^I should see icon “.*?”$/ do |arg1|
