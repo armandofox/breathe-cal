@@ -1,13 +1,15 @@
 <div style="height: 100%;">
   <div class="col-md-4 col-ms-12" style="padding-left: 0; padding-right: 0; max-width: 500px;" id="left-col">
     <div style="text-align: right; font-size: 15px; padding: 10px 15px; border-bottom-width: 1px; border-bottom-color: #eee; border-bottom-style: solid;">
+          <% if flash[:auth_failure] %>
+            <p style="color: red;"><%= flash[:auth_failure] %> </p>
+          <% elsif flash[:profile] %>
+            <p style="color: red;"><%= flash[:profile] %> </p>
+          <% end %>
           <% if current_user %>
-            <strong><%=current_user.name %></strong>!
+            <strong><%= link_to current_user.name, user_path(current_user) %></strong>
             <%= link_to 'Sign Out', signout_path, id: "sign_out", class:"signout_link" %>
           <% else %>
-            <% if flash[:auth_failure] %>
-              <p style="color: red;"><%= flash[:auth_failure] %> </p>
-            <% end %>
             <%= link_to "Sign in with Google+", "/auth/google_oauth2", id: "sign_in" %>
           <% end %>    
     </div>

@@ -28,10 +28,11 @@ class UsersController < ApplicationController
     private
     
     def require_real_user
+        byebug
         if !session[:user_id]
             flash[:profile] = "Cannot View Profile: Not Signed In"
             redirect_to root_path
-        elsif session[:user_id] != params[:id]
+        elsif session[:user_id] != params[:id].to_i
             flash[:profile] = "Cannot View Profile: Invalid UID"
             redirect_to root_path
         end
