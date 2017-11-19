@@ -18,7 +18,7 @@ module NavigationHelpers
     when /^the new city page$/ then '/cities/new'
     when /^the landing page$/ then '/'
     when /^index page%/ then '/'
-    when /^another persons profile page%/ then '/users/-1'
+    when /^another persons profile page$/ then '/users/-1'
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
