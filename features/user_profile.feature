@@ -38,7 +38,7 @@ Scenario: Non logged in user cannot see link to profile page
 @omniauth_google_login @user_profile
 Scenario: Error displayed when non logged in user tries to access profile
     Given I follow "Sign Out"
-    When I got to the user profile page
+    When I go to the user profile page
     Then I should be on the landing page
     And I should see "Cannot View Profile: Not Signed In"
   

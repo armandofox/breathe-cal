@@ -76,6 +76,7 @@ class ApplicationController < ActionController::Base
     u = User.new(:name => "guest", :email => "guest_#{Time.now.to_i}#{rand(100)}@example.com")
     u.save!(:validate => false)
     session[:guest_user_id] = u.id
+    u
   end
   
 end
