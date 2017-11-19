@@ -29,6 +29,12 @@ Scenario: Gan go from profile page to homepage
     Then I should see "Back to Home Page"
     When I follow "Back to Home Page"
     Then I should be on the landing page
+
+@omniauth_google_login @user_profile     
+Scenario: User tries to access someone else's profile
+    When I go to another persons profile page
+    Then I should be on the landing page
+    And I should see "Cannot View Profile: Invalid UID"
  
 @omniauth_google_login @user_profile
 Scenario: Non logged in user cannot see link to profile page
