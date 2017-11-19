@@ -22,6 +22,13 @@ Scenario: User profile displays name and email
     When I am on the user profile page
     Then I should see "James Jones"
     Then I should see "test@xxxx.com"
+
+@omniauth_google_login @user_profile   
+Scenario: Gan go from profile page to homepage
+    When I am on the user profile page
+    Then I should see "Back to Home Page"
+    When I follow "Back to Home Page"
+    Then I should be on the landing page
  
 @omniauth_google_login @user_profile
 Scenario: Non logged in user cannot see link to profile page
