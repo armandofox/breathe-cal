@@ -28,7 +28,6 @@ class UsersController < ApplicationController
     private
     
     def require_real_user
-        byebug
         if !session[:user_id]
             flash[:profile] = "Cannot View Profile: Not Signed In"
             redirect_to root_path
