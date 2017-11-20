@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
     # Currently user controller actions can only be accessed by logged in users
-    before_filter :require_login
+    before_filter :require_real_login
     
     def index
     end
@@ -33,8 +33,9 @@ class UsersController < ApplicationController
     
     private
     
-    # Checks to see if a user is logged in with id = session[:user_id]
-    def require_login
+    # Checks to see if a user (not a guest) is logged in with id = session[:user_id]
+    # Name chosen so as not to conflict with require_login for application_controller
+    def require_real_login
         if !session[:user_id]
             flash[:profile] = "Cannot View Profile: Not Signed In"
             redirect_to root_path
