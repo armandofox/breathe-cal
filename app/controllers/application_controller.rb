@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
       if session[:guest_user_id] && session[:guest_user_id] != current_user.id
         logging_in
         # reload guest_user to prevent caching problems before destruction
-        guest_user(with_retry = false).try(:reload).try(:destroy)
+        guest_user.try(:reload).try(:destroy)
         session[:guest_user_id] = nil
       end
       @current_or_guest_user = current_user
@@ -31,12 +31,11 @@ class ApplicationController < ActionController::Base
   
   # Returns a guest user if one exists otherwise it creates a new guest user
   # and returns it
-  def guest_user(with_retry = true)
+  def guest_user
     begin
     @guest_user ||= User.find(session[:guest_user_id] ||= create_guest_user.id)
     rescue ActiveRecord::RecordNotFound # if session[:guest_user_id] invalid
        session[:guest_user_id] = nil
-       guest_user if with_retry
     end
   end
 

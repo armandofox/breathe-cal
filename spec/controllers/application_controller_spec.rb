@@ -35,7 +35,7 @@ RSpec.describe ApplicationController, type: :controller do
         end
         it "sets guest_user and guest_user_id to nil if guest user creation fails" do
             allow(controller).to receive(:create_guest_user).and_return(double("User", :id => -1))
-            expect(controller.guest_user(with_retry = false)).to eq(nil)
+            expect(controller.guest_user).to eq(nil)
             expect(session[:guest_user_id]).to eq(nil)
         end
     end
