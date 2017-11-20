@@ -52,7 +52,7 @@ RSpec.describe CitiesController, type: :controller do
                 # expect successful response
             end
         end
-        
+
         describe '#city_data' do
             it 'when the recent searches does not contain the city being searched' do
                 get :cached_city_data, name: @city.name, format:'js'
@@ -88,6 +88,26 @@ RSpec.describe CitiesController, type: :controller do
                 expect(db_city.lng).to eq(@city.lng)
                 expect(db_city.location_key).to eq(@city.location_key)
             end
+            
+            it 'when the user searches a city that has not been searched' do 
+                geo = {:lat => "29.7604", :lng => "-95.3698"}
+                before = City.count
+                puts before
+                post :city_data, {:name => "Houston", :geo => geo, :format => "js"}, {:cities => []}
+                expect(response).to render_template('cities/city_data.js.erb')
+                puts City.count
+                expect(City.count).to_not eq(before)
+                expect(City.count).to eq(before + 1)
+            end
+            
+            it 'when the user searches a city that has been searched before' do
+                geo = {lat: "37.8716", lng: "-122.2727"}
+                before = City.count
+                post :city_data, {:name => "Berkeley", :geo => geo, :format => "js"}, {:cities => []}
+                expect(response).to render_template('cities/city_data.js.erb')
+                expect(City.count).to eq(before)
+            end
+            
         end
         
         describe 'favorite_cities' do
