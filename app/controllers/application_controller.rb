@@ -29,6 +29,8 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  # Returns a guest user if one exists otherwise it creates a new guest user
+  # and returns it
   def guest_user(with_retry = true)
     begin
     @guest_user ||= User.find(session[:guest_user_id] ||= create_guest_user.id)
@@ -55,6 +57,7 @@ class ApplicationController < ActionController::Base
   end
   
   # We need check if the user is logged or is a guest before they access the site
+  # For users to use this site they need to be associated with a User Record
   def require_login
     if !current_or_guest_user
         @error_message = "FAILED TO RETRIEVE REAL OR GUEST USER"
@@ -62,7 +65,7 @@ class ApplicationController < ActionController::Base
     end
   end
   
-  # called (once) when the user logs in, insert any code your application needs
+  # called (once) when the user logs in, insert any code our application needs
   # to hand off from guest_user to current_user.
   def logging_in
     # For example:
@@ -73,6 +76,7 @@ class ApplicationController < ActionController::Base
     # end
   end
   
+  # creates a guest user with most fields blank
   def create_guest_user
     u = User.new(:name => "guest", :email => "guest_#{Time.now.to_i}#{rand(100)}@example.com")
     u.save!(:validate => false)
