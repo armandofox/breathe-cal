@@ -9,6 +9,21 @@ class CitiesController < ApplicationController
     end
     
     def map_search
+      place_name = params[:name]
+      lat = params[:geo]["lat"]
+      lng = params[:geo]["lng"]
+      city = City.find_by(:lat => lat, :lng => lng)
+      if city.nil?
+        location_key = City.obtain_loc_key(lat, lng)
+        city = City.create(:lat => lat, :lng => lng, :name => place_name, :location_key => location_key)
+        city.update_city_data
+        # render template: "cities/index.html.erb"
+        redirect_to city_data_path(:id => city.id, :format => "js"), :status => 201
+      else
+        city.update_city_data
+        # render template: "cities/index.html.erb"
+        redirect_to city_data_path(:id => city.id, :format => "js"), :status => 200
+      end
     end
     
     # Start storing city data and send city data to be rendered. 
@@ -36,7 +51,6 @@ class CitiesController < ApplicationController
       return false
     end
     
-    # Making a cookie to store all data of cities being searched.
     def city_data
       if params[:geo]
         latlng = params[:geo]
@@ -53,9 +67,6 @@ class CitiesController < ApplicationController
         end
 
         session[:cities] << { "name" => city.name, "quality" => @quality }
-        #puts city.name
-        # trim session[:cities] here
-        # ensure that 5 >= session[:cities].length >= 0 
       end
     
       respond_to do |format|
@@ -65,6 +76,7 @@ class CitiesController < ApplicationController
       end
       # render :json => city.daily_data.to_json
     end
+
     
     # Cookie for recently searched cities. Shows at most 5 city.
     def city_data_back
