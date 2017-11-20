@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
   # We need check if the user is logged or is a guest before they access the site
   def require_login
     if !current_or_guest_user
-      raise "Cannot loging a user or create a guest user"
+      render :status => 500
     end
   end
   
