@@ -35,6 +35,7 @@ RSpec.describe SessionsController, type: :controller do
         it "Tries to find or create a new user" do
             expect(User).to receive(:find_or_create_from_auth_hash).with(OmniAuth.config.mock_auth[:google_oauth2]).and_return(@user)
             post :create
+<<<<<<< HEAD
             # expect(assigns(:current_user)).to eq("test user")
 =======
     describe "POST create" do
@@ -44,6 +45,9 @@ RSpec.describe SessionsController, type: :controller do
                 # expect(assigns(:current_user)).to eq("test user")
             end
 >>>>>>> fixed a few tests + maintain
+=======
+            #expect(assigns(:current_user)).to eq("test user")
+>>>>>>> 7ab0507bd0c2d1f6033f8f2d26882b4a946378bf
         end
         it "Can find an existing user and update its record" do
             expect(@user).to receive(:assign_attributes)

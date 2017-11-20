@@ -100,8 +100,6 @@ function initAutocomplete() {
     fetchMarkers();
   })
 
-
-
   var markers = [];
 
   searchBox.addListener('places_changed', function() {
@@ -112,12 +110,10 @@ function initAutocomplete() {
       return;
     }
 
-
     markers.forEach(function(marker) {
       marker.setMap(null);
     });
     markers = [];
-
 
     var bounds = new google.maps.LatLngBounds();
     // place = google's best reccommended city
@@ -143,6 +139,8 @@ function initAutocomplete() {
         data: JSON.stringify({geo: place.geometry.location, name: place.name}),
         success: function(data){
           $("#city-info").text(JSON.stringify(data));
+          console.log(place);
+          
         }
       });
       

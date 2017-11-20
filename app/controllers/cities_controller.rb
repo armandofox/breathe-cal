@@ -51,7 +51,10 @@ class CitiesController < ApplicationController
       return false
     end
     
+<<<<<<< HEAD
     
+=======
+>>>>>>> 7ab0507bd0c2d1f6033f8f2d26882b4a946378bf
     def city_data
       city = City.obtain_stored_city(params[:geo]["lat"], params[:geo]["lng"], params[:name])
       @data = [city.name, city.daily_data]
@@ -101,7 +104,7 @@ class CitiesController < ApplicationController
       @text = "Favorite Cities"
       if session[:client_id]
         @cities = session[:favorites]
-      if @cities == nil || @cities.empty? 
+        if @cities == nil || @cities.empty? 
           @no_cities = "You currently have no favorite cities!"
         end
       else 

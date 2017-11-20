@@ -38,9 +38,7 @@ Then /I expect to see "(.*)" before "(.*)"/ do |e1, e2|
 end
 
 Then /I expect to see a list of cities$/ do
-  wait_for_ajax
-  list_box = page.find('#list-box', visible: :all)
-  puts list_box.text
+  page.find('#list-box', visible: :all)
 end
 
 Given(/^I touch the add marker CTA$/) do
