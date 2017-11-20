@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :User do
+  factory :user do
     name 'John Smith' # default values
     provider 'google_oauth2'
     uid 101
