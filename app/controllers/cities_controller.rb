@@ -51,15 +51,9 @@ class CitiesController < ApplicationController
       return false
     end
     
+    
     def city_data
-      if params[:geo]
-        latlng = params[:geo]
-        loc_key = City.get_loc_key(latlng["lat"], latlng["lng"], params[:name])
-        city = City.find_by(location_key: loc_key)
-      end
-
-      city.update_city_data
-
+      city = City.obtain_stored_city(params[:geo]["lat"], params[:geo]["lng"], params[:name])
       @data = [city.name, city.daily_data]
       unless a_in_b_as_c?(city.name, session[:cities], "name")
         if (@quality.nil?)

@@ -53,5 +53,18 @@ class City < ActiveRecord::Base
     City.create(lat: "#{lat}", lng: "#{lng}", location_key: location_key, name: name)
     return location_key
   end
+  
+  # Helper function to get city, ensure city in database
+  def self.obtain_stored_city(lat, lng, place_name)
+    city = City.find_by(:lat => lat, :lng => lng)
+    if city.nil?
+      location_key = City.obtain_loc_key(lat, lng)
+      city = City.create(:lat => lat, :lng => lng, :name => place_name, :location_key => location_key)
+      city.update_city_data
+    else
+      city.update_city_data
+    end
+    return city
+  end
 
 end
