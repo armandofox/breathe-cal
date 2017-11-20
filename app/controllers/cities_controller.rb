@@ -67,9 +67,6 @@ class CitiesController < ApplicationController
         end
 
         session[:cities] << { "name" => city.name, "quality" => @quality }
-        #puts city.name
-        # trim session[:cities] here
-        # ensure that 5 >= session[:cities].length >= 0 
       end
     
       respond_to do |format|

@@ -25,7 +25,7 @@ class City < ActiveRecord::Base
       
   def update_city_data
     location_key = self.location_key
-    puts location_key
+
     if self.updated_at.nil? or self.updated_at <= Date.today.to_time.beginning_of_day or !has_valid_data()
       url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/#{self.location_key}"
       query = {apikey: City.get_accuweather_key(), language:"en-us", details: "true"}
