@@ -8,7 +8,7 @@ When /^my location is set to "(.*)"$/ do |place|
   fill_in 'pac-input', with: place
   #find('#pac-input').set(place)
   find('#pac-input').native.send_keys(:Enter)
-  wait_for_ajax
+  #wait_for_ajax
   Capybara.ignore_hidden_elements = false
 # ignore jquery animations
 end

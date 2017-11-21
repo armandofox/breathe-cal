@@ -17,12 +17,11 @@ Scenario: I should see a blank search history before having searched for anythin
 Scenario: Having searched for a city I should see it displayed on the page
     Given I go to the landing page
     And my location is set to "Kansas City"
+    And I wait for page to load
     And I follow "Back" 
     Then I should see "Kansas City"
     Then I should not see "Vancouver"
     Then I should not see "Boston"
-    # When I follow a recently searched link: "Kansas City"
-    # Then I should see the details of "Berkeley"
     
 
 @javascript   
@@ -34,8 +33,6 @@ Scenario: Having searched for two cities I should see the most recent one on top
     And I follow "Back"
     Then I expect to see "Albany" before "Berkeley"
     Then I expect to see a list of cities
-    #Then I should see a link "Berkeley"
-    #Then I should see a link "Albany"
     
 @javascript
 Scenario: Having searched for cities, I should retain my recent searches even if I go to the details page
@@ -46,13 +43,10 @@ Scenario: Having searched for cities, I should retain my recent searches even if
     And I follow "Back"
     Then I should see "Berkeley"
     Then I should see "New York"
-    #And I follow a recently searched link: "Berkeley" 
-    #And I follow "Back"
 
 @javascript    
 Scenario: Having searched for more than 5 cities I should only see the last 5 ones displayed
     Given I go to the landing page
-    #And I visit multiple locations: Berkeley, Albany, Oakland, Richmond, San Jose, Los Angeles
     And my location is set to "Berkeley"
     And I follow "Back"
     And my location is set to "Albany"
@@ -66,30 +60,4 @@ Scenario: Having searched for more than 5 cities I should only see the last 5 on
     And my location is set to "Los Angeles"
     And I follow "Back"
     And I wait for page to load
-    #Then I expect to see a list of cities
-    # And I go to the landing page
-    # Then I should see "Albany"
-    # Then I should see "Oakland"
-    # Then I should see "Richmond"
-    # Then I should see "San Jose"
-    # Then I should see "Los Angeles"
-    # Then I should not see "Berkeley"
-    
-
-
-# # @javascript   
-# # Scenario: Having searched for more than 5 cities I should only see the last 5 ones displayed
-# #     Given I as "client1" have searched for "Berkeley"
-# #     And I as "client1" have searched for "Albany"
-# #     And I as "client1" have searched for "Oakland"
-# #     And I as "client1" have searched for "Richmond"
-# #     And I as "client1" have searched for "San Francisco"
-# #     And I as "client1" have searched for "San Jose"
-# #     And I am on the landing page
-# #     Then I should see "San Jose"
-# #     And I should see "San Francisco"
-# #     And I should see "Richmond"
-# #     And I should see "Oakland"
-# #     And I should see "Albany"
-# #     And I should not see "Berkeley"
 
