@@ -34,8 +34,10 @@ RSpec.describe SessionsController, type: :controller do
         it "Tries to find or create a new user" do
             expect(User).to receive(:find_or_create_from_auth_hash).with(OmniAuth.config.mock_auth[:google_oauth2]).and_return(@user)
             post :create
-
         end
+    end
+    
+    describe "POST create" do
         it "Can find an existing user and update its record" do
             expect(@user).to receive(:assign_attributes)
             expect(@user).to receive(:save)

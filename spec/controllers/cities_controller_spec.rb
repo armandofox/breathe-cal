@@ -35,7 +35,7 @@ RSpec.describe CitiesController, type: :controller do
                new_lat = "32.2332"
                new_lng = "-42.3231"
                post :map_search, {:geo =>{:lat => new_lat, :lng => new_lng}}
-               expect(response.status).to eq(201)
+               expect(response.status).to eq(200)
                expect(true).to eq(true)
             end
             

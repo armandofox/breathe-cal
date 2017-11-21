@@ -51,7 +51,6 @@ class CitiesController < ApplicationController
       return false
     end
     
-    
     def city_data
       city = City.obtain_stored_city(params[:geo]["lat"], params[:geo]["lng"], params[:name])
       @data = [city.name, city.daily_data]
