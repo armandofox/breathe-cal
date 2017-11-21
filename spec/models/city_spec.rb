@@ -31,11 +31,13 @@ RSpec.describe City, type: :model do
   
   describe "city#obtain_loc_key" do
     it "gets the location key, without creating a city" do 
-      expect(City.obtain_loc_key("37.8716", "-122.2727")).to eq("332044")
-      expect(City.obtain_loc_key("37.8716", "-122.2727")).to_not change(City.count)
+      loc_key = City.obtain_loc_key("37.8716", "-122.2727")
+      expect(loc_key).to eq("332044")
+      expect{City.obtain_loc_key("37.8716", "-122.2727")}.to_not change{City.count}
       
-      expect(City.obtain_loc_key("29.7604", "-95.3698")).to eq("351197")
-      expect(City.obtain_loc_key("29.7604", "-95.3698")).to_not change(City.count)
+      loc_key = City.obtain_loc_key("29.7604", "-95.3698")
+      expect(loc_key).to eq("351197")
+      expect{City.obtain_loc_key("29.7604", "-95.3698")}.to_not change{City.count}
     end
   end
 end

@@ -14,11 +14,7 @@ RSpec.describe CitiesController, type: :controller do
             it 'should render the correct template' do
                 get :cached_city_data, name: @city.name, format: 'js'
                 expect(true).to eq(true)
-<<<<<<< HEAD
-                #expect(response).to render_template("cities/city_data.js.erb")
-=======
                 expect(response).to render_template("cities/city_data.js.erb")
->>>>>>> 7ab0507bd0c2d1f6033f8f2d26882b4a946378bf
             end
         end 
         
@@ -41,7 +37,7 @@ RSpec.describe CitiesController, type: :controller do
                new_lat = "32.2332"
                new_lng = "-42.3231"
                post :map_search, {:geo =>{:lat => new_lat, :lng => new_lng}}
-               expect(response.status).to eq(201)
+               expect(response.status).to eq(200)
                expect(true).to eq(true)
             end
             
