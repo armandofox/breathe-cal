@@ -54,11 +54,6 @@ When /^(?:|I )press "([^"]*)"$/ do |button|
 end
 
 When /^(?:|I )follow "([^"]*)"$/ do |link|
-<<<<<<< HEAD
-=======
-  wait_for_ajax
-  Capybara.ignore_hidden_elements = false
->>>>>>> [issue] javascript elements and rending is hanging up during capybara testing -> inconsistent test results
   click_link(link)
 end
 
