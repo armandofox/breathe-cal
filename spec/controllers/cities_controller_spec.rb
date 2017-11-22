@@ -8,6 +8,7 @@ RSpec.describe CitiesController, type: :controller do
             @city.save!
             @city2 = City.new(name: "Fort Lauderdale", lat: "26.1224", lng: "-80.1373", location_key: "328168")
             @city2.save!
+            @city3 = City.new(name: "")
         end
    
         describe '#cached_city_data' do
@@ -24,7 +25,6 @@ RSpec.describe CitiesController, type: :controller do
                # post map_search 
                lat = "37.8716"
                lng = "-122.2727"
-
                
                post :map_search, {:geo => {:lat => lat, :lng => lng}}
                expect(response.status).to eq(200)
@@ -38,7 +38,6 @@ RSpec.describe CitiesController, type: :controller do
                new_lng = "-42.3231"
                post :map_search, {:geo =>{:lat => new_lat, :lng => new_lng}}
                expect(response.status).to eq(200)
-               expect(true).to eq(true)
             end
             
             it 'when a user searches for a city, he/she has searched before' do
@@ -46,11 +45,6 @@ RSpec.describe CitiesController, type: :controller do
                lng = "-122.2727"
                post :map_search, {:geo =>{:lat => lat, :lng => lng}}
                expect(response.status).to eq(200)
-            #   expect(response).to render_template("cities/city_data.js.erb")
-               # ensure City object is valid, find by geo location
-                # valid_data
-                # get city_data {city_id}
-                # expect successful response
             end
         end
 
@@ -64,13 +58,14 @@ RSpec.describe CitiesController, type: :controller do
                 expect(response).to render_template('cities/city_data.js.erb')
             end
             
-            it 'when the recent searches does contain the city being searched' do
+            it 'when the recent searches contains the city being searched' do
                 latlng = {"lng" => @city.lng, "lat" => @city.lat}
                 request.session[:cities] = [{"name" => "Berkeley"}]
                 controller.instance_variable_set(:@quality, 'something')
                 get :city_data, name: @city.name, geo: latlng, format: 'js'
                 expect(response).to render_template('cities/city_data.js.erb')
             end
+            
             
             it 'when a user requests to see the details of a certain city' do
                 # 
@@ -229,6 +224,10 @@ RSpec.describe CitiesController, type: :controller do
             end
         end
         
+    end
+    
+    describe 'client_searches feature' do
+       it '' 
     end
     
 end

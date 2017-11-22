@@ -140,7 +140,6 @@ function initAutocomplete() {
         success: function(data){
           $("#city-info").text(JSON.stringify(data));
           console.log(place);
-          
         }
       });
       
