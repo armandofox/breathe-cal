@@ -52,18 +52,23 @@ class CitiesController < ApplicationController
     end
     
     def city_data
+      puts session[:cities]
       city = City.obtain_stored_city(params[:geo]["lat"], params[:geo]["lng"], params[:name])
       @data = [city.name, city.daily_data]
       unless a_in_b_as_c?(city.name, session[:cities], "name")
         if (@quality.nil?)
           @quality = city.daily_data["DailyForecasts"][0]["AirAndPollen"][0]["Category"]
         end
-
-        session[:cities] << { "name" => city.name, "quality" => @quality }
+        puts "ADDING " + city.name + "TO CACHE!!!!!!!!!!!!!!!!!!!!!"
+        session[:cities] = session[:cities].push({ "name" => city.name, "quality" => @quality, "id" => city.id })
+        
       end
-    
+      
+      @TEST_DATA = session[:cities]
+      
       respond_to do |format|
         format.js {
+          puts session[:cities]
           render :template => "cities/city_data.js.erb"
         }
       end
@@ -74,6 +79,7 @@ class CitiesController < ApplicationController
     # Cookie for recently searched cities. Shows at most 5 city.
     def city_data_back
       @text = "Recent Searches"
+      puts session[:cities]
       if session[:cities]
         # Trim the list of cities. Max length of the list is 5.
         if session[:cities].length > 5

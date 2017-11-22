@@ -160,7 +160,6 @@
         success: function(data){
           $("#city-info").text(JSON.stringify(data));
           console.log(place);
-          
         }
       });
 >>>>>>> [not working] in the process of map_search modification. redirect currently does not work

@@ -62,6 +62,7 @@ var marker = new google.maps.Marker({
         success: function(data){
           // $("#city-info").text(JSON.stringify(data));
           // console.log(JSON.stringify(data));
+          $(".session").html(data);
         }
       });
       

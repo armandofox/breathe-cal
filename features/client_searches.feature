@@ -54,3 +54,4 @@ Scenario: Having searched for more than 5 cities I should only see the last 5 on
     Then I should see a link "San jose"
     Then I should see a link "Los angeles"
     Then I should not see a link "Berkeley"
+ 

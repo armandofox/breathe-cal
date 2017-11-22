@@ -18,7 +18,6 @@ end
 And /^I visit multiple locations:(.*)$/ do |cities|
   city_list = cities.split(',')
   city_list.each do |city|
-    puts city
     steps %Q{When my location is set to "#{city}"}
     steps %Q{When I press "Back"}
   end
