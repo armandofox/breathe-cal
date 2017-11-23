@@ -14,15 +14,10 @@ Rails.application.routes.draw do
   get '/display_favorite_cities' => 'cities#display_favorite_cities'
   
   get 'auth/:provider/callback', to: "sessions#create", as: 'auth'
-
   get 'auth/failure' => "sessions#auth_failure", as: 'auth_failure'
-
   get 'signout', to: 'sessions#destroy', as: 'signout'
 
   resources :sessions, only: [:create, :destroy]
-  
-  get 'authcheck' => "sessions#checklogged"
-
 
   post '/markers' => 'markers#create'
   get '/markers' => 'markers#show'
