@@ -2,7 +2,6 @@
 // feature. People can enter geographical searches. The search box will return a
 // pick list containing a mix of places and predicted search terms.
 
-
 // This example requires the Places library. Include the libraries=places
 // parameter when you first load the API. For example:
 // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
@@ -20,6 +19,7 @@ function initAutocomplete() {
     return map.getProjection().fromPointToLatLng(worldPoint);
   }
   
+  // Responsible for populating the markers on the map with the 'GET markers' request, which invokes markers#show
   function fetchMarkers(){
     deleteMarkers();
     labelNum = 0;
@@ -29,7 +29,7 @@ function initAutocomplete() {
     $.ajax({
       type: "GET",
       contentType: "application/json; charset=utf-8",
-      url: "markers",
+      url: "/markers",
       data: {bounds :{uplat:NECorner.lat(),downlat:SWCorner.lat(),rightlong:NECorner.lng(),leftlong:SWCorner.lng()}},
       success: function(data){
         for(var i=0;i<data.length; i++){
@@ -58,7 +58,6 @@ function initAutocomplete() {
     })
   }
   
-  
   var map = new google.maps.Map(document.getElementById('map'), {
     center: {
       lat: 37.8716,
@@ -67,21 +66,21 @@ function initAutocomplete() {
     zoom: 13,
     mapTypeId: 'roadmap'
   });
-  
   var geocoder = new google.maps.Geocoder();
   
   google.maps.event.addDomListener(window, "resize", function() {
-   var center = map.getCenter();
-   google.maps.event.trigger(map, "resize");
-   map.setCenter(center); 
-  });
+    var center = map.getCenter();
+    google.maps.event.trigger(map, "resize");
+    map.setCenter(center); 
+    }
+  );
   
   $('#marker-cta').css('cursor','pointer');
-  
   $('#left-col').css('height', (window.innerHeight).toString());
   $('#right-col').css('height', (window.innerHeight).toString());
   $('#detail-box').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
   $('#detail-box-mask').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
+  
   // Create the search box and link it to the UI element.
   var input = document.getElementById('pac-input');
   var searchBox = new google.maps.places.SearchBox(input);
@@ -90,34 +89,23 @@ function initAutocomplete() {
   var markerEnabler = document.getElementById('marker-cta');
   map.controls[google.maps.ControlPosition.LEFT_TOP].push(markerEnabler);
 
+  // Bias the SearchBox results towards current map's viewport
+  map.addListener('bounds_changed', function() {searchBox.setBounds(map.getBounds()); });
 
-  // Bias the SearchBox results towards current map's viewport.
-  map.addListener('bounds_changed', function() {
-    searchBox.setBounds(map.getBounds());
-  });
-
-  google.maps.event.addListener(map, 'dragend', function(){
-    fetchMarkers();
-  })
-
-
+  google.maps.event.addListener(map, 'dragend', function(){ fetchMarkers(); })
 
   var markers = [];
 
   searchBox.addListener('places_changed', function() {
-    var places = searchBox.getPlaces();
-
-
-    if (places.length === 0) {
-      return;
+      var places = searchBox.getPlaces();
+      if (places.length === 0) {
+        return;
     }
-
-
-    markers.forEach(function(marker) {
-      marker.setMap(null);
+    markers.forEach(
+      function(marker) {
+        marker.setMap(null);
     });
     markers = [];
-
 
     var bounds = new google.maps.LatLngBounds();
     // place = google's best reccommended city
@@ -133,9 +121,7 @@ function initAutocomplete() {
         anchor: new google.maps.Point(17, 34),
         scaledSize: new google.maps.Size(25, 25)
       };
-      
-      // TODO mapsearch_data = {geo: place.geometry.location, name:place.name}
-
+      // POST the city data
       $.ajax({
         type: "POST",
         contentType: "application/json; charset=utf-8",
@@ -165,32 +151,27 @@ function initAutocomplete() {
   
   var canMark = false;
   
-  function loggedIn(){
-      $.ajax({
-      type: "GET",
-      contentType: "application/json; charset=utf-8",
-      url: "authcheck",
-      data: {},
-      success: function(data){
-        if (data.authorized && recentMarker === null){
-          map.setOptions({ draggableCursor :"url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto"});
-          $("#marker-cta").css("cursor", "url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto");
-          canMark = true;  
-        } else {
-          canMark = false;
-          window.location.href = '/auth/google_oauth2';
-        }
-      }
-    });
+  // Called when user begins to make a marker, makes create user request
+  function click_marker_cta(){
+    // We can add a marker
+    if (recentMarker === null){
+      map.setOptions({ draggableCursor :"url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto"});
+      $("#marker-cta").css("cursor", "url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto");
+      canMark = true;  
+    // We can't add a marker
+    } else {
+      canMark = false;
+    }
   }
  
-  // allow user to put down a marker
-  $("#marker-cta").click(function(){
-    loggedIn();
-    $("#marker-cta span").text("Click map to place marker")
-  });
+  // If user clicks to put a marker down
+  $("#marker-cta").click( function(){ 
+      click_marker_cta();
+      $("#marker-cta span").text("Click map to place marker")
+    }
+  );
 
-
+  // Waits for user to click on the map and place their allergen
   google.maps.event.addListener(map, 'click', function(event) {
     if (canMark){
       var x = event.pixel.x + 16;
@@ -199,7 +180,7 @@ function initAutocomplete() {
       point.x = x;
       point.y = y;
       var latlng = point2LatLng(point, map);
-      placeMarker(latlng);  
+      placeMarker(latlng);
       canMark = false;
       map.setOptions({ draggableCursor :"auto"});
       $("#marker-cta").css("cursor", "pointer");
@@ -209,6 +190,7 @@ function initAutocomplete() {
   
   var recentMarker = null;
   
+  // Create string to display in infowindow
   function createContentString(data){
     var title = data.title;
     var attributes = ["cat", "bees", "perfume", "oak", "peanut", "gluten", "dog", "dust", "smoke", "mold"];
@@ -237,8 +219,10 @@ function initAutocomplete() {
     return content;
   }
   
+  // Called when a user clicks to place a marker
   function placeMarker(location) {
     labelNum += 1;
+    // Create new mmaps marker object
     var marker = new google.maps.Marker({
       label: labelNum.toString() ,
       position: location,
@@ -246,6 +230,7 @@ function initAutocomplete() {
       draggable: true,
     })
     
+    // Create form to display to user so they can add an allergen
     var contentString = $(
       "<div id='wrap'>" + 
       "<form id='markerForm' action='markers' method='POST'>"+
@@ -269,6 +254,7 @@ function initAutocomplete() {
       "</div>"
     );
     
+    // Display the form above to the user in an infowindow
     var infowindow = new google.maps.InfoWindow();
     infowindow.open(map,marker);
     infowindow.setContent(contentString[0]);
@@ -279,6 +265,7 @@ function initAutocomplete() {
     
     recentMarker = marker;
     
+    // Close the window and remove the created marker if the user exits
     var listenerHandle = google.maps.event.addListener(infowindow, 'closeclick', function(){
       labelNum -=1;
       recentMarker.setMap(null);
@@ -286,32 +273,27 @@ function initAutocomplete() {
     });
     
     // disallow marker spawn if its already here. this means i need the UniqueID 
-    
-    
+    // Close the create allergen menu on form submission, POST marker object
     $(document).on('submit', '#markerForm', function(e){
       e.preventDefault();
       infowindow.close();
       var postData = $(this).serializeArray();
       postData.push({name: "lat", value: location.lat()});
       postData.push({name: "lng", value: location.lng()});
+      // Populate an array we pass into the POST request
       var convData = {};
-      $(postData).each(function(idnex,obj){
+      $(postData).each(function(index, obj){
         convData[obj.name] = obj.value;
       })
       
       $.ajax({
         type: "POST",
         contentType: "application/json; charset=utf-8",
-        url: "markers",
+        url: "/markers",
         data: JSON.stringify({marker: convData}),
         success: function(d){
           fetchedMarkers[d.id] = true;
           var newContent = createContentString(d);
-          // var newContent = $("<div>"+
-          //                     "cat " + d.cat + 
-          //                     "<br> dog " + d.dog +
-          //                     "<br> mold " + d.mold + "</div>");
-          console.log(d.id);
           recentMarker.infowindow.setContent(newContent[0]);
           recentMarker.infowindow.open(map,recentMarker);
           recentMarker.draggable = false;
@@ -320,29 +302,28 @@ function initAutocomplete() {
           markers.push(recentMarker);
         }
       })
-      
       return false;
     });
   }
   
-  // maybe just send a list of attributes to tell javascript to use....? 
+  //  
   function setMapOnAll(map) {
     for (var i = 0; i < markers.length; i++) {
       markers[i].setMap(map);
     }
   }
   
+  // Clears all markers
   function clearMarkers() {
     setMapOnAll(null);
   }
 
+  // Delete all markeres
   function deleteMarkers() {
     clearMarkers();
     markers = [];
   }
-
 }
-
 
 $(document).ready(initAutocomplete);
 $(document).on('page:load', initAutocomplete);
