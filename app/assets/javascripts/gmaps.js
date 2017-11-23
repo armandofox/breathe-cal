@@ -350,6 +350,7 @@ function initAutocomplete() {
           recentMarker = null;
           google.maps.event.removeEventListener(listenerHandle);
           markers.push(recentMarker);*/
+          //THE BELOW CODE HAS BEEN COMMENTED OUT, BUT WAS MY ATTEMPT AT FINDING A MARKER AND REMOVING IT
           //recentMarker = //Marker.find(conditions => {title => title});
           //markers.pop(recentMarker)
         }
