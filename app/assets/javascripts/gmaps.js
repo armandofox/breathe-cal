@@ -151,25 +151,42 @@ function initAutocomplete() {
   
   var canMark = false;
   
-  // Called when user begins to make a marker, makes create user request
-  function click_marker_cta(){
-    // We can add a marker
+  // Old function with a couple edits (no post call for user)
+  function loggedIn(){
     if (recentMarker === null){
       map.setOptions({ draggableCursor :"url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto"});
       $("#marker-cta").css("cursor", "url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto");
       canMark = true;  
-    // We can't add a marker
     } else {
       canMark = false;
     }
   }
  
-  // If user clicks to put a marker down
-  $("#marker-cta").click( function(){ 
-      click_marker_cta();
-      $("#marker-cta span").text("Click map to place marker")
-    }
-  );
+  // Old Function
+  $("#marker-cta").click(function(){
+    loggedIn();
+    $("#marker-cta span").text("Click map to place marker")
+  });
+  
+  // // Called when user begins to make a marker, makes create user request
+  // function click_marker_cta(){
+  //   // We can add a marker
+  //   if (recentMarker === null){
+  //     map.setOptions({ draggableCursor :"url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto"});
+  //     $("#marker-cta").css("cursor", "url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto");
+  //     canMark = true;  
+  //   // We can't add a marker
+  //   } else {
+  //     canMark = false;
+  //   }
+  // }
+ 
+  // // If user clicks to put a marker down
+  // $("#marker-cta").click( function(){ 
+  //     click_marker_cta();
+  //     $("#marker-cta span").text("Click map to place marker")
+  //   }
+  // );
 
   // Waits for user to click on the map and place their allergen
   google.maps.event.addListener(map, 'click', function(event) {
