@@ -224,6 +224,7 @@ function initAutocomplete() {
       }
     }
     var contentString ="<div id='wrap'>" + 
+                      "<form id='markerDetails' action='delete' method='POST'>"+
                       "Allergens at " + title + "<br>" +
                       "<div id='left_col'>" + 
                       leftContentString + 
@@ -231,6 +232,8 @@ function initAutocomplete() {
                       "<div id='right_col'>" + 
                       rightContentString +
                       "</div>" + 
+                      "<input type='button' value='Delete'>"+
+                      "</form>" +
                       "</div>";
     var content = $(contentString);
     return content;
@@ -317,6 +320,38 @@ function initAutocomplete() {
           recentMarker = null;
           google.maps.event.removeEventListener(listenerHandle);
           markers.push(recentMarker);
+        }
+      })
+      return false;
+    });
+    
+    $(document).on('button', '#markerDetails', function(e){
+      e.preventDefault();
+      infowindow.close();
+      var postData = $(this).serializeArray();
+      postData.push({name: "title", value: data.title});
+      // Populate an array we pass into the POST request
+      var convData = {};
+      $(postData).each(function(index, obj){
+        convData[obj.name] = obj.value;
+      })
+      
+      $.ajax({
+        type: "POST",
+        contentType: "application/json; charset=utf-8",
+        url: "/delete",
+        data: JSON.stringify({marker: convData}), //what does this do?
+        success: function(d){ //what is d?
+          /*fetchedMarkers[d.id] = true;
+          var newContent = createContentString(d);
+          recentMarker.infowindow.setContent(newContent[0]);
+          recentMarker.infowindow.open(map,recentMarker);
+          recentMarker.draggable = false;
+          recentMarker = null;
+          google.maps.event.removeEventListener(listenerHandle);
+          markers.push(recentMarker);*/
+          //recentMarker = //Marker.find(conditions => {title => title});
+          //markers.pop(recentMarker)
         }
       })
       return false;
