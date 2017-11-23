@@ -2,8 +2,7 @@ require 'date'
 class BreatheController < ApplicationController
   def index
     begin
-      url = "http://www.baaqmd.gov/Feeds/AlertRSS.aspx"
-      feed = Feedjira::Feed.fetch_and_parse url
+      feed = Feedjira::Feed.fetch_and_parse("http://www.baaqmd.gov/Feeds/AlertRSS.aspx")
       entry = feed.entries[0]
       @welcome_message = feed.title 
       @alert = entry.summary
