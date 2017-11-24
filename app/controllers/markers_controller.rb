@@ -1,4 +1,6 @@
 class MarkersController < ApplicationController
+  # Added this to prevent 'Can't verify CSRF token authenticity' heroku error
+  skip_before_action :verify_authenticity_token
   
   # Create a new marker
   def create
