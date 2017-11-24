@@ -63,7 +63,7 @@ function initAutocomplete() {
     mapTypeId: 'roadmap'
   });
   var geocoder = new google.maps.Geocoder();
-  // Resize trigger
+  // Resizes map if triggered
   google.maps.event.addDomListener(window, "resize", function() {
     var center = map.getCenter();
     google.maps.event.trigger(map, "resize");
@@ -81,44 +81,41 @@ function initAutocomplete() {
   var input = document.getElementById('pac-input');
   var searchBox = new google.maps.places.SearchBox(input);
   map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-  
+  // Create the marker button and link it to the UI element
   var markerEnabler = document.getElementById('marker-cta');
   map.controls[google.maps.ControlPosition.LEFT_TOP].push(markerEnabler);
-
-  // Bias the SearchBox results towards current map's viewport
+  // Sets bounds if the map moves
   map.addListener('bounds_changed', function() {searchBox.setBounds(map.getBounds()); });
-  // Fetches markers if
+  // Fetches markers if the map has been dragged and the drag has ended
   google.maps.event.addListener(map, 'dragend', function(){ fetchMarkers(); })
 
   var markers = [];
-
+  // Retrieve place details when user selects autofill prediction with places
   searchBox.addListener('places_changed', function() {
-      var places = searchBox.getPlaces();
-      if (places.length === 0) {
-        return;
-    }
+    var places = searchBox.getPlaces();
+    if (places.length === 0) {
+      return;
+    } // Remove all markers from map before changing bounds
     markers.forEach(
       function(marker) {
         marker.setMap(null);
     });
     markers = [];
-
     var bounds = new google.maps.LatLngBounds();
-    // Place = google's best reccommended city
     place = places[0];
     if (!place.geometry) {
         console.log("Returned place contains no geometry");
         return;
       }
-      var icon = {
-        url: place.icon,
-        size: new google.maps.Size(71, 71),
-        origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(17, 34),
-        scaledSize: new google.maps.Size(25, 25)
-      };
-      // POST the city data
-      $.ajax({
+    var icon = {
+      url: place.icon,
+      size: new google.maps.Size(71, 71),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(17, 34),
+      scaledSize: new google.maps.Size(25, 25)
+    };
+      // POST the city data and push marker for seemingly no reason
+    $.ajax({
         type: "POST",
         contentType: "application/json; charset=utf-8",
         url: "city_data",
@@ -127,19 +124,18 @@ function initAutocomplete() {
           $("#city-info").text(JSON.stringify(data));
         }
       });
-      
-      markers.push(new google.maps.Marker({
+    markers.push(new google.maps.Marker({
         map: map,
         icon: icon,
         title: place.name,
         position: place.geometry.location
       }));
 
-      if (place.geometry.viewport) {
-        bounds.union(place.geometry.viewport);
-      } else {
-        bounds.extend(place.geometry.location);
-      }
+    if (place.geometry.viewport) {
+      bounds.union(place.geometry.viewport);
+    } else {
+      bounds.extend(place.geometry.location);
+    }
     map.fitBounds(bounds);
     fetchMarkers();
   });
