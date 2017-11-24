@@ -157,7 +157,6 @@ function initAutocomplete() {
       map.setOptions({ draggableCursor :"url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto"});
       $("#marker-cta").css("cursor", "url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto");
       canMark = true;  
-      logger.debug
     } else {
       canMark = false;
     }
