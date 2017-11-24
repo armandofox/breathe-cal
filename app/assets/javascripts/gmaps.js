@@ -114,7 +114,7 @@ function initAutocomplete() {
       anchor: new google.maps.Point(17, 34),
       scaledSize: new google.maps.Size(25, 25)
     };
-      // POST the city data and push marker for seemingly no reason
+    // POST the city data and push marker for seemingly no reason
     $.ajax({
         type: "POST",
         contentType: "application/json; charset=utf-8",
