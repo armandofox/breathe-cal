@@ -1,7 +1,3 @@
-// This example adds a search box to a map, using the Google Place Autocomplete
-// feature. People can enter geographical searches. The search box will return a
-// pick list containing a mix of places and predicted search terms.
-
 // This example requires the Places library. Include the libraries=places
 // parameter when you first load the API. For example:
 // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
@@ -10,7 +6,7 @@ var fetchedMarkers = {};
 function initAutocomplete() {
   
   var labelNum = 0;
-  
+
   function point2LatLng(point, map) {
     var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
     var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
@@ -57,7 +53,7 @@ function initAutocomplete() {
       }
     })
   }
-  // Map initialization
+
   var map = new google.maps.Map(document.getElementById('map'), {
     center: {
       lat: 37.8716,
@@ -74,7 +70,7 @@ function initAutocomplete() {
     map.setCenter(center); 
     }
   );
-  // Setting css attributes
+  // Set css attributes
   $('#marker-cta').css('cursor','pointer');
   $('#left-col').css('height', (window.innerHeight).toString());
   $('#right-col').css('height', (window.innerHeight).toString());
@@ -91,7 +87,7 @@ function initAutocomplete() {
 
   // Bias the SearchBox results towards current map's viewport
   map.addListener('bounds_changed', function() {searchBox.setBounds(map.getBounds()); });
-
+  // Fetches markers if
   google.maps.event.addListener(map, 'dragend', function(){ fetchMarkers(); })
 
   var markers = [];
@@ -141,8 +137,7 @@ function initAutocomplete() {
 
       if (place.geometry.viewport) {
         bounds.union(place.geometry.viewport);
-      }
-      else {
+      } else {
         bounds.extend(place.geometry.location);
       }
     map.fitBounds(bounds);
@@ -151,7 +146,7 @@ function initAutocomplete() {
   
   var canMark = false;
  
-  // Runs when user places marker
+  // Runs when user clicks to place marker, sets up cursor for placement
   $("#marker-cta").click(function(){
     if (recentMarker === null){
       map.setOptions({ draggableCursor :"url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto"});
@@ -163,25 +158,6 @@ function initAutocomplete() {
     $("#marker-cta span").text("Click map to place marker")
   });
   
-  // function click_marker_cta(){
-  //   // We can add a marker
-  //   if (recentMarker === null){
-  //     map.setOptions({ draggableCursor :"url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto"});
-  //     $("#marker-cta").css("cursor", "url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto");
-  //     canMark = true;  
-  //   // We can't add a marker
-  //   } else {
-  //     canMark = false;
-  //   }
-  // }
- 
-  // // If user clicks to put a marker down
-  // $("#marker-cta").click( function(){ 
-  //     click_marker_cta();
-  //     $("#marker-cta span").text("Click map to place marker")
-  //   }
-  // );
-
   // Waits for user to click on the map and place their allergen
   google.maps.event.addListener(map, 'click', function(event) {
     if (canMark){
