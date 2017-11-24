@@ -152,7 +152,7 @@ function initAutocomplete() {
   var canMark = false;
   
   // Old function with a couple edits (no post call for user)
-  function loggedIn(){
+  function click_marker_cta(){
     if (recentMarker === null){
       map.setOptions({ draggableCursor :"url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto"});
       $("#marker-cta").css("cursor", "url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto");
@@ -164,7 +164,7 @@ function initAutocomplete() {
  
   // Old Function
   $("#marker-cta").click(function(){
-    loggedIn();
+    click_marker_cta();
     $("#marker-cta span").text("Click map to place marker")
   });
   
