@@ -33,7 +33,6 @@ module BreatheCal
     config.active_record.raise_in_transactional_callbacks = true
     
     config.log_level = :debug
-    
     #API keys in secrets.yml
     config_files = ['secrets.yml']
 
