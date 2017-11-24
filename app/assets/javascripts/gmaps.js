@@ -150,9 +150,9 @@ function initAutocomplete() {
   });
   
   var canMark = false;
-  
-  // Old function with a couple edits (no post call for user)
-  function click_marker_cta(){
+ 
+  // Runs when user places marker
+  $("#marker-cta").click(function(){
     if (recentMarker === null){
       map.setOptions({ draggableCursor :"url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto"});
       $("#marker-cta").css("cursor", "url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto");
@@ -160,15 +160,9 @@ function initAutocomplete() {
     } else {
       canMark = false;
     }
-  }
- 
-  // Old Function
-  $("#marker-cta").click(function(){
-    click_marker_cta();
     $("#marker-cta span").text("Click map to place marker")
   });
   
-  // // Called when user begins to make a marker, makes create user request
   // function click_marker_cta(){
   //   // We can add a marker
   //   if (recentMarker === null){
