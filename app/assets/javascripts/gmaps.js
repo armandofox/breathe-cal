@@ -57,7 +57,7 @@ function initAutocomplete() {
       }
     })
   }
-  
+  // Map initialization
   var map = new google.maps.Map(document.getElementById('map'), {
     center: {
       lat: 37.8716,
@@ -67,14 +67,14 @@ function initAutocomplete() {
     mapTypeId: 'roadmap'
   });
   var geocoder = new google.maps.Geocoder();
-  
+  // Resize trigger
   google.maps.event.addDomListener(window, "resize", function() {
     var center = map.getCenter();
     google.maps.event.trigger(map, "resize");
     map.setCenter(center); 
     }
   );
-  
+  // Setting css attributes
   $('#marker-cta').css('cursor','pointer');
   $('#left-col').css('height', (window.innerHeight).toString());
   $('#right-col').css('height', (window.innerHeight).toString());
@@ -108,7 +108,7 @@ function initAutocomplete() {
     markers = [];
 
     var bounds = new google.maps.LatLngBounds();
-    // place = google's best reccommended city
+    // Place = google's best reccommended city
     place = places[0];
     if (!place.geometry) {
         console.log("Returned place contains no geometry");
@@ -157,6 +157,7 @@ function initAutocomplete() {
       map.setOptions({ draggableCursor :"url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto"});
       $("#marker-cta").css("cursor", "url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto");
       canMark = true;  
+      logger.debug
     } else {
       canMark = false;
     }
