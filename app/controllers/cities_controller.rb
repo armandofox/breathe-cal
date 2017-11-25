@@ -54,14 +54,22 @@ class CitiesController < ApplicationController
     def city_data
       puts session[:cities]
       city = City.obtain_stored_city(params[:geo]["lat"], params[:geo]["lng"], params[:name])
+      # prepare data
       @data = [city.name, city.daily_data]
+      
+      # set quality from city.daily_data
+      
+      # add to city.recent_searches
+      # trim recent searches if length > 5
+      # set @cities to city.recent_searches
+      
+      
       unless a_in_b_as_c?(city.name, session[:cities], "name")
         if (@quality.nil?)
           @quality = city.daily_data["DailyForecasts"][0]["AirAndPollen"][0]["Category"]
         end
         puts "ADDING " + city.name + "TO CACHE!!!!!!!!!!!!!!!!!!!!!"
         session[:cities] = session[:cities].push({ "name" => city.name, "quality" => @quality, "id" => city.id })
-        
       end
       
       @TEST_DATA = session[:cities]
