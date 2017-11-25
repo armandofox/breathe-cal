@@ -71,14 +71,6 @@ RSpec.describe CitiesController, type: :controller do
                 # 
                 db_city = City.find(@city.id)
                 # expect to see the details of a city
-                puts db_city.name
-                puts @city.name
-                puts db_city.lat
-                puts @city.lat
-                puts db_city.lng
-                puts @city.lng
-                puts db_city.location_key
-                puts @city.location_key
                 expect(db_city.name).to eq(@city.name)
                 expect(db_city.lat).to eq(@city.lat)
                 expect(db_city.lng).to eq(@city.lng)
@@ -227,7 +219,41 @@ RSpec.describe CitiesController, type: :controller do
     end
     
     describe 'client_searches feature' do
-       it '' 
+        before :each do
+            @berk_geo = {:lat => "37.8716", :lng => "-122.2727"}
+            @hous_geo = {:lat => "29.7604", :lng => "-95.3698"}
+            @fld_geo = {:lat => "26.1224", :lng => "-80.1373"}
+            @city = City.new(name: "Berkeley", lat: "37.8716", lng: "-122.2727", location_key: "332044")
+            @city.save!
+            @city2 = City.new(name: "Fort Lauderdale", lat: "26.1224", lng: "-80.1373", location_key: "328168")
+            @city2.save!
+            session[:cities] = [] # simulate breathe_controller root 
+        end
+        
+        it 'session variable should be changed after a search to a city' do
+            geo = @fld_geo
+            expect(session[:cities].size).to eq(0)
+            post :city_data, :geo => geo, :name => "Fort Lauderdale", :format => "js"
+            expect(session[:cities].size).to eq(1)
+            geo = @berk_geo
+            expect{post :city_data, :geo => geo, :name => "Berkeley", :format => "js"}.to change{session[:cities].size}.by(1)
+            geo = @hous_geo
+            expect{post :city_data, :geo => geo, :name => "Houston", :format => "js"}.to change{session[:cities].size}.by(1)
+        end
+        
+        it 'session variable does not change when user queries same location' do
+            geo = @fld_geo
+            expect(session[:cities].size).to eq(0)
+            post :city_data, :geo => geo, :name => "Fort Lauderdale", :format => "js"
+            expect(session[:cities].size).to eq(1)
+            geo = @berk_geo
+            expect{post :city_data, :geo => geo, :name => "Berkeley", :format => "js"}.to change{session[:cities].size}.by(1)
+            geo = @fld_geo
+            expect{post :city_data, :geo => geo, :name => "Fort Lauderdale", :format => "js"}.not_to change{session[:cities].size}
+            geo = @berk_geo
+            expect{post :city_data, :geo => geo, :name => "berkeley", :format => "js"}.not_to change{session[:cities].size}
+        end
+        
     end
     
 end
