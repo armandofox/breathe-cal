@@ -280,12 +280,14 @@ function initAutocomplete() {
         success: function(d){
           fetchedMarkers[d.id] = true;
           var newContent = createContentString(d);
-          recentMarker.infowindow.setContent(newContent[0]);
-          recentMarker.infowindow.open(map, recentMarker);
-          recentMarker.draggable = false;
-          recentMarker = null;
-          //google.maps.event.removeEventListener(listenerHandle);
-          markers.push(recentMarker);
+          if (recentMarker) {
+            recentMarker.infowindow.setContent(newContent[0]);
+            recentMarker.infowindow.open(map, recentMarker);
+            recentMarker.draggable = false;
+            recentMarker = null;
+            //google.maps.event.removeEventListener(listenerHandle);
+            markers.push(recentMarker);
+          }
         }
       })
       return false;
