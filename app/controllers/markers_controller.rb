@@ -5,6 +5,7 @@ class MarkersController < ApplicationController
   # Create a new marker
   def create
     marker = Marker.create!(marker_params.merge(:user_id => current_or_guest_user.id))
+    config.log(marker)
     render :json => marker
   end
 
@@ -27,7 +28,7 @@ class MarkersController < ApplicationController
   private
   
   def marker_params
-    params.require(:marker).permit(:cat, :dog, :mold, :bees, :perfume, :oak, :peanut, :gluten, :dust, :smoke, :title, :user_id)
+    params.require(:marker).permit(:cat, :dog, :mold, :bees, :perfume, :oak, :peanut, :gluten, :dust, :smoke, :title, :user_id, :lat, :long)
   end
 
   def bound_params
