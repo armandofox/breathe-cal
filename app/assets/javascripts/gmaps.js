@@ -252,7 +252,7 @@ function initAutocomplete() {
     recentMarker = marker;
     
     // Close the window and remove the created marker if the user exits
-    var listenerHandle = google.maps.event.addListener(infowindow, 'closeclick', function(){
+    var listenerHandle = google.maps.event.addEventListener(infowindow, 'closeclick', function(){
       labelNum -=1;
       recentMarker.setMap(null);
       recentMarker = null;
