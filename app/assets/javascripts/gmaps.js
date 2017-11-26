@@ -252,11 +252,11 @@ function initAutocomplete() {
     recentMarker = marker;
     
     // Close the window and remove the created marker if the user exits
-    var listenerHandle = google.maps.event.addListener(infowindow, 'closeclick', function(){
-      labelNum -=1;
-      recentMarker.setMap(null);
-      recentMarker = null;
-    });
+    // var listenerHandle = google.maps.event.addListener(infowindow, 'closeclick', function(){
+    //   labelNum -=1;
+    //   recentMarker.setMap(null);
+    //   recentMarker = null;
+    // });
     
     // disallow marker spawn if its already here. this means i need the UniqueID 
     // Close the create allergen menu on form submission, POST marker object
@@ -271,7 +271,7 @@ function initAutocomplete() {
       $(postData).each(function(index, obj){
         convData[obj.name] = obj.value;
       })
-      
+      // 
       $.ajax({
         type: "POST",
         contentType: "application/json; charset=utf-8",
@@ -281,10 +281,10 @@ function initAutocomplete() {
           fetchedMarkers[d.id] = true;
           var newContent = createContentString(d);
           recentMarker.infowindow.setContent(newContent[0]);
-          recentMarker.infowindow.open(map,recentMarker);
+          recentMarker.infowindow.open(map, recentMarker);
           recentMarker.draggable = false;
           recentMarker = null;
-          google.maps.event.removeEventListener(listenerHandle);
+          //google.maps.event.removeEventListener(listenerHandle);
           markers.push(recentMarker);
         }
       })
