@@ -4,9 +4,9 @@ Feature:
  Feature:
 >>>>>>> replaced add_and_edit_allergsns.feature
   As an allergy sufferer, in order to know the allergen information for
-  my location, I should be able to add and edit allergens on the map.
+  my location, I should be able to add and delete allergens on the map.
   
-Background:
+Background: # (MANUAL PASS)
   Given I am on the landing page
 <<<<<<< HEAD
   

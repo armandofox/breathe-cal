@@ -252,11 +252,11 @@ function initAutocomplete() {
     recentMarker = marker;
     
     // Close the window and remove the created marker if the user exits
-    // var listenerHandle = google.maps.event.addListener(infowindow, 'closeclick', function(){
-    //   labelNum -=1;
-    //   recentMarker.setMap(null);
-    //   recentMarker = null;
-    // });
+    var listenerHandle = google.maps.event.addListener(infowindow, 'closeclick', function(){
+      labelNum -=1;
+      recentMarker.setMap(null);
+      recentMarker = null;
+    });
     
     // disallow marker spawn if its already here. this means i need the UniqueID 
     // Close the create allergen menu on form submission, POST marker object
