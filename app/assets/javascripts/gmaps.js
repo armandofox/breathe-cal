@@ -27,10 +27,10 @@ function initAutocomplete() {
       contentType: "application/json; charset=utf-8",
       url: "/markers",
       data: {bounds :{uplat:NECorner.lat(),downlat:SWCorner.lat(),rightlong:NECorner.lng(),leftlong:SWCorner.lng()}},
-      success: function(data){
+      success: function(data) {
         for(var i=0;i<data.length; i++){
           var id = data[i].id;
-          if (true){
+          if (true) {
             var location = {};
             location.lat = parseFloat(data[i].lat);
             location.lng = parseFloat(data[i].lng);
@@ -124,12 +124,12 @@ function initAutocomplete() {
           $("#city-info").text(JSON.stringify(data));
         }
       });
-    markers.push(new google.maps.Marker({
-        map: map,
-        icon: icon,
-        title: place.name,
-        position: place.geometry.location
-      }));
+    // markers.push(new google.maps.Marker({
+    //     map: map,
+    //     icon: icon,
+    //     title: place.name,
+    //     position: place.geometry.location
+    //   }));
 
     if (place.geometry.viewport) {
       bounds.union(place.geometry.viewport);
