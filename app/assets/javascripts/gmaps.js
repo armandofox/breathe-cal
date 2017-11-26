@@ -287,7 +287,7 @@ function initAutocomplete() {
             recentMarker.draggable = false;
             markers.push(recentMarker);
             recentMarker = null;
-            //google.maps.event.removeEventListener(listenerHandle);
+            google.maps.event.removeEventListener(listenerHandle);
           }
         }
       })
