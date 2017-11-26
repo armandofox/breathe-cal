@@ -29,19 +29,19 @@ Scenario: Once I've loaded the app and added an allergen, I should be able to ed
   And I click click here to add an allergen
   
 #PIVOTAL ID 152021104
-#Click on the map and see the box to create an allergen
+#Click on the map and see the box to create an allergen (MANUAL PASS)
 Scenario: Once I've loaded the app, I should be able to begin creating an allergen
   When I click on the map
   Then I should view the create allergen box
   
 #PIVOTAL ID 152021104
-#SAD PATH: Click outside the map, and don't see the box to create an allergen
+#SAD PATH: Click outside the map, and don't see the box to create an allergen (MANUAL PASS)
 Scenario: Once I've loaded the app, I should not be able to click outside the map and create an allergen
   When I click on the green area of the sidebar
   Then I should not view the create allergen box
 
 #PIVOTAL ID 152021104
-#Be able to fully add an allergen
+#Be able to fully add an allergen (MANUAL PASS)
 Scenario: Once the create allergen box is up, I should be able to add an allergen
   Given I click on the map
   And I should view the create allergen box
@@ -50,20 +50,21 @@ Scenario: Once the create allergen box is up, I should be able to add an allerge
   And I press submit
   Then I should see the allergen on the map
 
-#PIVOTAL ID 152021104
-#Add and edit an allergen on the map, see edits
-Scenario: Once I've loaded the app and added an allergen, I should be able to edit the allergen.
-  Given I add a dog allergen
-  And I click on the allergen
-  And I click the edit allergen button
-  And I should be able to see the allergen details
-  When I fill in title with cat
-  And I check cat
-  And I press submit
-  Then I should see the updated allergen on the map
+# TODO:
+# PIVOTAL ID 152021104
+# Add and edit an allergen on the map, see edits
+# Scenario: Once I've loaded the app and added an allergen, I should be able to edit the allergen.
+#   Given I add a dog allergen
+#   And I click on the allergen
+#   And I click the edit allergen button
+#   And I should be able to see the allergen details
+#   When I fill in title with cat
+#   And I check cat
+#   And I press submit
+#   Then I should see the updated allergen on the map
   
 #PIVOTAL ID 152021104
-#Login and add an allergen, logout, login and have it still be there
+#Login and add an allergen, logout, login and have it still be there (MANUAL PASS)
 @omniauth_google_login
 Scenario: Once I login and add an allergen, that allergen should still be there if I log out/switch users
   Given I add a dog allergen
