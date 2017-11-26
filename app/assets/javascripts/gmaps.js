@@ -255,7 +255,7 @@ function initAutocomplete() {
     var listenerHandle = google.maps.event.addListener(infowindow, 'closeclick', function(){
       labelNum -=1;
       recentMarker.setMap(null);
-    //   recentMarker = null;
+      recentMarker = null;
     });
     
     // disallow marker spawn if its already here. this means i need the UniqueID 
