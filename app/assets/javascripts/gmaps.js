@@ -262,7 +262,7 @@ function initAutocomplete() {
     // Close the create allergen menu on form submission, POST marker object
     $(document).on('submit', '#markerForm', function(e){
       e.preventDefault();
-      infowindow.close();
+      //infowindow.close();
       var postData = $(this).serializeArray();
       postData.push({name: "lat", value: location.lat()});
       postData.push({name: "lng", value: location.lng()});
