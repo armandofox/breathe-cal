@@ -86,7 +86,8 @@ function initAutocomplete() {
   map.controls[google.maps.ControlPosition.LEFT_TOP].push(markerEnabler);
   // Sets bounds if the map moves
   map.addListener('bounds_changed', function() {searchBox.setBounds(map.getBounds()); });
-  // Fetches markers if the map has been dragged and the drag has ended
+  // Fetches markers before and if the map has been dragged and the drag has ended
+  fetchMarkers();
   google.maps.event.addListener(map, 'dragend', function(){ fetchMarkers(); })
 
   var markers = [];
@@ -256,6 +257,7 @@ function initAutocomplete() {
       labelNum -=1;
       recentMarker.setMap(null);
       recentMarker = null;
+      
     });
     
     // disallow marker spawn if its already here. this means i need the UniqueID 
