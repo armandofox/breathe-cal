@@ -85,7 +85,7 @@ function initAutocomplete() {
   var markerEnabler = document.getElementById('marker-cta');
   map.controls[google.maps.ControlPosition.LEFT_TOP].push(markerEnabler);
   // Sets bounds if the map moves
-  map.addListener('bounds_changed', function() {searchBox.setBounds(map.getBounds()); });
+  map.addListener('bounds_changed', function() {searchBox.setBounds(map.getBounds()); fetchMarkers();});
   // Fetches markers before and if the map has been dragged and the drag has ended
   var markers = [];
   google.maps.event.addListener(map, 'dragend', function(){ fetchMarkers(); })
