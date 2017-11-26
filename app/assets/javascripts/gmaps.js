@@ -87,10 +87,10 @@ function initAutocomplete() {
   // Sets bounds if the map moves
   map.addListener('bounds_changed', function() {searchBox.setBounds(map.getBounds()); });
   // Fetches markers before and if the map has been dragged and the drag has ended
+  var markers = [];
   fetchMarkers();
   google.maps.event.addListener(map, 'dragend', function(){ fetchMarkers(); })
 
-  var markers = [];
   // Retrieve place details when user selects autofill prediction with places
   searchBox.addListener('places_changed', function() {
     var places = searchBox.getPlaces();
