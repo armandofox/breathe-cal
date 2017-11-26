@@ -275,7 +275,7 @@ function initAutocomplete() {
       $.ajax({
         type: "POST",
         contentType: "application/json; charset=utf-8",
-        url: "/markers",
+        url: "/markers/",
         data: JSON.stringify({marker: convData}),
         success: function(d){
           fetchedMarkers[d.id] = true;
