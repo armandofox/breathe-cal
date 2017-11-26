@@ -28,7 +28,7 @@ function initAutocomplete() {
       url: "/markers",
       data: {bounds :{uplat:NECorner.lat(),downlat:SWCorner.lat(),rightlong:NECorner.lng(),leftlong:SWCorner.lng()}},
       success: function(data) {
-        for(var i=0;i<data.length; i++){
+        for (var i = 0; i < data.length; i++) {
           var id = data[i].id;
           if (true) {
             var location = {};
@@ -271,7 +271,7 @@ function initAutocomplete() {
       $(postData).each(function(index, obj){
         convData[obj.name] = obj.value;
       })
-      // 
+      // POST marker to database
       $.ajax({
         type: "POST",
         contentType: "application/json; charset=utf-8",
@@ -284,9 +284,9 @@ function initAutocomplete() {
             recentMarker.infowindow.setContent(newContent[0]);
             recentMarker.infowindow.open(map, recentMarker);
             recentMarker.draggable = false;
+            markers.push(recentMarker);
             recentMarker = null;
             //google.maps.event.removeEventListener(listenerHandle);
-            markers.push(recentMarker);
           }
         }
       })
