@@ -47,17 +47,5 @@ Scenario: Having searched for cities, I should retain my recent searches even if
 @javascript    
 Scenario: Having searched for more than 5 cities I should only see the last 5 ones displayed
     Given I go to the landing page
-    And my location is set to "Berkeley"
-    And I follow "Back"
-    And my location is set to "Albany"
-    And I follow "Back"
-    And my location is set to "Oakland"
-    And I follow "Back"
-    And my location is set to "Richmond"
-    And I follow "Back"
-    And my location is set to "San Jose"
-    And I follow "Back"
-    And my location is set to "Los Angeles"
-    And I follow "Back"
-    Then I should not see "No recent searches"
+    And I visit multiple locations: Berkeley,Albany,Oakland,Richmond,San Jose, Los Angeles
     Then I should not see a link "Berkeley"
