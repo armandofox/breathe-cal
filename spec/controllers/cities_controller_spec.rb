@@ -207,9 +207,6 @@ RSpec.describe CitiesController, type: :controller do
             OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(@user_hash)
             Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
             @user = User.create_user_from_omniauth(@user_hash)
-        end
-        
-        before :each do
             @berk_geo = {:lat => "37.8716", :lng => "-122.2727"}
             @hous_geo = {:lat => "29.7604", :lng => "-95.3698"}
             @fld_geo = {:lat => "26.1224", :lng => "-80.1373"}
@@ -217,31 +214,37 @@ RSpec.describe CitiesController, type: :controller do
             @city.save!
             @city2 = City.new(name: "Fort Lauderdale", lat: "26.1224", lng: "-80.1373", location_key: "328168")
             @city2.save!
-            session[:cities] = [] # simulate breathe_controller root 
+            session[:user_id] = 101
+            
         end
+    
         
         it 'session variable should be changed after a search to a city' do
             geo = @fld_geo
-            expect(session[:cities].size).to eq(0)
+            expect(@user.recent_cities.size).to eq(0)
             post :city_data, :geo => geo, :name => "Fort Lauderdale", :format => "js"
-            expect(session[:cities].size).to eq(1)
+            expect(assigns(:cities).size).to eq(1)
             geo = @berk_geo
-            expect{post :city_data, :geo => geo, :name => "Berkeley", :format => "js"}.to change{session[:cities].size}.by(1)
+            post :city_data, :geo => geo, :name => "Berkeley", :format => "js"
+            expect(assigns(:cities).size).to eq(2)
             geo = @hous_geo
-            expect{post :city_data, :geo => geo, :name => "Houston", :format => "js"}.to change{session[:cities].size}.by(1)
+            post :city_data, :geo => geo, :name => "Houston", :format => "js"
+            expect(assigns(:cities).size).to eq(3)
         end
         
         it 'session variable does not change when user queries same location' do
             geo = @fld_geo
-            expect(session[:cities].size).to eq(0)
             post :city_data, :geo => geo, :name => "Fort Lauderdale", :format => "js"
-            expect(session[:cities].size).to eq(1)
+            expect(assigns(:cities).size).to eq(1)
             geo = @berk_geo
-            expect{post :city_data, :geo => geo, :name => "Berkeley", :format => "js"}.to change{session[:cities].size}.by(1)
+            post :city_data, :geo => geo, :name => "Berkeley", :format => "js"
+            expect(assigns(:cities).size).to eq(2)
             geo = @fld_geo
-            expect{post :city_data, :geo => geo, :name => "Fort Lauderdale", :format => "js"}.not_to change{session[:cities].size}
+            post :city_data, :geo => geo, :name => "Fort Lauderdale", :format => "js"
+            expect(assigns(:cities).size).to eq(2)
             geo = @berk_geo
-            expect{post :city_data, :geo => geo, :name => "berkeley", :format => "js"}.not_to change{session[:cities].size}
+            post :city_data, :geo => geo, :name => "berkeley", :format => "js"
+            expect(assigns(:cities).size).to eq(2)
         end
     end
 end
