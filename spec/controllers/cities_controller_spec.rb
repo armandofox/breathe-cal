@@ -52,10 +52,8 @@ RSpec.describe CitiesController, type: :controller do
             it 'when the user searches a city that has not been searched' do 
                 geo = {:lat => "29.7604", :lng => "-95.3698"}
                 before = City.count
-                puts before
                 post :city_data, {:name => "Houston", :geo => geo, :format => "js"}, {:cities => []}
                 expect(response).to render_template('cities/city_data.js.erb')
-                puts City.count
                 expect(City.count).to_not eq(before)
                 expect(City.count).to eq(before + 1)
             end
@@ -215,6 +213,10 @@ RSpec.describe CitiesController, type: :controller do
             @berk_geo = {:lat => "37.8716", :lng => "-122.2727"}
             @hous_geo = {:lat => "29.7604", :lng => "-95.3698"}
             @fld_geo = {:lat => "26.1224", :lng => "-80.1373"}
+            @mia_geo = {:lat => "25.7617", :lng => "-80.1918"}
+            @aus_geo = {:lat =>"30.2672", :lng => "-97.7431"}
+            @sfo_geo = {:lat => "37.7749", :lng => "-122.4194"}
+            
             @city = City.new(name: "Berkeley", lat: "37.8716", lng: "-122.2727", location_key: "332044")
             @city.save!
             @city2 = City.new(name: "Fort Lauderdale", lat: "26.1224", lng: "-80.1373", location_key: "328168")
@@ -234,10 +236,14 @@ RSpec.describe CitiesController, type: :controller do
             expect(@user.recent_cities.size).to eq(0)
             post :city_data, :geo => geo, :name => "Fort Lauderdale", :format => "js"
 <<<<<<< HEAD
+<<<<<<< HEAD
             expect(assigns(:cities).size).to eq(1)
 =======
             expect(@user.recent_cities.size).to eq(1)
 >>>>>>> rspec test create new user
+=======
+            expect(assigns(:cities).size).to eq(1)
+>>>>>>> rspec test done
             geo = @berk_geo
             post :city_data, :geo => geo, :name => "Berkeley", :format => "js"
             expect(assigns(:cities).size).to eq(2)
@@ -248,6 +254,10 @@ RSpec.describe CitiesController, type: :controller do
         
         it 'session variable does not change when user queries same location' do
             geo = @fld_geo
+<<<<<<< HEAD
+=======
+            expect(@user.recent_cities.size).to eq(0)
+>>>>>>> rspec test done
             post :city_data, :geo => geo, :name => "Fort Lauderdale", :format => "js"
             expect(assigns(:cities).size).to eq(1)
             geo = @berk_geo
@@ -260,5 +270,22 @@ RSpec.describe CitiesController, type: :controller do
             post :city_data, :geo => geo, :name => "berkeley", :format => "js"
             expect(assigns(:cities).size).to eq(2)
         end
+        
+        it 'session variable should have at most five cities at all time' do
+            geo = @fld_geo
+            expect(@user.recent_cities.size).to eq(0)
+            post :city_data, :geo => geo, :name => "Fort Lauderdale", :format => "js"
+            geo = @berk_geo
+            post :city_data, :geo => geo, :name => "Berkeley", :format => "js"
+            geo = @hous_geo
+            post :city_data, :geo => geo, :name => "Houston", :format => "js"
+            geo = @mia_geo
+            post :city_data, :geo => geo, :name => "Miami", :format => "js"
+            geo = @aus_geo
+            post :city_data, :geo => geo, :name => "Austin", :format => "js"
+            geo = @sfo_geo
+            post :city_data, :geo => geo, :name => "San Francisco", :format => "js"
+            expect(assigns(:cities).size).to eq(5)
+        end 
     end
 end
