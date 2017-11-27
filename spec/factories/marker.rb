@@ -4,6 +4,5 @@ FactoryGirl.define do
     cat true
     lat 10
     lng 10
-    user_id 1
   end
 end

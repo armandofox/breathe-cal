@@ -5,7 +5,6 @@ class MarkersController < ApplicationController
   # Create a new marker
   def create
     marker = Marker.create!(marker_params.merge(:user_id => current_or_guest_user.id))
-    config.log(marker)
     render :json => marker
   end
 
