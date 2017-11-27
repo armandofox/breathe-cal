@@ -5,8 +5,6 @@ var fetchedMarkers = {};
 
 function initAutocomplete() {
   
-  var labelNum = 0;
-
   function point2LatLng(point, map) {
     var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
     var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
@@ -18,7 +16,6 @@ function initAutocomplete() {
   // Responsible for populating the markers on the map with the 'GET markers' request, which invokes markers#show
   function fetchMarkers(){
     deleteMarkers();
-    labelNum = 0;
     var bounds = map.getBounds();
     var NECorner = bounds.getNorthEast();
     var SWCorner = bounds.getSouthWest();
@@ -34,9 +31,12 @@ function initAutocomplete() {
             var location = {};
             location.lat = parseFloat(data[i].lat);
             location.lng = parseFloat(data[i].lng);
-            labelNum += 1;
             var marker = new google.maps.Marker({
+<<<<<<< HEAD
                   label: labelNum.toString(),
+=======
+                  id: id,
+>>>>>>> removed labelnum, addded id to posted markers and implemented delete. testing
                   position: location,
                   map: map,
                   draggable: false,
@@ -207,14 +207,13 @@ function initAutocomplete() {
   
   // Called when a user clicks to place a marker
   function placeMarker(location) {
-    labelNum += 1;
-    // Create new mmaps marker object
+    
+    // Create the marker to display infowindow
     var marker = new google.maps.Marker({
-      label: labelNum.toString() ,
       position: location,
       map: map,
-      draggable: true,
-    })
+      draggable: false,
+    });
     
     // Create form to display to user so they can add an allergen
     var contentString = $(
@@ -240,13 +239,13 @@ function initAutocomplete() {
       "</div>"
     );
     
-    // Display the form above to the user in an infowindow
+    // Display the form above to the user in marker's infowindow
     var infowindow = new google.maps.InfoWindow();
     infowindow.open(map,marker);
     infowindow.setContent(contentString[0]);
     marker.infowindow = infowindow;
     google.maps.event.addListener(marker, 'click', function(){
-      marker.infowindow.open(map,marker);
+      marker.infowindow.open(map, marker);
     });
     
     recentMarker = marker;
@@ -254,8 +253,11 @@ function initAutocomplete() {
     // Close the window and remove the created marker if the user exits
     var listenerHandle = google.maps.event.addListener(infowindow, 'closeclick', function(){
       if (recentMarker) {
-        labelNum -=1;
+        // POTENTIAL REAPLCEMENT
+        // infowindow.anchor.setMap(null)
         recentMarker.setMap(null);
+        
+        // We keep this line because recentmarker should only be truthy if we are in the POST markers call to access the marker object and put the id in
         recentMarker = null;
       }
     });
@@ -286,6 +288,7 @@ function initAutocomplete() {
             recentMarker.infowindow.setContent(newContent[0]);
             recentMarker.infowindow.open(map, recentMarker);
             recentMarker.draggable = false;
+            recentMarker.set('id', id);
             markers.push(recentMarker);
             recentMarker = null;
             google.maps.event.removeListener(listenerHandle);
@@ -296,33 +299,20 @@ function initAutocomplete() {
     });
     
     $(document).on('button', '#markerDetails', function(e){
-      e.preventDefault();
+      // e.preventDefault();  Just for submit right?
+      marker = infowindow.anchor;
+      id = marker.id;
       infowindow.close();
-      var postData = $(this).serializeArray();
-      postData.push({name: "title", value: data.title});
-      // Populate an array we pass into the POST request
-      var convData = {};
-      $(postData).each(function(index, obj){
-        convData[obj.name] = obj.value;
-      })
-      
+      // POSTS the marker id to the markers#destroy controller method
       $.ajax({
         type: "POST",
         contentType: "application/json; charset=utf-8",
-        url: "/delete",
-        data: JSON.stringify({marker: convData}), //what does this do?
-        success: function(d){ //what is d?
-          /*fetchedMarkers[d.id] = true;
-          var newContent = createContentString(d);
-          recentMarker.infowindow.setContent(newContent[0]);
-          recentMarker.infowindow.open(map,recentMarker);
-          recentMarker.draggable = false;
-          recentMarker = null;
+        url: "/delete/" + id,
+        // data: JSON.stringify({id: id}),
+        success: function(d){
+          marker.setMap(null)
+          recentMarker = null
           google.maps.event.removeEventListener(listenerHandle);
-          markers.push(recentMarker);*/
-          //THE BELOW CODE HAS BEEN COMMENTED OUT, BUT WAS MY ATTEMPT AT FINDING A MARKER AND REMOVING IT
-          //recentMarker = //Marker.find(conditions => {title => title});
-          //markers.pop(recentMarker)
         }
       })
       return false;
