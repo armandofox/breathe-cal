@@ -83,44 +83,11 @@ RSpec.describe User, type: :model do
         end
     end 
     
-    describe 'recent cities associations' do
+    describe 'saving recent_searches' do
         before :each do
             @valid_user = User.new(uid: 101, name: 'Joseph Brodsky', provider: 'google_oauth2', oauth_token: 'some_token', oauth_expires_at: Time.now + 10.day, email: 'jamesbond@gmail.com')
         end
         
-        it "should have many recent cities" do
-            t = User.reflect_on_association(:recent_cities)
-            expect(t.macro).to eq(:has_many)
-        end
-        
-        it 'should be respond to recent_cities' do
-            expect(@valid_user).to respond_to(:recent_cities)
-        end
-        
-        it 'should return empty relation if no recent cities have been added' do
-            @recent_cities = @valid_user.recent_cities
-            expect(@recent_cities).to eq(User.none)
-            expect(@recent_cities.empty?).to be_truthy
-        end
-        
-        it 'should be able to add and access recent cities' do
-            @city = City.new(name: "z", lat: "37.8716", lng: "-122.2727", location_key: "332044")
-            @city.save!
-            @city2 = City.new(name: "r", lat: "29.7604", lng: "-95.3698")
-            @city2.save!
-            @city3 = City.new(name: "s", lat: "3", lng: "2")
-            @city3.save!
-            @valid_user.recent_cities << @city2
-            @valid_user.recent_cities << @city
-            @valid_user.recent_cities << @city3
-            @recent_cities = @valid_user.recent_cities
-            expect(@recent_cities.empty?).to be_falsey
-            expect(@recent_cities.size).to eq(3)
-            # puts @recent_cities.drop(1).reverse!
-            # @recent_cities.drop(1).reverse!.each do |c|
-            #     puts c.name
-            # end
-        end
     end
     
     

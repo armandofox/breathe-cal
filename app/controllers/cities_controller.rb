@@ -68,6 +68,10 @@ class CitiesController < ApplicationController
     def city_data
       city = City.obtain_stored_city(params[:geo]["lat"], params[:geo]["lng"], params[:name])
       @data = [city.name, city.daily_data]
+      
+      @user = current_or_guest_user
+      @recent_cities = @user.recent_cities
+      
       unless a_in_b_as_c?(city.name, session[:cities], "name")
         if (@quality.nil?)
           @quality = city.daily_data["DailyForecasts"][0]["AirAndPollen"][0]["Category"]
