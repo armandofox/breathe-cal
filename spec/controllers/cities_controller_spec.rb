@@ -255,7 +255,19 @@ RSpec.describe CitiesController, type: :controller do
             geo = @fld_geo
             expect(@user.recent_cities.size).to eq(0)
             post :city_data, :geo => geo, :name => "Fort Lauderdale", :format => "js"
+<<<<<<< HEAD
             expect(assigns(:cities).size).to eq(1)
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+            expect(assigns(:cities).size).to eq(1)
+=======
+            expect(@user.recent_cities.size).to eq(1)
+>>>>>>> rspec test create new user
+=======
+            expect(assigns(:cities).size).to eq(1)
+>>>>>>> rspec test done
+>>>>>>> rspec tests
             geo = @berk_geo
             post :city_data, :geo => geo, :name => "Berkeley", :format => "js"
             expect(assigns(:cities).size).to eq(2)
@@ -267,6 +279,7 @@ RSpec.describe CitiesController, type: :controller do
         it 'session variable does not change when user queries same location' do
             geo = @fld_geo
             expect(@user.recent_cities.size).to eq(0)
+
             post :city_data, :geo => geo, :name => "Fort Lauderdale", :format => "js"
             expect(assigns(:cities).size).to eq(1)
             geo = @berk_geo
