@@ -83,5 +83,12 @@ RSpec.describe User, type: :model do
         end
     end 
     
+    describe 'saving recent_searches' do
+        before :each do
+            @valid_user = User.new(uid: 101, name: 'Joseph Brodsky', provider: 'google_oauth2', oauth_token: 'some_token', oauth_expires_at: Time.now + 10.day, email: 'jamesbond@gmail.com')
+        end
+        
+    end
+    
     
 end

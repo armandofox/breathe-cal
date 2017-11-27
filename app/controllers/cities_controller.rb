@@ -37,13 +37,28 @@ class CitiesController < ApplicationController
       city = City.obtain_stored_city(params[:geo]["lat"], params[:geo]["lng"], params[:name])
       # prepare data
       @data = [city.name, city.daily_data]
-      unless a_in_b_as_c?(city.name, session[:cities], "name")
+      
+      @user = current_or_guest_user
+      @recent_cities = @user.recent_cities
+      
+      unless a_in_b_as_c?(city.name, @recent_cities, "name")
         if (@quality.nil?)
           @quality = city.daily_data["DailyForecasts"][0]["AirAndPollen"][0]["Category"]
         end
-        session[:cities] = session[:cities].push({ "name" => city.name, "quality" => @quality, "id" => city.id })
+        @recent_cities << { "name" => city.name, "quality" => @quality, "id" => city.id }
       end
       
+      if @recent_cities.length > 5
+        @recent_cities = @recent_cities[@recent_cities.length - 5, @recent_cities.length - 1]
+      end
+      if @user.provider.nil?
+        @user.update_attributes(recent_cities: @recent_cities)
+        @user.save(:validate => false)
+      else
+        @user.update_attributes!(recent_cities: @recent_cities)
+      end
+      @cities = @user.recent_cities.reverse
+
       respond_to do |format|
         format.js {
           render :template => "cities/city_data.js.erb"
@@ -55,21 +70,10 @@ class CitiesController < ApplicationController
     # Cookie for recently searched cities. Shows at most 5 city.
     def city_data_back
       @text = "Recent Searches"
-      flash[:notice] = session[:cities]
-      if session[:cities]
-        # Trim the list of cities. Max length of the list is 5.
-        if session[:cities].length > 5
-          session[:cities] = session[:cities][session[:cities].length - 5, session[:cities].length - 1]
-        end 
-        # Used for debugging, prints all 5 city names to server.
-        #session[:cities].each do |city|
-          #puts city
-        #end 
-        @cities = session[:cities].reverse
-      else
-        @cities = []
-        session[:cities] = []
-      end
+      @user = current_or_guest_user
+      @cities = @user.recent_cities.reverse!
+      @cities ||= []
+      
       respond_to do |format|
         format.js {
           render :template => "cities/city_data_back.js.erb"

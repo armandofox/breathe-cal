@@ -7,11 +7,6 @@ class City < ActiveRecord::Base
     Rails.application.secrets.WEATHER_KEY
   end
   
-  def self.get_resonse(resp, _url, _query)
-    # JS: I found args url and query unused so added in _ to improve test coverage
-    return resp
-  end
-  
   def has_valid_data
     if self.daily_data.nil?
       return false
@@ -28,8 +23,8 @@ class City < ActiveRecord::Base
     if self.updated_at.nil? or self.updated_at <= Date.today.to_time.beginning_of_day or !has_valid_data()
       url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/#{self.location_key}"
       query = {apikey: City.get_accuweather_key(), language:"en-us", details: "true"}
-      response = City.get_resonse(HTTParty.get(url, query: query), url, query)
-      self.update_attribute("daily_data" , response)
+      resp = HTTParty.get(url, query: query)
+      self.update_attribute("daily_data" , resp)
     end
   end
   
@@ -37,8 +32,8 @@ class City < ActiveRecord::Base
     # We want to avoid creating a City object when we get location key
     url = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search"
     query = {apikey: City.get_accuweather_key(), q: "#{lat},#{lng}",language:"en-us" }
-    response = City.get_resonse(HTTParty.get(url, query: query), url, query)
-    return response["Key"]
+    resp = HTTParty.get(url, query: query)
+    return resp["Key"]
   end
   
   def self.get_loc_key(lat,lng, name)
@@ -48,8 +43,8 @@ class City < ActiveRecord::Base
     end
     url = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search"
     query = {apikey: City.get_accuweather_key(), q: "#{lat},#{lng}",language:"en-us" }
-    response = City.get_resonse(HTTParty.get(url, query: query), url, query)
-    location_key = response["Key"]
+    resp = HTTParty.get(url, query: query)
+    location_key = resp["Key"]
     City.create(lat: "#{lat}", lng: "#{lng}", location_key: location_key, name: name)
     return location_key
   end
