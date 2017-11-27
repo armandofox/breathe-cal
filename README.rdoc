@@ -17,44 +17,35 @@ http://www.breathebayarea.org/
 
 Our overall goal is to provide information on airborne allergens and air quality to those who need it.
 
-Intallation
- 
- Because of some customizations that were made in the develpoment process, one first has to perform multiple steps in order to be able to run the included testing features
- 
- Make sure the following gems are added to the Gemfile:
-     gem 'cucumber-rails', :require => false
-     gem 'database_cleaner'
-     gem 'rspec-rails'
-     gem 'capybara'
-     gem 'poltergeist'
-     gem 'phantomjs', '1.9.8'
-     gem 'selenium-webdriver'
-     gem 'omniauth-google-oauth2'
-     gem 'gmaps4rails'
-     gem 'geocoder'
-     
- And then run bundle install command in the terminal.
- 
- In order to make Capybara use PhantomJS headless browser through the Poltergeist driver there is one change that needs to be done:
- 
- require 'capybara/poltergeist'
- 
- Capybara.javascript_driver = :poltergeist
- 
- Capybara.register_driver :poltergeist do |app|  
-   Capybara::Poltergeist::Driver.new(app, js_error: false)
- end  
- 
- Add the above to the test setup file.
- 
-Moreover, since our app integrate Google Map API, be sure to add your development website to Google Map API 
+Genral Setup
 
-https://console.developers.google.com/apis/credentials/oauthclient/140496364556-f0lvk46ni0jm0ke4k41nfnlp5mj7j8tl.apps.googleusercontent.com?project=breathe-149522&authuser=1
+Fork/clone the repo, then run bundle install. The gemfile with dependencies is included in the repository so bundler should locate and use it.
 
- 
- After that all that is left to do is run the migration file by typing in rake db:migrate in the terminal line
- 
- Now, in order to run any of the cucumber features we type cucumber features/*
+API Keys - set manually in heroku. They include Accuweather, Google SSO, and Google Maps.
 
- Please feel free to use a different markup language if you do not plan to run
+Make sure to add your deployment url to the list of Google SSO redirect links, do so here:
+
+
+
+
+  
+Database
+
+Setup - run 'bundle exec rake db:migrate', then 'bundle exec rake db:test:preapare'. This will run all of our migrations for development and test environments while considering dependencies.
+
+Clear all markers from heroku database - 'heroku run pg:reset DATABASE' will clear, then 'heroku run rake db:migrate' will run our migrations and 'heroku run rake db:seed' will populate the database with any seeds. Seeds can be found in F>SDJFLDSJFS
+
+
+
+Development/Deployment
+
+Before pushing to heroku, assets must be precompiled (they also should be after any app/assets/ edits) with 'RAILS_ENV=production rake assets:precompile'
+
+
+
+
+
+Now, in order to run any of the cucumber features we type cucumber features/*
+
+Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.
