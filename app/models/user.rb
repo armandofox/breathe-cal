@@ -1,12 +1,11 @@
 class User < ActiveRecord::Base
-    has_many :recent_cities, :class_name => "City", :foreign_key => 'recent_city_id'
-    has_many :favorite_cities, :class_name => "City", :foreign_key => 'favorite_city_id'
     validates :provider, :uid, :name, :email, :oauth_token, presence: true
     validates :oauth_expires_at, presence: true, if: :not_expired?
 
     geocoded_by :address
     after_validation :geocode
     serialize :searches, JSON
+    serialize :recent_cities, Hash
     
     # During Authentication, checks if user already exists in the database else
     # it creates a new user entry. If a user exists it updates its the user's

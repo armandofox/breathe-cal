@@ -51,6 +51,8 @@ class CitiesController < ApplicationController
       city = City.obtain_stored_city(params[:geo]["lat"], params[:geo]["lng"], params[:name])
       # prepare data
       @data = [city.name, city.daily_data]
+      @user = current_or_guest_user
+      @recent_cities = @user.recent_cities
       
       unless a_in_b_as_c?(city.name, session[:cities], "name")
         if (@quality.nil?)
