@@ -63,7 +63,6 @@ class CitiesController < ApplicationController
           render :template => "cities/city_data.js.erb"
         }
       end
-      # render :json => city.daily_data.to_json
     end
 
     
