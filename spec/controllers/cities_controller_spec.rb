@@ -17,7 +17,7 @@ RSpec.describe CitiesController, type: :controller do
                 expect(response).to render_template("cities/city_data.js.erb")
             end
         end 
-        
+
         describe '#map_search' do
             it 'when a user searches for a city' do
                # attempt to query city
@@ -253,7 +253,6 @@ RSpec.describe CitiesController, type: :controller do
             geo = @berk_geo
             expect{post :city_data, :geo => geo, :name => "berkeley", :format => "js"}.not_to change{session[:cities].size}
         end
-        
     end
     
 end

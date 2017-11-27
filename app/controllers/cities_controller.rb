@@ -8,24 +8,6 @@ class CitiesController < ApplicationController
     def new
     end
     
-    def map_search
-      place_name = params[:name]
-      lat = params[:geo]["lat"]
-      lng = params[:geo]["lng"]
-      city = City.find_by(:lat => lat, :lng => lng)
-      if city.nil?
-        location_key = City.obtain_loc_key(lat, lng)
-        city = City.create(:lat => lat, :lng => lng, :name => place_name, :location_key => location_key)
-        city.update_city_data
-        # render template: "cities/index.html.erb"
-        redirect_to city_data_path(:id => city.id, :format => "js"), :status => 201
-      else
-        city.update_city_data
-        # render template: "cities/index.html.erb"
-        redirect_to city_data_path(:id => city.id, :format => "js"), :status => 200
-      end
-    end
-    
     # Start storing city data and send city data to be rendered. 
     def cached_city_data
       city = City.find_by(name: params[:name])
@@ -87,7 +69,7 @@ class CitiesController < ApplicationController
     # Cookie for recently searched cities. Shows at most 5 city.
     def city_data_back
       @text = "Recent Searches"
-      puts session[:cities]
+      flash[:notice] = session[:cities]
       if session[:cities]
         # Trim the list of cities. Max length of the list is 5.
         if session[:cities].length > 5
@@ -112,7 +94,7 @@ class CitiesController < ApplicationController
     # Display favorite cities.
     def display_favorite_cities
       @text = "Favorite Cities"
-      if session[:client_id]
+      if session[:user_id]
         @cities = session[:favorites]
         if @cities == nil || @cities.empty? 
           @no_cities = "You currently have no favorite cities!"
