@@ -10,6 +10,7 @@ RSpec.describe CitiesController, type: :controller do
             @city2.save!
             @city3 = City.new(name: "")
         end
+        
    
         describe '#cached_city_data' do
             it 'should render the correct template' do
@@ -157,15 +158,19 @@ RSpec.describe CitiesController, type: :controller do
         end
         
         describe '#city_data_back' do
-            it 'more than 5 cities have been searched for' do
-                request.session[:cities] = [{"name" => '1'}, {"name" => '2'}, {"name" => '3'}, {"name" => '4'}, {"name" => '5'}, {"name" => '6'}]
-                get :city_data_back, format: 'js'
-                x = 2
-                request.session[:cities].each do |city|
-                   expect(city["name"]).to eq(x.to_s) 
-                   x = x + 1
-                end
+                     before :each do
+                OmniAuth.config.test_mode = true
+                @user_hash = {
+                    provider: 'google_oauth2', 
+                    uid: 101,
+                    info: {name: "test user", email: "test@xxxx.com"},
+                    credentials: {token: 'some_token', expires_at: (Time.now + 10.day).round}
+                }
+                OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(@user_hash)
+                Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+                @user = User.create_user_from_omniauth(@user_hash)
             end
+
             
             it 'less that 5 cities have been searched for' do
                 request.session[:cities] = [{"name" => '1'}]
@@ -219,6 +224,20 @@ RSpec.describe CitiesController, type: :controller do
     end
     
     describe 'client_searches feature' do
+        
+        before :each do
+            OmniAuth.config.test_mode = true
+            @user_hash = {
+                provider: 'google_oauth2', 
+                uid: 101,
+                info: {name: "test user", email: "test@xxxx.com"},
+                credentials: {token: 'some_token', expires_at: (Time.now + 10.day).round}
+            }
+            OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(@user_hash)
+            Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+            @user = User.create_user_from_omniauth(@user_hash)
+        end
+        
         before :each do
             @berk_geo = {:lat => "37.8716", :lng => "-122.2727"}
             @hous_geo = {:lat => "29.7604", :lng => "-95.3698"}
@@ -254,5 +273,4 @@ RSpec.describe CitiesController, type: :controller do
             expect{post :city_data, :geo => geo, :name => "berkeley", :format => "js"}.not_to change{session[:cities].size}
         end
     end
-    
 end
