@@ -285,7 +285,7 @@ function initAutocomplete() {
             recentMarker.infowindow.setContent(newContent[0]);
             recentMarker.infowindow.open(map, recentMarker);
             recentMarker.draggable = false;
-            recentMarker.set('id', id);
+            // recentMarker.set('id', id);
             markers.push(recentMarker);
             recentMarker = null;
             google.maps.event.removeListener(listenerHandle);
