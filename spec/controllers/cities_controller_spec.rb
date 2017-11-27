@@ -18,35 +18,6 @@ RSpec.describe CitiesController, type: :controller do
                 expect(response).to render_template("cities/city_data.js.erb")
             end
         end 
-        
-        describe '#map_search' do
-            it 'when a user searches for a city' do
-               # attempt to query city
-               # post map_search 
-               lat = "37.8716"
-               lng = "-122.2727"
-               
-               post :map_search, {:geo => {:lat => lat, :lng => lng}}
-               expect(response.status).to eq(200)
-               
-               new_lat = "32.2332"
-               new_lng = "-42.3231"
-               post :map_search, {:geo => {:lat => new_lat, :lng => new_lng}}
-               expect(response.status).to eq(201)
-               
-               new_lat = "32.2332"
-               new_lng = "-42.3231"
-               post :map_search, {:geo =>{:lat => new_lat, :lng => new_lng}}
-               expect(response.status).to eq(200)
-            end
-            
-            it 'when a user searches for a city, he/she has searched before' do
-               lat = "37.8716"
-               lng = "-122.2727"
-               post :map_search, {:geo =>{:lat => lat, :lng => lng}}
-               expect(response.status).to eq(200)
-            end
-        end
 
         describe '#city_data' do
             it 'when the recent searches does not contain the city being searched' do
@@ -253,7 +224,6 @@ RSpec.describe CitiesController, type: :controller do
             geo = @berk_geo
             expect{post :city_data, :geo => geo, :name => "berkeley", :format => "js"}.not_to change{session[:cities].size}
         end
-        
     end
     
 end
