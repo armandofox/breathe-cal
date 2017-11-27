@@ -7,20 +7,15 @@ Pivotal Link
 
 https://www.pivotaltracker.com/n/projects/2118203
 
-Heroku Link
+Heroku Link (Master Branch)
 
-PREVIOUSLY https://pacific-ravine-11496.herokuapp.com/
-NOW https://breathe-cal.herokuapp.com/
+https://breathe-cal.herokuapp.com/
 
 Client Site
 
 http://www.breathebayarea.org/
 
-Our overall goal is to improve provide adequate information to individuals so that they may be better prepared in the case of a adverse lung health event.
-Requested Features
-A key feature for this project will be the allergen detection. This is the main feature of the proposed project in that it serves as the purpose for the application.
-
-(Note: The client did not have time for a meeting so this explanation of the client's business needs was taken from the project listing description.)
+Our overall goal is to provide information on airborne allergens and air quality to those who need it.
 
 Intallation
  
