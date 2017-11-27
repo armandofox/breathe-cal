@@ -32,16 +32,12 @@ function initAutocomplete() {
             location.lat = parseFloat(data[i].lat);
             location.lng = parseFloat(data[i].lng);
             var marker = new google.maps.Marker({
-<<<<<<< HEAD
-                  label: labelNum.toString(),
-=======
                   id: id,
->>>>>>> removed labelnum, addded id to posted markers and implemented delete. testing
                   position: location,
                   map: map,
                   draggable: false,
                   });
-            var newContent = createContentString(data[i]);      
+            var newContent = createMarkerDetails(data[i]);      
             marker.info = new google.maps.InfoWindow();
             marker.info.setContent(newContent[0]);
             google.maps.event.addListener(marker, 'click', function(){
@@ -174,7 +170,7 @@ function initAutocomplete() {
   var recentMarker = null;
   
   // Create string to display in infowindow
-  function createContentString(data){
+  function createMarkerDetails(data){
     var title = data.title;
     var attributes = ["cat", "bees", "perfume", "oak", "peanut", "gluten", "dog", "dust", "smoke", "mold"];
     var leftContentString = "";
@@ -189,7 +185,7 @@ function initAutocomplete() {
         rightContentString += attributes[i] + "<br>";  
       }
     }
-    var contentString ="<div id='wrap'>" + 
+    var markerDetails ="<div id='wrap'>" + 
                       "<form id='markerDetails' action='delete' method='POST'>"+
                       "Allergens at " + title + "<br>" +
                       "<div id='left_col'>" + 
@@ -198,10 +194,10 @@ function initAutocomplete() {
                       "<div id='right_col'>" + 
                       rightContentString +
                       "</div>" + 
-                      "<input type='button' value='Delete'>"+
+                      "<input type='button' value='Delete' onclick='removeMarker()'>"+
                       "</form>" +
                       "</div>";
-    var content = $(contentString);
+    var content = $(markerDetails);
     return content;
   }
   
@@ -283,7 +279,8 @@ function initAutocomplete() {
         data: JSON.stringify({marker: convData}),
         success: function(d){
           fetchedMarkers[d.id] = true;
-          var newContent = createContentString(d);
+          // We need to store the marker database object's id in the google maps object
+          var newContent = createMarkerDetails(d);
           if (recentMarker) {
             recentMarker.infowindow.setContent(newContent[0]);
             recentMarker.infowindow.open(map, recentMarker);
@@ -298,28 +295,48 @@ function initAutocomplete() {
       return false;
     });
     
-    $(document).on('button', '#markerDetails', function(e){
-      // e.preventDefault();  Just for submit right?
-      marker = infowindow.anchor;
-      id = marker.id;
-      infowindow.close();
-      // POSTS the marker id to the markers#destroy controller method
-      $.ajax({
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        url: "/delete/" + id,
-        // data: JSON.stringify({id: id}),
-        success: function(d){
-          marker.setMap(null)
-          recentMarker = null
-          google.maps.event.removeEventListener(listenerHandle);
-        }
-      })
-      return false;
-    });
+    // $(document).on('button', '#markerDetails', function(e){
+    //   // e.preventDefault();  Just for submit right?
+    //   marker = infowindow.anchor;
+    //   id = marker.id;
+    //   infowindow.close();
+    //   // POSTS the marker id to the markers#destroy controller method
+    //   $.ajax({
+    //     type: "POST",
+    //     contentType: "application/json; charset=utf-8",
+    //     url: "/delete/" + id,
+    //     // data: JSON.stringify({id: id}),
+    //     success: function(d){
+    //       marker.setMap(null)
+    //       recentMarker = null
+    //       google.maps.event.removeEventListener(listenerHandle);
+    //     }
+    //   })
+    //   return false;
+    // });
   }
   
-  //  
+  // Removes one marker, triggered from specific marker's infowindow's delete button
+  function removeMarker() {
+    marker = infowindow.anchor;
+    id = marker.id;
+    infowindow.close();
+    // POSTS the marker id to the markers#destroy controller method
+    $.ajax({
+      type: "POST",
+      contentType: "application/json; charset=utf-8",
+      url: "/delete/" + id,
+      // data: JSON.stringify({id: id}),
+      success: function(d){
+        marker.setMap(null)
+        recentMarker = null
+        google.maps.event.removeEventListener(listenerHandle);
+      }
+    })
+    return false;
+  }
+  
+  // Shows all markers
   function setMapOnAll(map) {
     for (var i = 0; i < markers.length; i++) {
       marker = markers[i]
