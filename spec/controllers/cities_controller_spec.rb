@@ -250,7 +250,7 @@ RSpec.describe CitiesController, type: :controller do
             session[:user_id] = 101
 
         end
-      
+        
         it 'session variable should be changed after a search to a city' do
             geo = @fld_geo
             expect(@user.recent_cities.size).to eq(0)
