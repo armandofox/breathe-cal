@@ -207,6 +207,11 @@ RSpec.describe CitiesController, type: :controller do
             OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(@user_hash)
             Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
             @user = User.create_user_from_omniauth(@user_hash)
+<<<<<<< HEAD
+=======
+            allow(@user).to receive(:id).and_return(101)
+            
+>>>>>>> rspec test create new user
             @berk_geo = {:lat => "37.8716", :lng => "-122.2727"}
             @hous_geo = {:lat => "29.7604", :lng => "-95.3698"}
             @fld_geo = {:lat => "26.1224", :lng => "-80.1373"}
@@ -214,16 +219,25 @@ RSpec.describe CitiesController, type: :controller do
             @city.save!
             @city2 = City.new(name: "Fort Lauderdale", lat: "26.1224", lng: "-80.1373", location_key: "328168")
             @city2.save!
+<<<<<<< HEAD
             session[:user_id] = 101
             
         end
     
+=======
+        end
+       
+>>>>>>> rspec test create new user
         
         it 'session variable should be changed after a search to a city' do
             geo = @fld_geo
             expect(@user.recent_cities.size).to eq(0)
             post :city_data, :geo => geo, :name => "Fort Lauderdale", :format => "js"
+<<<<<<< HEAD
             expect(assigns(:cities).size).to eq(1)
+=======
+            expect(@user.recent_cities.size).to eq(1)
+>>>>>>> rspec test create new user
             geo = @berk_geo
             post :city_data, :geo => geo, :name => "Berkeley", :format => "js"
             expect(assigns(:cities).size).to eq(2)
