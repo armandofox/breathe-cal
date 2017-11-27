@@ -130,7 +130,7 @@ end
 
 Then /^I should not see a link "(.*)"$/ do |link|
   Capybara.ignore_hidden_elements = false
-  assert !find_link(link, visible: false)
+  expect(has_no_link?(link, :visible => true)).to eq(true)
 end
 
 Then /^I should see icon “.*?”$/ do |arg1|
