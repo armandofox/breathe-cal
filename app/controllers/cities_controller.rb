@@ -51,8 +51,21 @@ class CitiesController < ApplicationController
       return false
     end
     
+    def manage_recent_cities(city)
+      @user = current_or_guest_user
+      @recent_cities = @user.recent_cities
+      
+      if !@recent_cities.exists?(city)
+        if @recent_cities.size >= 5
+          @recent_cities.drop(1).each do |c|
+            @user.recent_cities << c
+          end
+        end
+        @user.recent_cities << city
+      end
+    end
+    
     def city_data
-      puts session[:cities]
       city = City.obtain_stored_city(params[:geo]["lat"], params[:geo]["lng"], params[:name])
       @data = [city.name, city.daily_data]
       unless a_in_b_as_c?(city.name, session[:cities], "name")
@@ -66,9 +79,13 @@ class CitiesController < ApplicationController
       
       @TEST_DATA = session[:cities]
       
+      manage_recent_cities(city)
+      @user = current_or_guest_user
+      @cities = @user.recent_cities
+      @quality = city.daily_data["DailyForecasts"][0]["AirAndPollen"][0]["Category"]
+      
       respond_to do |format|
         format.js {
-          puts session[:cities]
           render :template => "cities/city_data.js.erb"
         }
       end
@@ -79,21 +96,24 @@ class CitiesController < ApplicationController
     # Cookie for recently searched cities. Shows at most 5 city.
     def city_data_back
       @text = "Recent Searches"
-      puts session[:cities]
-      if session[:cities]
-        # Trim the list of cities. Max length of the list is 5.
-        if session[:cities].length > 5
-          session[:cities] = session[:cities][session[:cities].length - 5, session[:cities].length - 1]
-        end 
-        # Used for debugging, prints all 5 city names to server.
-        #session[:cities].each do |city|
-          #puts city
-        #end 
-        @cities = session[:cities].reverse
-      else
-        @cities = []
-        session[:cities] = []
-      end
+      # puts session[:cities]
+      # if session[:cities]
+      #   # Trim the list of cities. Max length of the list is 5.
+      #   if session[:cities].length > 5
+      #     session[:cities] = session[:cities][session[:cities].length - 5, session[:cities].length - 1]
+      #   end 
+      #   # Used for debugging, prints all 5 city names to server.
+      #   #session[:cities].each do |city|
+      #     #puts city
+      #   #end 
+      #   @cities = session[:cities].reverse
+      # else
+      #   @cities = []
+      #   session[:cities] = []
+      # end
+      @user = current_or_guest_user
+      @cities = @user.recent_cities.reverse_order!
+      
       respond_to do |format|
         format.js {
           render :template => "cities/city_data_back.js.erb"
