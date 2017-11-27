@@ -138,25 +138,6 @@ function initAutocomplete() {
   
   var canMark = false;
   
-  // Removes one marker, triggered from specific marker's infowindow's delete button
-  // function removeMarker() {
-  //   marker = infowindow.anchor;
-  //   id = marker.id;
-  //   infowindow.close();
-  //   // POSTS the marker id to the markers#destroy controller method
-  //   $.ajax({
-  //     type: "POST",
-  //     contentType: "application/json; charset=utf-8",
-  //     url: "/delete/" + id,
-  //     // data: JSON.stringify({id: id}),
-  //     success: function(d){
-  //       marker.setMap(null)
-  //       recentMarker = null
-  //     }
-  //   })
-  //   return false;
-  // }
-  
   // Runs when user clicks to place marker, sets up cursor for placement
   $("#marker-cta").click(function(){
     if (recentMarker === null){
@@ -304,7 +285,7 @@ function initAutocomplete() {
             recentMarker.infowindow.setContent(newContent[0]);
             recentMarker.infowindow.open(map, recentMarker);
             recentMarker.draggable = false;
-            recentMarker.set('id', id);
+            // recentMarker.set('id', id);
             markers.push(recentMarker);
             recentMarker = null;
             google.maps.event.removeListener(listenerHandle);
