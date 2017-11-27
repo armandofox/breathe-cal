@@ -290,7 +290,6 @@ function initAutocomplete() {
       $(postData).each(function(index, obj){
         convData[obj.name] = obj.value;
       })
-      puts(JSON.stringify({marker: convData}))
       // POST marker to database
       $.ajax({
         type: "POST",
