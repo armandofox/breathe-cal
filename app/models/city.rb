@@ -57,7 +57,6 @@ class City < ActiveRecord::Base
   # Helper function to get city, ensure city in database
   def self.obtain_stored_city(lat, lng, _place_name)
     city = City.find_by(:lat => lat, :lng => lng)
-    puts "City is nil?", city.nil?
     if city.nil?
       location_key = City.obtain_loc_key(lat, lng)
       city = City.create!(:lat => lat, :lng => lng, :name => _place_name, :location_key => location_key)
@@ -65,7 +64,6 @@ class City < ActiveRecord::Base
     else
       city.update_city_data
     end
-    puts "Location Key is nil?  ", city.location_key.nil?
     return city
   end
 

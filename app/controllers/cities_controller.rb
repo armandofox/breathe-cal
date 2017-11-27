@@ -41,7 +41,6 @@ class CitiesController < ApplicationController
         if (@quality.nil?)
           @quality = city.daily_data["DailyForecasts"][0]["AirAndPollen"][0]["Category"]
         end
-        puts "ADDING " + city.name + "TO CACHE!!!!!!!!!!!!!!!!!!!!!"
         session[:cities] = session[:cities].push({ "name" => city.name, "quality" => @quality, "id" => city.id })
       end
       
