@@ -8,7 +8,7 @@ When /^my location is set to "(.*)"$/ do |place|
   fill_in 'pac-input', with: place
   #find('#pac-input').set(place)
   find('#pac-input').native.send_keys(:Enter)
-  #wait_for_ajax
+  wait_for_ajax
   Capybara.ignore_hidden_elements = false
 # ignore jquery animations
 end
@@ -24,6 +24,7 @@ end
 
 And /^I wait for page to load/ do
   wait_for_ajax
+  save_screenshot('/home/ubuntu/workspace/fall17breathecal/breathe-cal/coverage/cool.png', :full => true)
 end
 
 Then /I should see the details of "(.*)"/ do |city_name|
