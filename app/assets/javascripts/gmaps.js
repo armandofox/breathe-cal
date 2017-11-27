@@ -139,23 +139,23 @@ function initAutocomplete() {
   var canMark = false;
   
   // Removes one marker, triggered from specific marker's infowindow's delete button
-  function removeMarker() {
-    marker = infowindow.anchor;
-    id = marker.id;
-    infowindow.close();
-    // POSTS the marker id to the markers#destroy controller method
-    $.ajax({
-      type: "POST",
-      contentType: "application/json; charset=utf-8",
-      url: "/delete/" + id,
-      // data: JSON.stringify({id: id}),
-      success: function(d){
-        marker.setMap(null)
-        recentMarker = null
-      }
-    })
-    return false;
-  }
+  // function removeMarker() {
+  //   marker = infowindow.anchor;
+  //   id = marker.id;
+  //   infowindow.close();
+  //   // POSTS the marker id to the markers#destroy controller method
+  //   $.ajax({
+  //     type: "POST",
+  //     contentType: "application/json; charset=utf-8",
+  //     url: "/delete/" + id,
+  //     // data: JSON.stringify({id: id}),
+  //     success: function(d){
+  //       marker.setMap(null)
+  //       recentMarker = null
+  //     }
+  //   })
+  //   return false;
+  // }
   
   // Runs when user clicks to place marker, sets up cursor for placement
   $("#marker-cta").click(function(){
@@ -213,7 +213,8 @@ function initAutocomplete() {
                       "<div id='right_col'>" + 
                       rightContentString +
                       "</div>" + 
-                      "<input type='button' value='Delete' onclick='removeMarker()'>"+
+                      // "<input type='button' value='Delete' onclick='removeMarker()'>"+
+                      "<input type='button' value='Delete'>"+
                       "</form>" +
                       "</div>";
     var content = $(markerDetails);
@@ -299,6 +300,7 @@ function initAutocomplete() {
           fetchedMarkers[d.id] = true;    // Not sure why this is here
           var newContent = createMarkerDetails(d);
           if (recentMarker) {
+            // This shouldn't display immediately because delete can't be chosen until they refresh since the marker id can't be assigned until fetch
             recentMarker.infowindow.setContent(newContent[0]);
             recentMarker.infowindow.open(map, recentMarker);
             recentMarker.draggable = false;
@@ -311,25 +313,6 @@ function initAutocomplete() {
       })
       return false;
     });
-    // $(document).on('button', '#markerDetails', function(e){
-    //   // e.preventDefault();  Just for submit right?
-    //   marker = infowindow.anchor;
-    //   id = marker.id;
-    //   infowindow.close();
-    //   // POSTS the marker id to the markers#destroy controller method
-    //   $.ajax({
-    //     type: "POST",
-    //     contentType: "application/json; charset=utf-8",
-    //     url: "/delete/" + id,
-    //     // data: JSON.stringify({id: id}),
-    //     success: function(d){
-    //       marker.setMap(null)
-    //       recentMarker = null
-    //       google.maps.event.removeEventListener(listenerHandle);
-    //     }
-    //   })
-    //   return false;
-    // });
   }
   
   // Removes one marker, triggered from specific marker's infowindow's delete button
