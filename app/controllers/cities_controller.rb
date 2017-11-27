@@ -33,20 +33,6 @@ class CitiesController < ApplicationController
       return false
     end
     
-    def manage_recent_cities(city)
-      @user = current_or_guest_user
-      @recent_cities = @user.recent_cities
-      
-      if !@recent_cities.exists?(city)
-        if @recent_cities.size >= 5
-          @recent_cities.drop(1).each do |c|
-            @user.recent_cities << c
-          end
-        end
-        @user.recent_cities << city
-      end
-    end
-    
     def city_data
       city = City.obtain_stored_city(params[:geo]["lat"], params[:geo]["lng"], params[:name])
       # prepare data
@@ -54,19 +40,24 @@ class CitiesController < ApplicationController
       @user = current_or_guest_user
       @recent_cities = @user.recent_cities
       
-      unless a_in_b_as_c?(city.name, session[:cities], "name")
+      unless a_in_b_as_c?(city.name, @recent_cities, "name")
         if (@quality.nil?)
           @quality = city.daily_data["DailyForecasts"][0]["AirAndPollen"][0]["Category"]
         end
-        puts "ADDING " + city.name + "TO CACHE!!!!!!!!!!!!!!!!!!!!!"
-        session[:cities] = session[:cities].push({ "name" => city.name, "quality" => @quality, "id" => city.id })
+        @recent_cities << { "name" => city.name, "quality" => @quality, "id" => city.id }
       end
       
-      manage_recent_cities(city)
-      @user = current_or_guest_user
-      @cities = @user.recent_cities
-      @quality = city.daily_data["DailyForecasts"][0]["AirAndPollen"][0]["Category"]
-      
+      if @recent_cities.length > 5
+        @recent_cities = @recent_cities[@recent_cities.length - 5, @recent_cities.length - 1]
+      end
+      if @user.provider.nil?
+        @user.update_attributes(recent_cities: @recent_cities)
+        @user.save(:validate => false)
+      else
+        @user.update_attributes!(recent_cities: @recent_cities)
+      end
+      @cities = @user.recent_cities.reverse
+
       respond_to do |format|
         format.js {
           render :template => "cities/city_data.js.erb"

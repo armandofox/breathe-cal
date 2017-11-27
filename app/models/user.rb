@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
     geocoded_by :address
     after_validation :geocode
     serialize :searches, JSON
-    serialize :recent_cities, Hash
+    serialize :recent_cities, Array
     
     # During Authentication, checks if user already exists in the database else
     # it creates a new user entry. If a user exists it updates its the user's

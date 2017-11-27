@@ -1,6 +1,13 @@
 // This example requires the Places library. Include the libraries=places
 // parameter when you first load the API. For example:
 // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+<<<<<<< HEAD
+=======
+var fetchedMarkers = {};
+var map;
+
+function initAutocomplete() {
+>>>>>>> [feat] Recent Cities
   
     var map = null;
     var geocoder = null;
@@ -79,7 +86,7 @@
   }
   
   
-  var map = new google.maps.Map(document.getElementById('map'), {
+  map = new google.maps.Map(document.getElementById('map'), {
     center: {
       lat: 37.8716,
       lng: -122.2727
