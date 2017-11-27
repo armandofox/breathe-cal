@@ -137,7 +137,26 @@ function initAutocomplete() {
   });
   
   var canMark = false;
- 
+  
+  // Removes one marker, triggered from specific marker's infowindow's delete button
+  function removeMarker() {
+    marker = infowindow.anchor;
+    id = marker.id;
+    infowindow.close();
+    // POSTS the marker id to the markers#destroy controller method
+    $.ajax({
+      type: "POST",
+      contentType: "application/json; charset=utf-8",
+      url: "/delete/" + id,
+      // data: JSON.stringify({id: id}),
+      success: function(d){
+        marker.setMap(null)
+        recentMarker = null
+      }
+    })
+    return false;
+  }
+  
   // Runs when user clicks to place marker, sets up cursor for placement
   $("#marker-cta").click(function(){
     if (recentMarker === null){
@@ -235,7 +254,7 @@ function initAutocomplete() {
       "</div>"
     );
     
-    // Display the form above to the user in marker's infowindow
+    // Display the form above to the user in marker's infowindow, replacing the old infowindow
     var infowindow = new google.maps.InfoWindow();
     infowindow.open(map,marker);
     infowindow.setContent(contentString[0]);
@@ -249,8 +268,7 @@ function initAutocomplete() {
     // Close the window and remove the created marker if the user exits
     var listenerHandle = google.maps.event.addListener(infowindow, 'closeclick', function(){
       if (recentMarker) {
-        // POTENTIAL REAPLCEMENT
-        // infowindow.anchor.setMap(null)
+        // infowindow.anchor.setMap(null)   //POTENTIAL REPLACEMENT
         recentMarker.setMap(null);
         
         // We keep this line because recentmarker should only be truthy if we are in the POST markers call to access the marker object and put the id in
@@ -278,8 +296,7 @@ function initAutocomplete() {
         url: "/markers/",
         data: JSON.stringify({marker: convData}),
         success: function(d){
-          fetchedMarkers[d.id] = true;
-          // We need to store the marker database object's id in the google maps object
+          fetchedMarkers[d.id] = true;    // Not sure why this is here
           var newContent = createMarkerDetails(d);
           if (recentMarker) {
             recentMarker.infowindow.setContent(newContent[0]);
@@ -294,7 +311,6 @@ function initAutocomplete() {
       })
       return false;
     });
-    
     // $(document).on('button', '#markerDetails', function(e){
     //   // e.preventDefault();  Just for submit right?
     //   marker = infowindow.anchor;
