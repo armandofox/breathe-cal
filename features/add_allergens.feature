@@ -49,19 +49,6 @@ Scenario: Once the create allergen box is up, I should be able to add an allerge
   And I check cat
   And I press submit
   Then I should see the allergen on the map
-
-# TODO:
-# PIVOTAL ID 152021104
-# Add and edit an allergen on the map, see edits
-# Scenario: Once I've loaded the app and added an allergen, I should be able to edit the allergen.
-#   Given I add a dog allergen
-#   And I click on the allergen
-#   And I click the edit allergen button
-#   And I should be able to see the allergen details
-#   When I fill in title with cat
-#   And I check cat
-#   And I press submit
-#   Then I should see the updated allergen on the map
   
 #PIVOTAL ID 152021104
 #Login and add an allergen, logout, login and have it still be there (MANUAL PASS)
