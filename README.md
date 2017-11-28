@@ -1,6 +1,7 @@
 # Breathe California Allergen Map
 <img src="https://api.codeclimate.com/v1/badges/836757131179145c6ddf/maintainability" /> <img src="https://travis-ci.org/MaadhavShah/breathe-cal.svg?branch=master" alt="Build Status" /> <img src="https://api.codeclimate.com/v1/badges/836757131179145c6ddf/test_coverage" />
 
+## Links
 #### Pivotal Tracker Link
 https://www.pivotaltracker.com/n/projects/2118203
 
@@ -14,14 +15,8 @@ Our overall goal is to provide information on airborne allergens and air quality
 
 ## Genral Setup
 * Fork/clone the repo, then run bundle install. The gemfile with dependencies is included in the repository so bundler should locate and use it.
-
 * API Keys - set manually in heroku. They include Accuweather, Google SSO, and Google Maps.
-
-* Make sure to add your deployment url to the list of Google SSO redirect links, do so here:
-
-
-
-
+* Make sure to add your deployment url to the list of Google SSO redirect links, do so <a href="url">link here</a>:
   
 ## Database
 * Setup - run 'bundle exec rake db:migrate', then 'bundle exec rake db:test:preapare'. This will run all of our migrations for development and test environments while considering dependencies.
