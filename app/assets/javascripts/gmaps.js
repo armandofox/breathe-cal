@@ -1,11 +1,14 @@
 // This example requires the Places library. Include the libraries=places
 // parameter when you first load the API. For example:
 // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+var map = null;
+var geocoder = null;
 var markers = []
 var canMark = true;
 var recentMarker = null;
 
-function loadMap() {
+  // Loads the map and page attributes
+  function loadMap() {
   
   // Initialize map, set css attributes, search boxes, and buttons
   $('#marker-cta').css('cursor','pointer');
@@ -14,7 +17,7 @@ function loadMap() {
   $('#detail-box').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
   $('#detail-box-mask').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
   
-  var map = new google.maps.Map(document.getElementById('map'), {
+  map = new google.maps.Map(document.getElementById('map'), {
   // TODO: Set location to user's current location
     center: {
       lat: 37.8716,
@@ -25,7 +28,7 @@ function loadMap() {
   });
   map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
   map.controls[google.maps.ControlPosition.LEFT_TOP].push(markerEnabler);
-  var geocoder = new google.maps.Geocoder();
+  geocoder = new google.maps.Geocoder();
   var input = document.getElementById('pac-input');
   var markerEnabler = document.getElementById('marker-cta');
   var searchBox = new google.maps.places.SearchBox(input);
@@ -125,6 +128,7 @@ function loadMap() {
   
 }
 
+  // Helper function to converta point to lat and long
   function point2LatLng(point, map) {
     var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
     var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
