@@ -5,12 +5,14 @@ Feature: authentication
 
 # '@omniauth_google_login' set in /breathe-cal/features/support/hooks.rb
 
-@omniauth_google_login
+#PIVOTAL ID 152339680
+@omniauth_google_login @authentication
 Scenario: See option to login with Google
   Given I am on the landing page
   Then I should see "Sign in with Google+"
 
-@omniauth_google_login 
+#PIVOTAL ID 152339680
+@omniauth_google_login @authentication
 Scenario: Login with Google
   Given I successfully authenticated with Google as "James Jones"
   Then I should be on the landing page
@@ -19,7 +21,8 @@ Scenario: Login with Google
   And I should not see "Sign in with Google+"
   And I should see "Sign Out"
 
-@omniauth_google_login 
+#PIVOTAL ID 152339680
+@omniauth_google_login @authentication
 Scenario: Logout
   Given I successfully authenticated with Google as "James Jones"
   And I am on the landing page
@@ -28,7 +31,8 @@ Scenario: Logout
   And I should not see "James Jones"
   And I should see "Sign in with Google+"
 
-@omniauth_google_login
+#PIVOTAL ID 152339680
+@omniauth_google_login @authentication
 Scenario: Login Failure
   Given I fail to login
   Then I should be on the landing page
