@@ -26,11 +26,11 @@ var recentMarker = null;
     zoom: 13,
     mapTypeId: 'roadmap'
   });
+  var input = document.getElementById('pac-input');
   map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+  var markerEnabler = document.getElementById('marker-cta');
   map.controls[google.maps.ControlPosition.LEFT_TOP].push(markerEnabler);
   geocoder = new google.maps.Geocoder();
-  var input = document.getElementById('pac-input');
-  var markerEnabler = document.getElementById('marker-cta');
   var searchBox = new google.maps.places.SearchBox(input);
   
   // Listeners
