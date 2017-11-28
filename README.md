@@ -1,7 +1,7 @@
 # Breathe California Allergen Map
-{<img src="https://api.codeclimate.com/v1/badges/836757131179145c6ddf/maintainability" />}[https://codeclimate.com/github/MaadhavShah/breathe-cal/maintainability]
-{<img src="https://travis-ci.org/MaadhavShah/breathe-cal.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/MaadhavShah/breathe-cal]
-{<img src="https://api.codeclimate.com/v1/badges/836757131179145c6ddf/test_coverage" />}[https://codeclimate.com/github/MaadhavShah/breathe-cal/test_coverage]
+{<img src="https://api.codeclimate.com/v1/badges/836757131179145c6ddf/maintainability" />}
+{<img src="https://travis-ci.org/MaadhavShah/breathe-cal.svg?branch=master" alt="Build Status" />}
+{<img src="https://api.codeclimate.com/v1/badges/836757131179145c6ddf/test_coverage" />}
 
 ### Pivotal Link
 
