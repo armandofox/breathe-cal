@@ -51,9 +51,9 @@ Seeds can be found in db/seeds.rb.
 ## Testing
 #### Spec Tests
 ```
-   bundle exec rspec
+  bundle exec rspec
 ```
 #### Cucumber Feature Files
 ```
-   bundle exec cucumber
+  bundle exec cucumber
 ```
