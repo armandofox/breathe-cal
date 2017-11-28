@@ -43,7 +43,10 @@ Seeds can be found in db/seeds.rb.
 
 ## Development/Deployment
 * Setup <a href="https://devcenter.heroku.com/articles/getting-started-with-ruby#introduction"> Heroku </a>
-* Before pushing to heroku, assets must be precompiled (they also should be after any app/assets/ edits) with 'RAILS_ENV=production rake assets:precompile'
+* Before pushing to heroku, assets must be precompiled (they also should be after any app/assets/ edits):
+```
+  RAILS_ENV=production rake assets:precompile
+```
 #### Push to Heroku (only the heroku remote's master branch deploys)
 ```
   git push heroku master
