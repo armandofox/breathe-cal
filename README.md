@@ -1,23 +1,23 @@
-== README
+# Breathe California Allergen Map
 {<img src="https://api.codeclimate.com/v1/badges/836757131179145c6ddf/maintainability" />}[https://codeclimate.com/github/MaadhavShah/breathe-cal/maintainability]
 {<img src="https://travis-ci.org/MaadhavShah/breathe-cal.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/MaadhavShah/breathe-cal]
 {<img src="https://api.codeclimate.com/v1/badges/836757131179145c6ddf/test_coverage" />}[https://codeclimate.com/github/MaadhavShah/breathe-cal/test_coverage]
 
-**Pivotal Link**
+### Pivotal Link
 
 https://www.pivotaltracker.com/n/projects/2118203
 
-Heroku Link (Master Branch)
+### Heroku Link (Master Branch)
 
 https://breathe-cal.herokuapp.com/
 
-Client Site
+### Client Site
 
 http://www.breathebayarea.org/
 
 Our overall goal is to provide information on airborne allergens and air quality to those who need it.
 
-Genral Setup
+## Genral Setup
 
 Fork/clone the repo, then run bundle install. The gemfile with dependencies is included in the repository so bundler should locate and use it.
 
@@ -29,7 +29,7 @@ Make sure to add your deployment url to the list of Google SSO redirect links, d
 
 
   
-Database
+## Database
 
 Setup - run 'bundle exec rake db:migrate', then 'bundle exec rake db:test:preapare'. This will run all of our migrations for development and test environments while considering dependencies.
 
@@ -37,15 +37,7 @@ Clear all markers from heroku database - 'heroku run pg:reset DATABASE' will cle
 
 
 
-Development/Deployment
+###Development/Deployment
 
 Before pushing to heroku, assets must be precompiled (they also should be after any app/assets/ edits) with 'RAILS_ENV=production rake assets:precompile'
 
-
-
-
-
-Now, in order to run any of the cucumber features we type cucumber features/*
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
