@@ -1,10 +1,6 @@
 # Breathe California Allergen Map
-<img src="http://api.codeclimate.com/v1/badges/836757131179145c6ddf/maintainability" /> <img src="http://travis-ci.org/MaadhavShah/breathe-cal.svg?branch=master" alt="Build Status" /> <img src="http://api.codeclimate.com/v1/badges/836757131179145c6ddf/test_coverage" />
-
 <img src="http://travis-ci.org/MaadhavShah/breathe-cal.svg?branch=master" alt="Build Status" /> <a href="https://codeclimate.com/github/MaadhavShah/breathe-cal/maintainability"><img src="https://api.codeclimate.com/v1/badges/836757131179145c6ddf/maintainability" /></a> 
-<a href="https://codeclimate.com/github/MaadhavShah/breathe-cal/test_coverage"><img src="https://api.codeclimate.com/v1/badges/836757131179145c6ddf/test_coverage" /></a>
-
-<img src="http://travis-ci.org/MaadhavShah/breathe-cal.svg?branch=master" alt="Build Status" /> 
+<a href="https://codeclimate.com/github/MaadhavShah/breathe-cal/test_coverage"><img src="https://api.codeclimate.com/v1/badges/836757131179145c6ddf/test_coverage" /></a><img src="http://travis-ci.org/MaadhavShah/breathe-cal.svg?branch=master" alt="Build Status" /> 
 
 ## Goal
 Our overall goal is to provide information on airborne allergens and air quality to those who need it.
