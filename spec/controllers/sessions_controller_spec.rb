@@ -9,7 +9,7 @@ RSpec.describe SessionsController, type: :controller do
             provider: 'google_oauth2', 
             uid: 101,
             info: {name: "test user", email: "test@xxxx.com"},
-            credentials: {token: 'some_token', expires_at: (Time.now + 10.day).round}
+            credentials: {token: 'some_token', expires_at: (Time.new(2060) + 10.day)}
         }
         OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(@user_hash)
         Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
@@ -59,7 +59,7 @@ RSpec.describe SessionsController, type: :controller do
         it "Logs out current user" do
             delete :destroy
             expect(session[:user_id]).to eq(nil)
-            response.should redirect_to root_path
+            expect(response).to redirect_to root_path
         end
     end
     
@@ -67,7 +67,7 @@ RSpec.describe SessionsController, type: :controller do
         it "sets an error message" do
             get :auth_failure
             expect(flash[:auth_failure]).to eq("Failed to Login")
-            response.should redirect_to root_path
+            expect(response).to redirect_to root_path
         end
     end
 end

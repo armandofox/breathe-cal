@@ -8,8 +8,8 @@ RSpec.describe UsersController, type: :controller do
     
     describe ' require_real_login filter' do
         it 'calls the function to check to see if user is logged in' do
-            controller.should_receive(:require_real_login)
-            controller.should_receive(:show)
+            expect(controller).to receive(:require_real_login)
+            expect(controller).to receive(:show)
             get :show, {:id => 1}
         end
         it 'sends non logged in users to homepage' do
@@ -27,7 +27,7 @@ RSpec.describe UsersController, type: :controller do
     describe ' #show' do
         before :each do
             controller.class.skip_before_filter :require_real_login, :require_login
-            @fake_user = FactoryGirl.build(:user)
+            @fake_user = FactoryBot.build(:user)
         end
         describe ' with invalid credentials' do
             before :each do
