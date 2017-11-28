@@ -14,7 +14,7 @@ https://breathe-cal.herokuapp.com/
 http://www.breathebayarea.org/
 
 ## Genral Setup
-* Fork & clone the repo, <a href="https://www.ruby-lang.org/en/documentation/installation/"> install Ruby 2.3.0 </a>, <a href="http://blog.teamtreehouse.com/install-rails-5-mac"> install Rails 4.2.6 </a>, run:
+* Fork & clone the repo, install <a href="https://www.ruby-lang.org/en/documentation/installation/"> Ruby 2.3.0 </a>, install <a href="http://blog.teamtreehouse.com/install-rails-5-mac"> Rails 4.2.6 </a>, run:
 ```
   gem install bundler
   bundle install
@@ -41,5 +41,10 @@ http://www.breathebayarea.org/
   Seeds can be found in db/seeds.rb.
 
 ## Development/Deployment
+* Setup <a href="https://devcenter.heroku.com/articles/getting-started-with-ruby#introduction"> Heroku </a>
 * Before pushing to heroku, assets must be precompiled (they also should be after any app/assets/ edits) with 'RAILS_ENV=production rake assets:precompile'
+### Push to Heroku (only the heroku remote's master branch deploys)
+```
+  git push heroku master
+```
 
