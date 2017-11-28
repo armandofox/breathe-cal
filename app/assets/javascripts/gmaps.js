@@ -1,56 +1,27 @@
 // This example requires the Places library. Include the libraries=places
 // parameter when you first load the API. For example:
 // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-var fetchedMarkers = {};
+var markers = []
+var canMark = true;
+var recentMarker = null;
 
-function initAutocomplete() {
+function loadMap() {
   
-  function point2LatLng(point, map) {
-    var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
-    var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
-    var scale = Math.pow(2, map.getZoom());
-    var worldPoint = new google.maps.Point(point.x / scale + bottomLeft.x, point.y / scale + topRight.y);
-    return map.getProjection().fromPointToLatLng(worldPoint);
-  }
+  // Set css attributes, search boxes, and buttons
+  $('#marker-cta').css('cursor','pointer');
+  $('#left-col').css('height', (window.innerHeight).toString());
+  $('#right-col').css('height', (window.innerHeight).toString());
+  $('#detail-box').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
+  $('#detail-box-mask').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
+  var input = document.getElementById('pac-input');
+  var searchBox = new google.maps.places.SearchBox(input);
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+  var markerEnabler = document.getElementById('marker-cta');
+  map.controls[google.maps.ControlPosition.LEFT_TOP].push(markerEnabler);
   
-  // Responsible for populating the markers on the map with the 'GET markers' request, which invokes markers#show
-  function fetchMarkers(){
-    deleteMarkers();
-    var bounds = map.getBounds();
-    var NECorner = bounds.getNorthEast();
-    var SWCorner = bounds.getSouthWest();
-    $.ajax({
-      type: "GET",
-      contentType: "application/json; charset=utf-8",
-      url: "/markers",
-      data: {bounds :{uplat:NECorner.lat(),downlat:SWCorner.lat(),rightlong:NECorner.lng(),leftlong:SWCorner.lng()}},
-      success: function(data) {
-        for (var i = 0; i < data.length; i++) {
-          var id = data[i].id;
-          if (true) {
-            var location = {};
-            location.lat = parseFloat(data[i].lat);
-            location.lng = parseFloat(data[i].lng);
-            var marker = new google.maps.Marker({
-                  id: id,
-                  position: location,
-                  map: map,
-                  draggable: false,
-                  });
-            var newContent = createMarkerDetails(data[i]);      
-            marker.info = new google.maps.InfoWindow();
-            marker.info.setContent(newContent[0]);
-            google.maps.event.addListener(marker, 'click', function(){
-              this.info.open(map, this);
-            });
-            markers.push(marker);
-          }
-        }
-      }
-    })
-  }
-
+  // Initialize map
   var map = new google.maps.Map(document.getElementById('map'), {
+    // TODO: Set location to user's current location
     center: {
       lat: 37.8716,
       lng: -122.2727
@@ -59,34 +30,24 @@ function initAutocomplete() {
     mapTypeId: 'roadmap'
   });
   var geocoder = new google.maps.Geocoder();
-  // Resizes map if triggered
-  google.maps.event.addDomListener(window, "resize", function() {
+  
+  // Listeners
+    google.maps.event.addDomListener(window, "resize", function() {
     var center = map.getCenter();
     google.maps.event.trigger(map, "resize");
     map.setCenter(center); 
     }
   );
-  // Set css attributes
-  $('#marker-cta').css('cursor','pointer');
-  $('#left-col').css('height', (window.innerHeight).toString());
-  $('#right-col').css('height', (window.innerHeight).toString());
-  $('#detail-box').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
-  $('#detail-box-mask').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
   
-  // Create the search box and link it to the UI element.
-  var input = document.getElementById('pac-input');
-  var searchBox = new google.maps.places.SearchBox(input);
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-  // Create the marker button and link it to the UI element
-  var markerEnabler = document.getElementById('marker-cta');
-  map.controls[google.maps.ControlPosition.LEFT_TOP].push(markerEnabler);
-  // Sets bounds if the map moves
-  map.addListener('bounds_changed', function() {searchBox.setBounds(map.getBounds()); fetchMarkers();});
-  // Fetches markers before and if the map has been dragged and the drag has ended
-  var markers = [];
-  google.maps.event.addListener(map, 'dragend', function(){ fetchMarkers(); })
-
-  // Retrieve place details when user selects autofill prediction with places
+  map.addListener('bounds_changed', function() {
+    searchBox.setBounds(map.getBounds());
+    fetchMarkers();
+  });
+  
+  google.maps.event.addListener(map, 'dragend', function(){ 
+    fetchMarkers();
+  })
+  
   searchBox.addListener('places_changed', function() {
     var places = searchBox.getPlaces();
     if (places.length === 0) {
@@ -136,9 +97,6 @@ function initAutocomplete() {
     fetchMarkers();
   });
   
-  var canMark = false;
-  
-  // Runs when user clicks to place marker, sets up cursor for placement
   $("#marker-cta").click(function(){
     if (recentMarker === null){
       map.setOptions({ draggableCursor :"url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto"});
@@ -150,7 +108,6 @@ function initAutocomplete() {
     $("#marker-cta span").text("Click map to place marker")
   });
   
-  // Waits for user to click on the map and place their allergen
   google.maps.event.addListener(map, 'click', function(event) {
     if (canMark){
       var x = event.pixel.x + 16;
@@ -167,7 +124,52 @@ function initAutocomplete() {
     }
   });
   
-  var recentMarker = null;
+}
+
+  function point2LatLng(point, map) {
+    var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
+    var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
+    var scale = Math.pow(2, map.getZoom());
+    var worldPoint = new google.maps.Point(point.x / scale + bottomLeft.x, point.y / scale + topRight.y);
+    return map.getProjection().fromPointToLatLng(worldPoint);
+  }
+  
+  // Responsible for populating the markers on the map with the 'GET markers' request, which invokes markers#show
+  function fetchMarkers(){
+    deleteMarkers();
+    var bounds = map.getBounds();
+    var NECorner = bounds.getNorthEast();
+    var SWCorner = bounds.getSouthWest();
+    $.ajax({
+      type: "GET",
+      contentType: "application/json; charset=utf-8",
+      url: "/markers",
+      data: {bounds :{uplat:NECorner.lat(),downlat:SWCorner.lat(),rightlong:NECorner.lng(),leftlong:SWCorner.lng()}},
+      success: function(data) {
+        for (var i = 0; i < data.length; i++) {
+          var id = data[i].id;
+          if (true) {
+            var location = {};
+            location.lat = parseFloat(data[i].lat);
+            location.lng = parseFloat(data[i].lng);
+            var marker = new google.maps.Marker({
+                  id: id,
+                  position: location,
+                  map: map,
+                  draggable: false,
+                  });
+            var newContent = createMarkerDetails(data[i]);      
+            marker.info = new google.maps.InfoWindow();
+            marker.info.setContent(newContent[0]);
+            google.maps.event.addListener(marker, 'click', function(){
+              this.info.open(map, this);
+            });
+            markers.push(marker);
+          }
+        }
+      }
+    })
+  }
   
   // Create string to display in infowindow
   function createMarkerDetails(data){
@@ -278,7 +280,6 @@ function initAutocomplete() {
         url: "/markers/",
         data: JSON.stringify({marker: convData}),
         success: function(d){
-          fetchedMarkers[d.id] = true;    // Not sure why this is here
           var newContent = createMarkerDetails(d);
           if (recentMarker) {
             // This shouldn't display immediately because delete can't be chosen until they refresh since the marker id can't be assigned until fetch
@@ -334,8 +335,7 @@ function initAutocomplete() {
     clearMarkers();
     markers = [];
   }
-}
 
-$(document).ready(initAutocomplete);
-$(document).on('page:load', initAutocomplete);
-$(document).on('page:change', initAutocomplete);
+$(document).ready(loadMap);
+$(document).on('page:load', loadMap);
+$(document).on('page:change', loadMap);
