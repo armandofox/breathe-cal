@@ -14,7 +14,7 @@ https://breathe-cal.herokuapp.com/
 http://www.breathebayarea.org/
 
 ## Genral Setup
-* Fork & clone the repo, <a href="https://www.ruby-lang.org/en/documentation/installation/"> install Ruby 2.3.0 </a>, <a href="http://blog.teamtreehouse.com/install-rails-5-mac"> install Rails 4.2.6 </a>, run 
+* Fork & clone the repo, <a href="https://www.ruby-lang.org/en/documentation/installation/"> install Ruby 2.3.0 </a>, <a href="http://blog.teamtreehouse.com/install-rails-5-mac"> install Rails 4.2.6 </a>, run:
 ```
   gem install bundler
   bundle install
@@ -23,7 +23,7 @@ http://www.breathebayarea.org/
 * Add your deployment url to the list of Google SSO redirect link on the Breathe California Google API Account.
 
 ## Database
-* Setup - run 
+* Setup - run:
 ```
   bundle exec rake db:migrate
   bundle exec rake db:test:prepare
