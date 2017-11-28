@@ -4,8 +4,7 @@
   
     var map = null;
     var geocoder = null;
-    var markers = []
-    var canMark = true;
+    var markers = [];
     var recentMarker = null;
   
     // Loads the map and page attributes
@@ -18,14 +17,14 @@
         $('#detail-box-mask').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
       
         map = new google.maps.Map(document.getElementById('map'), {
-        // TODO: Set location to user's current location
+            // TODO: Set location to user's current location
             center: {
                 lat: 37.8716,
                 lng: -122.2727
             },
             zoom: 13,
             mapTypeId: 'roadmap'
-      });
+        });
         geocoder = new google.maps.Geocoder();
     
         var input = document.getElementById('pac-input');
@@ -56,10 +55,7 @@
             if (places.length === 0) {
                 return;
             } // Remove all markers from map before changing bounds
-            markers.forEach(function(marker) {
-                marker.setMap(null);
-            });
-            markers = [];
+            deleteMarkers();
             var bounds = new google.maps.LatLngBounds();
             place = places[0];
             if (!place.geometry) {
@@ -73,7 +69,7 @@
                 anchor: new google.maps.Point(17, 34),
                 scaledSize: new google.maps.Size(25, 25)
             };
-          // POST the city data and push marker for seemingly no reason
+            // POST the city data
             $.ajax({
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
@@ -83,49 +79,67 @@
                     $("#city-info").text(JSON.stringify(data));
                 }
             });
-          // markers.push(new google.maps.Marker({
-          //     map: map,
-          //     icon: icon,
-          //     title: place.name,
-          //     position: place.geometry.location
-          //   }));
-    
-          if (place.geometry.viewport) {
-              bounds.union(place.geometry.viewport);
-          } else {
-              bounds.extend(place.geometry.location);
-          }
-          map.fitBounds(bounds);
-          fetchMarkers();
-      });
-    
+            if (place.geometry.viewport) {
+                bounds.union(place.geometry.viewport);
+            } else {
+                bounds.extend(place.geometry.location);
+            }
+            map.fitBounds(bounds);
+            fetchMarkers();
+        });
+        
+        canMark = false
+        
         $("#marker-cta").click(function(){
+            // TODO: Figure out the recentmarker relevance; when would a user actually not be able to mark? 
             if (recentMarker === null){
                 map.setOptions({ draggableCursor :"url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto"});
                 $("#marker-cta").css("cursor", "url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto");
-                canMark = true;  
+                canMark = true;
+                google.maps.event.addListener(map, 'click', function(event) {
+                    if (canMark) {
+                        var x = event.pixel.x + 16;
+                        var y = event.pixel.y + 32;
+                        var point = {};
+                        point.x = x;
+                        point.y = y;
+                        var latlng = point2LatLng(point, map);
+                        placeMarker(latlng);
+                        canMark = false;
+                        map.setOptions({ draggableCursor :"auto"});
+                        $("#marker-cta").css("cursor", "pointer");
+                        $("#marker-cta span").text("Click here to add an allergen");
+                    }
+                });
             } else {
                 canMark = false;
             }
             $("#marker-cta span").text("Click map to place marker")
         });
-    
-        google.maps.event.addListener(map, 'click', function(event) {
-            if (canMark){
-                var x = event.pixel.x + 16;
-                var y = event.pixel.y + 32;
-                var point = {};
-                point.x = x;
-                point.y = y;
-                var latlng = point2LatLng(point, map);
-                placeMarker(latlng);
-                canMark = false;
-                map.setOptions({ draggableCursor :"auto"});
-                $("#marker-cta").css("cursor", "pointer");
-                $("#marker-cta span").text("Click here to add an allergen");
-            }
-        });
     }
+        
+    //     $("#marker-cta").click(function() {
+    //         if (recentMarker === null) {
+    //             map.setOptions({ draggableCursor :"url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto"});
+    //             $("#marker-cta").css("cursor", "url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto");
+    //             $("#marker-cta span").text("Click map to place marker")
+    //             clickToPlace = google.maps.event.addListener(map, 'click', function(event) {
+    //                 var x = event.pixel.x + 16;
+    //                 var y = event.pixel.y + 32;
+    //                 var point = {};
+    //                 point.x = x;
+    //                 point.y = y;
+    //                 var latlng = point2LatLng(point, map);
+    //                 placeMarker(latlng);
+    //                 canMark = false;
+    //                 map.setOptions({ draggableCursor :"auto"});
+    //                 $("#marker-cta").css("cursor", "pointer");
+    //                 $("#marker-cta span").text("Click here to add an allergen");
+    //                 google.maps.event.removeListener(clickToPlace)
+    //             });
+    //         }
+    //     });
+    // }
   
     // Helper function to converta point to lat and long
     function point2LatLng(point, map) {
@@ -216,6 +230,7 @@
             map: map,
             draggable: false,
         });
+        recentMarker = marker;
       
         // Create form to display to user so they can add an allergen
         var contentString = $(
@@ -250,12 +265,17 @@
             marker.infowindow.open(map, marker);
         });
       
-        recentMarker = marker;
-      
         // Close the window and remove the created marker if the user exits
         var listenerHandle = google.maps.event.addListener(infowindow, 'closeclick', function(){
+            // marker = infowindow.anchor
+            // if (marker) {
+            //     infowindow.anchor.setMap(null)
+            // }
+            // if (recentMarker) {
+            //     recentMarker = null;
+            // }
             if (recentMarker) {
-                // infowindow.anchor.setMap(null)   //POTENTIAL REPLACEMENT
+                //infowindow.anchor.setMap(null)   //POTENTIAL REPLACEMENT
                 recentMarker.setMap(null);
                 // We keep this line because recentmarker should only be truthy if we are in the POST markers call to access the marker object and put the id in
                 recentMarker = null;
@@ -265,7 +285,6 @@
         // POST Marker object on form submission
         $(document).on('submit', '#markerForm', function(e){
             e.preventDefault();
-            //infowindow.close();
             var postData = $(this).serializeArray();
             postData.push({name: "lat", value: location.lat()});
             postData.push({name: "lng", value: location.lng()});
@@ -280,9 +299,10 @@
                 url: "/markers/",
                 data: JSON.stringify({marker: convData}),
                 success: function(d){
-                    var newContent = createMarkerDetails(d);
                     if (recentMarker) {
-                        // This shouldn't display immediately because delete can't be chosen until they refresh since the marker id can't be assigned until fetch
+                        var newContent = createMarkerDetails(d);
+                        // TODO: Set marker id here to retrieve on click in case of deletion
+                        recentMarker.infowindow.close()
                         recentMarker.infowindow.setContent(newContent[0]);
                         recentMarker.infowindow.open(map, recentMarker);
                         recentMarker.draggable = false;
