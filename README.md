@@ -1,16 +1,13 @@
 # Breathe California Allergen Map
 <img src="https://api.codeclimate.com/v1/badges/836757131179145c6ddf/maintainability" /> <img src="https://travis-ci.org/MaadhavShah/breathe-cal.svg?branch=master" alt="Build Status" /> <img src="https://api.codeclimate.com/v1/badges/836757131179145c6ddf/test_coverage" />
 
-### Pivotal Link
-
+### Pivotal Tracker Link
 https://www.pivotaltracker.com/n/projects/2118203
 
-### Heroku Link (Master Branch)
-
+### Heroku Deployment Link (Master Branch)
 https://breathe-cal.herokuapp.com/
 
-### Client Site
-
+### Breathe California's Website
 http://www.breathebayarea.org/
 
 Our overall goal is to provide information on airborne allergens and air quality to those who need it.
