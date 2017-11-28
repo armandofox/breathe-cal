@@ -28,8 +28,14 @@ http://www.breathebayarea.org/
   bundle exec rake db:migrate
   bundle exec rake db:test:prepare
 ```
-  This will run all of our migrations for development and test environments while considering dependencies.
-* Clear all markers from heroku database - 'heroku run pg:reset DATABASE' will clear, then 'heroku run rake db:migrate' will run our migrations and 'heroku run rake db:seed' will populate the database with any seeds. Seeds can be found in db/seeds.rb.
+    This will run all of our migrations for development and test environments while considering dependencies.
+* Clear all markers from heroku database - 
+```
+  'heroku run pg:reset DATABASE' will clear,
+  'heroku run rake db:migrate' will run our migrations,
+  'heroku run rake db:seed' will populate the database with any seeds.
+```
+    Seeds can be found in db/seeds.rb.
 
 ## Development/Deployment
 * Before pushing to heroku, assets must be precompiled (they also should be after any app/assets/ edits) with 'RAILS_ENV=production rake assets:precompile'
