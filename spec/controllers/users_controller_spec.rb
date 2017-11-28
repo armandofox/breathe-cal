@@ -27,7 +27,7 @@ RSpec.describe UsersController, type: :controller do
     describe ' #show' do
         before :each do
             controller.class.skip_before_filter :require_real_login, :require_login
-            @fake_user = FactoryGirl.build(:user)
+            @fake_user = FactoryBot.build(:user)
         end
         describe ' with invalid credentials' do
             before :each do

@@ -42,8 +42,8 @@ RSpec.describe ApplicationController, type: :controller do
     
     describe " current_or_guest_user" do
         before :each do
-            @fake_user = FactoryGirl.build(:user)
-            @fake_guest_user = FactoryGirl.build(:user, :name => 'Guest')
+            @fake_user = FactoryBot.build(:user)
+            @fake_guest_user = FactoryBot.build(:user, :name => 'Guest')
         end
         describe " current_user exists" do
             before :each do
