@@ -27,8 +27,9 @@ http://www.breathebayarea.org/
 ```
   bundle exec rake db:migrate
   bundle exec rake db:test:prepare
+  heroku run rake db:migrate
 ```
-  This will run all of our migrations for development and test environments while considering dependencies.
+  This will run all of our migrations for development, test, and production environments while considering dependencies.
 ### Clear all markers from heroku database:
 ```
   heroku run pg:reset DATABASE
@@ -47,4 +48,12 @@ http://www.breathebayarea.org/
 ```
   git push heroku master
 ```
-
+## Testing
+### Spec Tests
+```
+    bundle exec rspec
+```
+### Cucumber Feature Files
+```
+    bundle exec cucumber
+```
