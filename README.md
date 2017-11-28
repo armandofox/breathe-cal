@@ -14,7 +14,7 @@ https://breathe-cal.herokuapp.com/
 http://www.breathebayarea.org/
 
 ## Genral Setup
-* Fork/clone the repo, then run bundle install. The gemfile with dependencies is included in the repository so bundler should locate and use it.
+* Fork & clone the repo, <a href="http://blog.teamtreehouse.com/install-rails-5-mac"> install Rails</a>, then run 'bundle install'.
 * API Keys - set manually in heroku. They include Accuweather, Google SSO, and Google Maps.
 * Make sure to add your deployment url to the list of Google SSO redirect links, do so <a href="url"> here</a>.
   
