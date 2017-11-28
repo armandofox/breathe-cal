@@ -1,344 +1,341 @@
 // This example requires the Places library. Include the libraries=places
 // parameter when you first load the API. For example:
 // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-var map = null;
-var geocoder = null;
-var markers = []
-var canMark = true;
-var recentMarker = null;
-
-  // Loads the map and page attributes
-  function loadMap() {
   
-  // Initialize map, set css attributes, search boxes, and buttons
-  $('#marker-cta').css('cursor','pointer');
-  $('#left-col').css('height', (window.innerHeight).toString());
-  $('#right-col').css('height', (window.innerHeight).toString());
-  $('#detail-box').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
-  $('#detail-box-mask').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
+    var map = null;
+    var geocoder = null;
+    var markers = []
+    var canMark = true;
+    var recentMarker = null;
   
-  map = new google.maps.Map(document.getElementById('map'), {
-  // TODO: Set location to user's current location
-    center: {
-      lat: 37.8716,
-      lng: -122.2727
-    },
-    zoom: 13,
-    mapTypeId: 'roadmap'
-  });
-  var input = document.getElementById('pac-input');
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-  var markerEnabler = document.getElementById('marker-cta');
-  map.controls[google.maps.ControlPosition.LEFT_TOP].push(markerEnabler);
-  geocoder = new google.maps.Geocoder();
-  var searchBox = new google.maps.places.SearchBox(input);
-  
-  // Listeners
-  google.maps.event.addDomListener(window, "resize", function() {
-    var center = map.getCenter();
-    google.maps.event.trigger(map, "resize");
-    map.setCenter(center); 
-    }
-  );
-  
-  map.addListener('bounds_changed', function() {
-    searchBox.setBounds(map.getBounds());
-    fetchMarkers();
-  });
-  
-  google.maps.event.addListener(map, 'dragend', function(){ 
-    fetchMarkers();
-  })
-  
-  searchBox.addListener('places_changed', function() {
-    var places = searchBox.getPlaces();
-    if (places.length === 0) {
-      return;
-    } // Remove all markers from map before changing bounds
-    markers.forEach(
-      function(marker) {
-        marker.setMap(null);
-    });
-    markers = [];
-    var bounds = new google.maps.LatLngBounds();
-    place = places[0];
-    if (!place.geometry) {
-        console.log("Returned place contains no geometry");
-        return;
-      }
-    var icon = {
-      url: place.icon,
-      size: new google.maps.Size(71, 71),
-      origin: new google.maps.Point(0, 0),
-      anchor: new google.maps.Point(17, 34),
-      scaledSize: new google.maps.Size(25, 25)
-    };
-    // POST the city data and push marker for seemingly no reason
-    $.ajax({
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        url: "city_data",
-        data: JSON.stringify({geo: place.geometry.location, name: place.name}),
-        success: function(data){
-          $("#city-info").text(JSON.stringify(data));
-        }
+    // Loads the map and page attributes
+    function loadMap() {
+        // Initialize map, set css attributes, search boxes, and buttons
+        $('#marker-cta').css('cursor','pointer');
+        $('#left-col').css('height', (window.innerHeight).toString());
+        $('#right-col').css('height', (window.innerHeight).toString());
+        $('#detail-box').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
+        $('#detail-box-mask').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
+      
+        map = new google.maps.Map(document.getElementById('map'), {
+        // TODO: Set location to user's current location
+            center: {
+                lat: 37.8716,
+                lng: -122.2727
+            },
+            zoom: 13,
+            mapTypeId: 'roadmap'
       });
-    // markers.push(new google.maps.Marker({
-    //     map: map,
-    //     icon: icon,
-    //     title: place.name,
-    //     position: place.geometry.location
-    //   }));
-
-    if (place.geometry.viewport) {
-      bounds.union(place.geometry.viewport);
-    } else {
-      bounds.extend(place.geometry.location);
-    }
-    map.fitBounds(bounds);
-    fetchMarkers();
-  });
-  
-  $("#marker-cta").click(function(){
-    if (recentMarker === null){
-      map.setOptions({ draggableCursor :"url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto"});
-      $("#marker-cta").css("cursor", "url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto");
-      canMark = true;  
-    } else {
-      canMark = false;
-    }
-    $("#marker-cta span").text("Click map to place marker")
-  });
-  
-  google.maps.event.addListener(map, 'click', function(event) {
-    if (canMark){
-      var x = event.pixel.x + 16;
-      var y = event.pixel.y + 32;
-      var point = {};
-      point.x = x;
-      point.y = y;
-      var latlng = point2LatLng(point, map);
-      placeMarker(latlng);
-      canMark = false;
-      map.setOptions({ draggableCursor :"auto"});
-      $("#marker-cta").css("cursor", "pointer");
-      $("#marker-cta span").text("Click here to add an allergen");
-    }
-  });
-  
-}
-
-  // Helper function to converta point to lat and long
-  function point2LatLng(point, map) {
-    var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
-    var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
-    var scale = Math.pow(2, map.getZoom());
-    var worldPoint = new google.maps.Point(point.x / scale + bottomLeft.x, point.y / scale + topRight.y);
-    return map.getProjection().fromPointToLatLng(worldPoint);
-  }
-  
-  // Responsible for populating the markers on the map with the 'GET markers' request, which invokes markers#show
-  function fetchMarkers(){
-    deleteMarkers();
-    var bounds = map.getBounds();
-    var NECorner = bounds.getNorthEast();
-    var SWCorner = bounds.getSouthWest();
-    $.ajax({
-      type: "GET",
-      contentType: "application/json; charset=utf-8",
-      url: "/markers",
-      data: {bounds :{uplat:NECorner.lat(),downlat:SWCorner.lat(),rightlong:NECorner.lng(),leftlong:SWCorner.lng()}},
-      success: function(data) {
-        for (var i = 0; i < data.length; i++) {
-          var id = data[i].id;
-          if (true) {
-            var location = {};
-            location.lat = parseFloat(data[i].lat);
-            location.lng = parseFloat(data[i].lng);
-            var marker = new google.maps.Marker({
-                  id: id,
-                  position: location,
-                  map: map,
-                  draggable: false,
-                  });
-            var newContent = createMarkerDetails(data[i]);      
-            marker.info = new google.maps.InfoWindow();
-            marker.info.setContent(newContent[0]);
-            google.maps.event.addListener(marker, 'click', function(){
-              this.info.open(map, this);
+        geocoder = new google.maps.Geocoder();
+    
+        var input = document.getElementById('pac-input');
+        var searchBox = new google.maps.places.SearchBox(input);
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+      
+        var markerEnabler = document.getElementById('marker-cta');
+        map.controls[google.maps.ControlPosition.LEFT_TOP].push(markerEnabler);
+      
+        // Set listeners
+        google.maps.event.addDomListener(window, "resize", function() {
+            var center = map.getCenter();
+            google.maps.event.trigger(map, "resize");
+            map.setCenter(center); 
+        });
+      
+        map.addListener('bounds_changed', function() {
+            searchBox.setBounds(map.getBounds());
+            fetchMarkers();
+        });
+      
+        google.maps.event.addListener(map, 'dragend', function(){ 
+            fetchMarkers();
+        })
+    
+        searchBox.addListener('places_changed', function() {
+            var places = searchBox.getPlaces();
+            if (places.length === 0) {
+                return;
+            } // Remove all markers from map before changing bounds
+            markers.forEach(function(marker) {
+                marker.setMap(null);
             });
-            markers.push(marker);
+            markers = [];
+            var bounds = new google.maps.LatLngBounds();
+            place = places[0];
+            if (!place.geometry) {
+                console.log("Returned place contains no geometry");
+                return;
+            }
+            var icon = {
+                url: place.icon,
+                size: new google.maps.Size(71, 71),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(17, 34),
+                scaledSize: new google.maps.Size(25, 25)
+            };
+          // POST the city data and push marker for seemingly no reason
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "city_data",
+                data: JSON.stringify({geo: place.geometry.location, name: place.name}),
+                success: function(data){
+                    $("#city-info").text(JSON.stringify(data));
+                }
+            });
+          // markers.push(new google.maps.Marker({
+          //     map: map,
+          //     icon: icon,
+          //     title: place.name,
+          //     position: place.geometry.location
+          //   }));
+    
+          if (place.geometry.viewport) {
+              bounds.union(place.geometry.viewport);
+          } else {
+              bounds.extend(place.geometry.location);
           }
+          map.fitBounds(bounds);
+          fetchMarkers();
+      });
+    
+        $("#marker-cta").click(function(){
+            if (recentMarker === null){
+                map.setOptions({ draggableCursor :"url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto"});
+                $("#marker-cta").css("cursor", "url(https://maps.google.com/mapfiles/ms/micons/red-dot.png), auto");
+                canMark = true;  
+            } else {
+                canMark = false;
+            }
+            $("#marker-cta span").text("Click map to place marker")
+        });
+    
+        google.maps.event.addListener(map, 'click', function(event) {
+            if (canMark){
+                var x = event.pixel.x + 16;
+                var y = event.pixel.y + 32;
+                var point = {};
+                point.x = x;
+                point.y = y;
+                var latlng = point2LatLng(point, map);
+                placeMarker(latlng);
+                canMark = false;
+                map.setOptions({ draggableCursor :"auto"});
+                $("#marker-cta").css("cursor", "pointer");
+                $("#marker-cta span").text("Click here to add an allergen");
+            }
+        });
+    }
+  
+    // Helper function to converta point to lat and long
+    function point2LatLng(point, map) {
+        var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
+        var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
+        var scale = Math.pow(2, map.getZoom());
+        var worldPoint = new google.maps.Point(point.x / scale + bottomLeft.x, point.y / scale + topRight.y);
+        return map.getProjection().fromPointToLatLng(worldPoint);
+    }
+    
+    // Responsible for populating the markers on the map with the 'GET markers' request, which invokes markers#show
+    function fetchMarkers(){
+        deleteMarkers();
+        var bounds = map.getBounds();
+        var NECorner = bounds.getNorthEast();
+        var SWCorner = bounds.getSouthWest();
+        $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            url: "/markers",
+            data: {bounds :{uplat:NECorner.lat(),downlat:SWCorner.lat(),rightlong:NECorner.lng(),leftlong:SWCorner.lng()}},
+            success: function(data) {
+                for (var i = 0; i < data.length; i++) {
+                    var id = data[i].id;
+                    if (true) {
+                      var location = {};
+                      location.lat = parseFloat(data[i].lat);
+                      location.lng = parseFloat(data[i].lng);
+                      var marker = new google.maps.Marker({
+                            id: id,
+                            position: location,
+                            map: map,
+                            draggable: false,
+                      });
+                      var newContent = createMarkerDetails(data[i]);      
+                      marker.info = new google.maps.InfoWindow();
+                      marker.info.setContent(newContent[0]);
+                      google.maps.event.addListener(marker, 'click', function(){
+                        this.info.open(map, this);
+                      });
+                      markers.push(marker);
+                    }
+                }
+            }
+        })
+    }
+    
+    // Create string to display in infowindow
+    function createMarkerDetails(data){
+        var title = data.title;
+        var attributes = ["cat", "bees", "perfume", "oak", "peanut", "gluten", "dog", "dust", "smoke", "mold"];
+        var leftContentString = "";
+        var rightContentString = "";
+        for(var i=0; i<attributes.length/2; i++){
+            if (data[attributes[i]]){
+              leftContentString += attributes[i] + "<br>";  
+            }
         }
-      }
-    })
-  }
-  
-  // Create string to display in infowindow
-  function createMarkerDetails(data){
-    var title = data.title;
-    var attributes = ["cat", "bees", "perfume", "oak", "peanut", "gluten", "dog", "dust", "smoke", "mold"];
-    var leftContentString = "";
-    var rightContentString = "";
-    for(var i=0; i<attributes.length/2; i++){
-      if (data[attributes[i]]){
-        leftContentString += attributes[i] + "<br>";  
-      }
-    }
-    for(i=attributes.length/2; i<attributes.length; i++){
-      if (data[attributes[i]]){
-        rightContentString += attributes[i] + "<br>";  
-      }
-    }
-    var markerDetails ="<div id='wrap'>" + 
-                      "<form id='markerDetails' action='delete' method='POST'>"+
-                      "Allergens at " + title + "<br>" +
-                      "<div id='left_col'>" + 
-                      leftContentString + 
-                      "</div>" + 
-                      "<div id='right_col'>" + 
-                      rightContentString +
-                      "</div>" + 
-                      // "<input type='button' value='Delete' onclick='removeMarker()'>"+
-                      "<input type='button' value='Delete'>"+
-                      "</form>" +
-                      "</div>";
-    var content = $(markerDetails);
-    return content;
-  }
-  
-  // Called when a user clicks to place a marker
-  function placeMarker(location) {
-    
-    // Create the marker to display infowindow
-    var marker = new google.maps.Marker({
-      position: location,
-      map: map,
-      draggable: false,
-    });
-    
-    // Create form to display to user so they can add an allergen
-    var contentString = $(
-      "<div id='wrap'>" + 
-      "<form id='markerForm' action='markers' method='POST'>"+
-      "Title <input type='text' name='title'> <br>" + 
-      "<div id='left_col'>" + 
-      "<input type = 'checkbox' name='cat' value='true'> Cats <br>"+
-      "<input type = 'checkbox' name='bees' value='true'> Bees <br>"+
-      "<input type = 'checkbox' name='perfume' value='true'> Perfume <br>"+
-      "<input type = 'checkbox' name='oak' value='true'> Oak <br>"+
-      "<input type = 'checkbox' name='peanut' value='true'> Peanut <br>"+
-      "</div>" +
-      "<div id='right_col'>" + 
-      "<input type = 'checkbox' name='gluten' value='true'> Gluten <br>"+
-      "<input type = 'checkbox' name='dog' value='true'> Dogs <br>"+
-      "<input type = 'checkbox' name='dust' value='true'> Dust <br>"+
-      "<input type = 'checkbox' name='smoke' value='true'> Smoke <br>"+
-      "<input type = 'checkbox' name='mold' value='true'> Mold <br>"+
-      "</div>" +
-      "<input type='submit' value='Submit'>"+
-      "</form>" +
-      "</div>"
-    );
-    
-    // Display the form above to the user in marker's infowindow, replacing the old infowindow
-    var infowindow = new google.maps.InfoWindow();
-    infowindow.open(map,marker);
-    infowindow.setContent(contentString[0]);
-    marker.infowindow = infowindow;
-    google.maps.event.addListener(marker, 'click', function(){
-      marker.infowindow.open(map, marker);
-    });
-    
-    recentMarker = marker;
-    
-    // Close the window and remove the created marker if the user exits
-    var listenerHandle = google.maps.event.addListener(infowindow, 'closeclick', function(){
-      if (recentMarker) {
-        // infowindow.anchor.setMap(null)   //POTENTIAL REPLACEMENT
-        recentMarker.setMap(null);
-        
-        // We keep this line because recentmarker should only be truthy if we are in the POST markers call to access the marker object and put the id in
-        recentMarker = null;
-      }
-    });
-    
-    // disallow marker spawn if its already here. this means i need the UniqueID 
-    // Close the create allergen menu on form submission, POST marker object
-    $(document).on('submit', '#markerForm', function(e){
-      e.preventDefault();
-      //infowindow.close();
-      var postData = $(this).serializeArray();
-      postData.push({name: "lat", value: location.lat()});
-      postData.push({name: "lng", value: location.lng()});
-      // Populate an array we pass into the POST request
-      var convData = {};
-      $(postData).each(function(index, obj){
-        convData[obj.name] = obj.value;
-      })
-      // POST marker to database
-      $.ajax({
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        url: "/markers/",
-        data: JSON.stringify({marker: convData}),
-        success: function(d){
-          var newContent = createMarkerDetails(d);
-          if (recentMarker) {
-            // This shouldn't display immediately because delete can't be chosen until they refresh since the marker id can't be assigned until fetch
-            recentMarker.infowindow.setContent(newContent[0]);
-            recentMarker.infowindow.open(map, recentMarker);
-            recentMarker.draggable = false;
-            // recentMarker.set('id', id);
-            markers.push(recentMarker);
-            recentMarker = null;
-            google.maps.event.removeListener(listenerHandle);
-          }
+        for(i=attributes.length/2; i<attributes.length; i++){
+            if (data[attributes[i]]){
+                rightContentString += attributes[i] + "<br>";  
+            }
         }
-      })
-      return false;
-    });
-  }
-  
-  // Removes one marker, triggered from specific marker's infowindow's delete button
-  function removeMarker() {
-    marker = infowindow.anchor;
-    id = marker.id;
-    infowindow.close();
-    // POSTS the marker id to the markers#destroy controller method
-    $.ajax({
-      type: "POST",
-      contentType: "application/json; charset=utf-8",
-      url: "/delete/" + id,
-      // data: JSON.stringify({id: id}),
-      success: function(d){
-        marker.setMap(null)
-        recentMarker = null
-        google.maps.event.removeEventListener(listenerHandle);
-      }
-    })
-    return false;
-  }
-  
-  // Shows all markers
-  function setMapOnAll(map) {
-    for (var i = 0; i < markers.length; i++) {
-      marker = markers[i]
-      marker.setMap(map);
+        var markerDetails ="<div id='wrap'>" + 
+                        "<form id='markerDetails' action='delete' method='POST'>"+
+                        "Allergens at " + title + "<br>" +
+                        "<div id='left_col'>" + 
+                        leftContentString + 
+                        "</div>" + 
+                        "<div id='right_col'>" + 
+                        rightContentString +
+                        "</div>" + 
+                        // TODO: Add delete functionality 
+                        // "<input type='button' value='Delete' onclick='removeMarker()'>"+
+                        "<input type='button' value='Delete'>"+
+                        "</form>" +
+                        "</div>";
+        var content = $(markerDetails);
+        return content;
     }
-  }
+    
+    // Called when a user clicks to place a marker
+    function placeMarker(location) {
+      
+        // Create the marker to display infowindow
+        var marker = new google.maps.Marker({
+            position: location,
+            map: map,
+            draggable: false,
+        });
+      
+        // Create form to display to user so they can add an allergen
+        var contentString = $(
+            "<div id='wrap'>" + 
+            "<form id='markerForm' action='markers' method='POST'>"+
+            "Title <input type='text' name='title'> <br>" + 
+            "<div id='left_col'>" + 
+            "<input type = 'checkbox' name='cat' value='true'> Cats <br>"+
+            "<input type = 'checkbox' name='bees' value='true'> Bees <br>"+
+            "<input type = 'checkbox' name='perfume' value='true'> Perfume <br>"+
+            "<input type = 'checkbox' name='oak' value='true'> Oak <br>"+
+            "<input type = 'checkbox' name='peanut' value='true'> Peanut <br>"+
+            "</div>" +
+            "<div id='right_col'>" + 
+            "<input type = 'checkbox' name='gluten' value='true'> Gluten <br>"+
+            "<input type = 'checkbox' name='dog' value='true'> Dogs <br>"+
+            "<input type = 'checkbox' name='dust' value='true'> Dust <br>"+
+            "<input type = 'checkbox' name='smoke' value='true'> Smoke <br>"+
+            "<input type = 'checkbox' name='mold' value='true'> Mold <br>"+
+            "</div>" +
+            "<input type='submit' value='Submit'>"+
+            "</form>" +
+            "</div>"
+        );
+      
+        // Display the form above to the user in marker's infowindow, replacing the old infowindow
+        var infowindow = new google.maps.InfoWindow();
+        infowindow.open(map,marker);
+        infowindow.setContent(contentString[0]);
+        marker.infowindow = infowindow;
+        google.maps.event.addListener(marker, 'click', function(){
+            marker.infowindow.open(map, marker);
+        });
+      
+        recentMarker = marker;
+      
+        // Close the window and remove the created marker if the user exits
+        var listenerHandle = google.maps.event.addListener(infowindow, 'closeclick', function(){
+            if (recentMarker) {
+                // infowindow.anchor.setMap(null)   //POTENTIAL REPLACEMENT
+                recentMarker.setMap(null);
+                // We keep this line because recentmarker should only be truthy if we are in the POST markers call to access the marker object and put the id in
+                recentMarker = null;
+            }
+        });
+      
+        // POST Marker object on form submission
+        $(document).on('submit', '#markerForm', function(e){
+            e.preventDefault();
+            //infowindow.close();
+            var postData = $(this).serializeArray();
+            postData.push({name: "lat", value: location.lat()});
+            postData.push({name: "lng", value: location.lng()});
+            // Populate an array we pass into the POST request
+            var convData = {};
+            $(postData).each(function(index, obj){
+              convData[obj.name] = obj.value;
+            })
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "/markers/",
+                data: JSON.stringify({marker: convData}),
+                success: function(d){
+                    var newContent = createMarkerDetails(d);
+                    if (recentMarker) {
+                        // This shouldn't display immediately because delete can't be chosen until they refresh since the marker id can't be assigned until fetch
+                        recentMarker.infowindow.setContent(newContent[0]);
+                        recentMarker.infowindow.open(map, recentMarker);
+                        recentMarker.draggable = false;
+                        // recentMarker.set('id', id);
+                        markers.push(recentMarker);
+                        recentMarker = null;
+                        google.maps.event.removeListener(listenerHandle);
+                    }
+                }
+            })
+            return false;
+        });
+    }
+    
+    // Removes one marker, triggered from specific marker's infowindow's delete button
+    function removeMarker() {
+        marker = infowindow.anchor;
+        id = marker.id;
+        infowindow.close();
+        // POSTS the marker id to the markers#destroy controller method
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "/delete/" + id,
+            // data: JSON.stringify({id: id}),
+            success: function(d){
+                marker.setMap(null)
+                recentMarker = null
+                google.maps.event.removeEventListener(listenerHandle);
+            }
+        })
+        return false;
+    }
+    
+    // Shows all markers
+    function setMapOnAll(map) {
+        for (var i = 0; i < markers.length; i++) {
+            marker = markers[i]
+            marker.setMap(map);
+        }
+    }
+    
+    // Clears all markers
+    function clearMarkers() {
+        setMapOnAll(null);
+    }
   
-  // Clears all markers
-  function clearMarkers() {
-    setMapOnAll(null);
-  }
-
-  // Delete all markeres
-  function deleteMarkers() {
-    clearMarkers();
-    markers = [];
-  }
-
-$(document).ready(loadMap);
-$(document).on('page:load', loadMap);
-$(document).on('page:change', loadMap);
+    // Delete all markeres
+    function deleteMarkers() {
+        clearMarkers();
+        markers = [];
+    }
+  
+  $(document).ready(loadMap);
+  $(document).on('page:load', loadMap);
+  $(document).on('page:change', loadMap);
