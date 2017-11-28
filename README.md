@@ -35,16 +35,16 @@ http://www.breathebayarea.org/
   heroku run pg:reset DATABASE
   heroku run rake db:migrate
 ```
-•••And load the seeds with:
+⋅⋅⋅And load the seeds with:
 ```
   heroku run rake db:seed
 ```
-•••Seeds can be found in db/seeds.rb.
+⋅⋅⋅Seeds can be found in db/seeds.rb.
 
 ## Development/Deployment
 * Setup <a href="https://devcenter.heroku.com/articles/getting-started-with-ruby#introduction"> Heroku </a>
 * Before pushing to heroku, assets must be precompiled (they also should be after any app/assets/ edits) with 'RAILS_ENV=production rake assets:precompile'
-•### Push to Heroku (only the heroku remote's master branch deploys)
+#### Push to Heroku (only the heroku remote's master branch deploys)
 ```
   git push heroku master
 ```
