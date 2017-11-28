@@ -7,21 +7,15 @@ var recentMarker = null;
 
 function loadMap() {
   
-  // Set css attributes, search boxes, and buttons
+  // Initialize map, set css attributes, search boxes, and buttons
   $('#marker-cta').css('cursor','pointer');
   $('#left-col').css('height', (window.innerHeight).toString());
   $('#right-col').css('height', (window.innerHeight).toString());
   $('#detail-box').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
   $('#detail-box-mask').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
-  var input = document.getElementById('pac-input');
-  var searchBox = new google.maps.places.SearchBox(input);
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-  var markerEnabler = document.getElementById('marker-cta');
-  map.controls[google.maps.ControlPosition.LEFT_TOP].push(markerEnabler);
   
-  // Initialize map
   var map = new google.maps.Map(document.getElementById('map'), {
-    // TODO: Set location to user's current location
+  // TODO: Set location to user's current location
     center: {
       lat: 37.8716,
       lng: -122.2727
@@ -29,10 +23,15 @@ function loadMap() {
     zoom: 13,
     mapTypeId: 'roadmap'
   });
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+  map.controls[google.maps.ControlPosition.LEFT_TOP].push(markerEnabler);
   var geocoder = new google.maps.Geocoder();
+  var input = document.getElementById('pac-input');
+  var markerEnabler = document.getElementById('marker-cta');
+  var searchBox = new google.maps.places.SearchBox(input);
   
   // Listeners
-    google.maps.event.addDomListener(window, "resize", function() {
+  google.maps.event.addDomListener(window, "resize", function() {
     var center = map.getCenter();
     google.maps.event.trigger(map, "resize");
     map.setCenter(center); 
