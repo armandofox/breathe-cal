@@ -1,6 +1,6 @@
 # Breathe California Allergen Map
 <img src="https://api.codeclimate.com/v1/badges/836757131179145c6ddf/maintainability" /> <img src="https://travis-ci.org/MaadhavShah/breathe-cal.svg?branch=master" alt="Build Status" /> <img src="https://api.codeclimate.com/v1/badges/836757131179145c6ddf/test_coverage" />
-### Goal
+## Goal
 Our overall goal is to provide information on airborne allergens and air quality to those who need it.
 
 ## Links
