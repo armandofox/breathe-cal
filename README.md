@@ -23,17 +23,20 @@ http://www.breathebayarea.org/
 * Add your deployment url to the list of Google SSO redirect link on the Breathe California Google API Account.
 
 ## Database
-* Setup - run:
+* Setup:
 ```
   bundle exec rake db:migrate
   bundle exec rake db:test:prepare
 ```
     This will run all of our migrations for development and test environments while considering dependencies.
-* Clear all markers from heroku database - 
+* Clear all markers from heroku database:
 ```
-  'heroku run pg:reset DATABASE' will clear,
-  'heroku run rake db:migrate' will run our migrations,
-  'heroku run rake db:seed' will populate the database with any seeds.
+  heroku run pg:reset DATABASE
+  heroku run rake db:migrate
+```
+    And load the seeds with:
+```
+  heroku run rake db:seed
 ```
     Seeds can be found in db/seeds.rb.
 
