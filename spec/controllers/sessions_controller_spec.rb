@@ -9,7 +9,7 @@ RSpec.describe SessionsController, type: :controller do
             provider: 'google_oauth2', 
             uid: 101,
             info: {name: "test user", email: "test@xxxx.com"},
-            credentials: {token: 'some_token', expires_at: (Time.now + 10.day).round}
+            credentials: {token: 'some_token', expires_at: (Time.new(2060) + 10.day)}
         }
         OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(@user_hash)
         Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
