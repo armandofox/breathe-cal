@@ -35,11 +35,11 @@ http://www.breathebayarea.org/
   heroku run pg:reset DATABASE
   heroku run rake db:migrate
 ```
-⋅⋅⋅And load the seeds with:
+And load the seeds with:
 ```
   heroku run rake db:seed
 ```
-⋅⋅⋅Seeds can be found in db/seeds.rb.
+Seeds can be found in db/seeds.rb.
 
 ## Development/Deployment
 * Setup <a href="https://devcenter.heroku.com/articles/getting-started-with-ruby#introduction"> Heroku </a>
