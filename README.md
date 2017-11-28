@@ -19,7 +19,7 @@ http://www.breathebayarea.org/
   gem install bundler
   bundle install
 ```
-* Set API keys manually in heroku. They are Accuweather, Google SSO, and Google Maps.
+* Set API keys manually in heroku. They are Accuweather, Google OAuth 2.0, and Google Maps.
 * Add your deployment url to the list of Google SSO redirect link on the Breathe California Google API Account.
 
 ## Database
