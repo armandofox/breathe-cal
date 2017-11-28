@@ -16,8 +16,8 @@ http://www.breathebayarea.org/
 ## Genral Setup
 * Fork & clone the repo, <a href="http://blog.teamtreehouse.com/install-rails-5-mac"> install Rails</a>, run 
 ```
-'gem install bundler'
-'bundle install'
+  gem install bundler
+  bundle install
 ```
 * API Keys - set manually in heroku. They include Accuweather, Google SSO, and Google Maps.
 * Add your deployment url to the list of Google SSO redirect link on the Breathe California Google API Account.
