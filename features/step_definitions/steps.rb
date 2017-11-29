@@ -23,7 +23,6 @@ end
 
 And /^I wait for page to load/ do
   wait_for_ajax
-  save_screenshot('/home/ubuntu/workspace/fall17breathecal/breathe-cal/coverage/cool.png', :full => true)
 end
 
 Then /I should see the details of "(.*)"/ do |city_name|
