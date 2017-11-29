@@ -248,26 +248,13 @@ RSpec.describe CitiesController, type: :controller do
             @city2 = City.new(name: "Fort Lauderdale", lat: "26.1224", lng: "-80.1373", location_key: "328168")
             @city2.save!
             session[:user_id] = 101
-
         end
         
-        it 'session variable should be changed after a search to a city' do
+        it 'recent_cities of a user should be changed after a search to a city' do
             geo = @fld_geo
             expect(@user.recent_cities.size).to eq(0)
             post :city_data, :geo => geo, :name => "Fort Lauderdale", :format => "js"
-<<<<<<< HEAD
             expect(assigns(:cities).size).to eq(1)
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-            expect(assigns(:cities).size).to eq(1)
-=======
-            expect(@user.recent_cities.size).to eq(1)
->>>>>>> rspec test create new user
-=======
-            expect(assigns(:cities).size).to eq(1)
->>>>>>> rspec test done
->>>>>>> rspec tests
             geo = @berk_geo
             post :city_data, :geo => geo, :name => "Berkeley", :format => "js"
             expect(assigns(:cities).size).to eq(2)
@@ -276,7 +263,7 @@ RSpec.describe CitiesController, type: :controller do
             expect(assigns(:cities).size).to eq(3)
         end
         
-        it 'session variable does not change when user queries same location' do
+        it 'recent_cities of a user does not change when user queries same location' do
             geo = @fld_geo
             expect(@user.recent_cities.size).to eq(0)
 
@@ -293,7 +280,7 @@ RSpec.describe CitiesController, type: :controller do
             expect(assigns(:cities).size).to eq(2)
         end
         
-        it 'session variable should have at most five cities at all time' do
+        it 'recent_cities of a user should have at most five cities at all time' do
             geo = @fld_geo
             expect(@user.recent_cities.size).to eq(0)
             post :city_data, :geo => geo, :name => "Fort Lauderdale", :format => "js"
