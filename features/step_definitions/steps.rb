@@ -41,6 +41,10 @@ Then /I expect to see a list of cities$/ do
   page.find('#list-box', visible: :all)
 end
 
+Then /I expect to see a list of cities$/ do
+  page.find('#list-box', visible: :all)
+end
+
 Given(/^I touch the add marker CTA$/) do
   find("#marker-cta").click
 end

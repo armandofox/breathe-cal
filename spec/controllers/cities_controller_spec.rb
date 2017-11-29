@@ -15,6 +15,7 @@ RSpec.describe CitiesController, type: :controller do
         describe '#cached_city_data' do
             it 'should render the correct template' do
                 get :cached_city_data, name: @city.name, format: 'js'
+                expect(true).to eq(true)
                 expect(response).to render_template("cities/city_data.js.erb")
             end
         end 
@@ -126,6 +127,23 @@ RSpec.describe CitiesController, type: :controller do
         end
         
         describe '#city_data_back' do
+<<<<<<< HEAD
+=======
+                     before :each do
+                OmniAuth.config.test_mode = true
+                @user_hash = {
+                    provider: 'google_oauth2', 
+                    uid: 101,
+                    info: {name: "test user", email: "test@xxxx.com"},
+                    credentials: {token: 'some_token', expires_at: (Time.now + 10.day).round}
+                }
+                OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(@user_hash)
+                Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+                @user = User.create_user_from_omniauth(@user_hash)
+            end
+
+            
+>>>>>>> 47cf72c5e4cd6c3d93d5dfde2d064af0b6e062d6
             it 'less that 5 cities have been searched for' do
                 request.session[:cities] = [{"name" => '1'}]
                 get :city_data_back, format: 'js'
@@ -177,8 +195,13 @@ RSpec.describe CitiesController, type: :controller do
         
     end
     
+<<<<<<< HEAD
     # Pivotal Tracker ID#152020968
     describe 'client_searches feature' do
+=======
+    describe 'client_searches feature' do
+        
+>>>>>>> 47cf72c5e4cd6c3d93d5dfde2d064af0b6e062d6
         before :each do
             OmniAuth.config.test_mode = true
             @user_hash = {
@@ -204,6 +227,7 @@ RSpec.describe CitiesController, type: :controller do
             @city2 = City.new(name: "Fort Lauderdale", lat: "26.1224", lng: "-80.1373", location_key: "328168")
             @city2.save!
             session[:user_id] = 101
+<<<<<<< HEAD
         end
         
         it 'recent_cities of a user should be changed after a search to a city' do
@@ -211,6 +235,22 @@ RSpec.describe CitiesController, type: :controller do
             expect(@user.recent_cities.size).to eq(0)
             post :city_data, :geo => geo, :name => "Fort Lauderdale", :format => "js"
             expect(assigns(:cities).size).to eq(1)
+=======
+            
+        end
+    
+
+       
+
+        
+        it 'user recent cities should change after a search to a city' do
+            geo = @fld_geo
+            expect(@user.recent_cities.size).to eq(0)
+            post :city_data, :geo => geo, :name => "Fort Lauderdale", :format => "js"
+
+            expect(assigns(:cities).size).to eq(1)
+
+>>>>>>> 47cf72c5e4cd6c3d93d5dfde2d064af0b6e062d6
             geo = @berk_geo
             post :city_data, :geo => geo, :name => "Berkeley", :format => "js"
             expect(assigns(:cities).size).to eq(2)
@@ -219,10 +259,16 @@ RSpec.describe CitiesController, type: :controller do
             expect(assigns(:cities).size).to eq(3)
         end
         
+<<<<<<< HEAD
         it 'recent_cities of a user does not change when user queries same location' do
             geo = @fld_geo
             expect(@user.recent_cities.size).to eq(0)
 
+=======
+        it 'user recent cities does not change when user queries same location' do
+            geo = @fld_geo
+            expect(@user.recent_cities.size).to eq(0)
+>>>>>>> 47cf72c5e4cd6c3d93d5dfde2d064af0b6e062d6
             post :city_data, :geo => geo, :name => "Fort Lauderdale", :format => "js"
             expect(assigns(:cities).size).to eq(1)
             geo = @berk_geo
@@ -236,7 +282,11 @@ RSpec.describe CitiesController, type: :controller do
             expect(assigns(:cities).size).to eq(2)
         end
         
+<<<<<<< HEAD
         it 'recent_cities of a user should have at most five cities at all time' do
+=======
+        it 'user recent cities should have at most five cities at all time' do
+>>>>>>> 47cf72c5e4cd6c3d93d5dfde2d064af0b6e062d6
             geo = @fld_geo
             expect(@user.recent_cities.size).to eq(0)
             post :city_data, :geo => geo, :name => "Fort Lauderdale", :format => "js"

@@ -37,6 +37,7 @@ class CitiesController < ApplicationController
       city = City.obtain_stored_city(params[:geo]["lat"], params[:geo]["lng"], params[:name])
       # prepare data
       @data = [city.name, city.daily_data]
+      
       @user = current_or_guest_user
       @recent_cities = @user.recent_cities
       
