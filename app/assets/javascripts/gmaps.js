@@ -1,146 +1,35 @@
 // This example requires the Places library. Include the libraries=places
 // parameter when you first load the API. For example:
 // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-var fetchedMarkers = {};
-var map;
-
-function initAutocomplete() {
   
     var map = null;
     var geocoder = null;
     var markers = [];
     var recentMarker = null;
   
-  function point2LatLng(point, map) {
-    var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
-    var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
-    var scale = Math.pow(2, map.getZoom());
-    var worldPoint = new google.maps.Point(point.x / scale + bottomLeft.x, point.y / scale + topRight.y);
-    return map.getProjection().fromPointToLatLng(worldPoint);
-  }
-  
-  function fetchMarkers(){
-    deleteMarkers();
-    labelNum = 0;
-    var bounds = map.getBounds();
-    var NECorner = bounds.getNorthEast();
-    var SWCorner = bounds.getSouthWest();
-    $.ajax({
-      type: "GET",
-      contentType: "application/json; charset=utf-8",
-      url: "markers",
-      data: {bounds :{uplat:NECorner.lat(),downlat:SWCorner.lat(),rightlong:NECorner.lng(),leftlong:SWCorner.lng()}},
-      success: function(data){
-        for(var i=0;i<data.length; i++){
-          var id = data[i].id;
-          if (true){
-            var location = {};
-            location.lat = parseFloat(data[i].lat);
-            location.lng = parseFloat(data[i].lng);
-            labelNum += 1;
-            var marker = new google.maps.Marker({
-                  label: labelNum.toString(),
-                  position: location,
-                  map: map,
-                  draggable: false,
-                  });
-            var newContent = createContentString(data[i]);      
-            marker.info = new google.maps.InfoWindow();
-            marker.info.setContent(newContent[0]);
-            google.maps.event.addListener(marker, 'click', function(){
-              this.info.open(map, this);
-            });
-            markers.push(marker);
-          }
-        }
-      }
-    })
-  }
-  
-  
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {
-      lat: 37.8716,
-      lng: -122.2727
-    },
-    zoom: 13,
-    mapTypeId: 'roadmap'
-  });
-  
-  var geocoder = new google.maps.Geocoder();
-  
-  google.maps.event.addDomListener(window, "resize", function() {
-   var center = map.getCenter();
-   google.maps.event.trigger(map, "resize");
-   map.setCenter(center); 
-  });
-  
-  $('#marker-cta').css('cursor','pointer');
-  
-  $('#left-col').css('height', (window.innerHeight).toString());
-  $('#right-col').css('height', (window.innerHeight).toString());
-  $('#detail-box').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
-  $('#detail-box-mask').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
-  // Create the search box and link it to the UI element.
-  var input = document.getElementById('pac-input');
-  var searchBox = new google.maps.places.SearchBox(input);
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-  
-  var markerEnabler = document.getElementById('marker-cta');
-  map.controls[google.maps.ControlPosition.LEFT_TOP].push(markerEnabler);
-
-
-  // Bias the SearchBox results towards current map's viewport.
-  map.addListener('bounds_changed', function() {
-    searchBox.setBounds(map.getBounds());
-  });
-
-  google.maps.event.addListener(map, 'dragend', function(){
-    fetchMarkers();
-  })
-
-  var markers = [];
-
-  searchBox.addListener('places_changed', function() {
-    var places = searchBox.getPlaces();
-
-
-    if (places.length === 0) {
-      return;
-    }
-
-    markers.forEach(function(marker) {
-      marker.setMap(null);
-    });
-    markers = [];
-
-    var bounds = new google.maps.LatLngBounds();
-    // place = google's best reccommended city
-    place = places[0];
-    if (!place.geometry) {
-        console.log("Returned place contains no geometry");
-        return;
-      }
-      var icon = {
-        url: place.icon,
-        size: new google.maps.Size(71, 71),
-        origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(17, 34),
-        scaledSize: new google.maps.Size(25, 25)
-      };
+    // Loads the map and page attributes
+    function loadMap() {
+        // Initialize map, set css attributes, search boxes, and buttons
+        $('#marker-cta').css('cursor','pointer');
+        $('#left-col').css('height', (window.innerHeight).toString());
+        $('#right-col').css('height', (window.innerHeight).toString());
+        $('#detail-box').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
+        $('#detail-box-mask').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
       
-      // TODO mapsearch_data = {geo: place.geometry.location, name:place.name}
-
-      $.ajax({
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        url: "city_data",
-        data: JSON.stringify({geo: place.geometry.location, name: place.name}),
-        success: function(data){
-          $("#city-info").text(JSON.stringify(data));
-          console.log(place);
-        }
-      });
+        map = new google.maps.Map(document.getElementById('map'), {
+            // TODO: Set location to user's current location
+            center: {
+                lat: 37.8716,
+                lng: -122.2727
+            },
+            zoom: 13,
+            mapTypeId: 'roadmap'
+        });
+        geocoder = new google.maps.Geocoder();
+    
+        var input = document.getElementById('pac-input');
+        var searchBox = new google.maps.places.SearchBox(input);
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
       
         var markerEnabler = document.getElementById('marker-cta');
         map.controls[google.maps.ControlPosition.LEFT_TOP].push(markerEnabler);

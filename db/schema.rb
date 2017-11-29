@@ -29,18 +29,6 @@ ActiveRecord::Schema.define(version: 20171127032659) do
 
   add_index "cities", ["user_id"], name: "index_cities_on_user_id"
 
-  create_table "clients", force: :cascade do |t|
-    t.string   "name"
-    t.string   "email"
-    t.text     "searches"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-    t.string   "provider"
-    t.string   "uid"
-    t.string   "oauth_token"
-    t.datetime "oauth_expires_at"
-  end
-
   create_table "markers", force: :cascade do |t|
     t.string   "lng"
     t.string   "lat"
@@ -55,12 +43,12 @@ ActiveRecord::Schema.define(version: 20171127032659) do
     t.boolean  "smoke"
     t.boolean  "gluten"
     t.boolean  "peanut"
-    t.integer  "client_id"
+    t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  add_index "markers", ["client_id"], name: "index_markers_on_client_id"
+  add_index "markers", ["user_id"], name: "index_markers_on_user_id"
 
   create_table "users", force: :cascade do |t|
     t.float    "latitude"
