@@ -19,8 +19,6 @@ class City < ActiveRecord::Base
   end
       
   def update_city_data
-    location_key = self.location_key
-
     if self.updated_at.nil? or self.updated_at <= Date.today.to_time.beginning_of_day or !has_valid_data()
       url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/#{self.location_key}"
       query = {apikey: City.get_accuweather_key(), language:"en-us", details: "true"}
@@ -51,13 +49,11 @@ class City < ActiveRecord::Base
   end
   
   # Helper function to get city, ensure city in database
-  def self.obtain_stored_city(lat, lng, _place_name)
+  def self.obtain_stored_city(lat, lng, place_name)
     city = City.find_by(:lat => lat, :lng => lng)
     if city.nil?
       location_key = City.obtain_loc_key(lat, lng)
-      city = City.create!(:lat => lat, :lng => lng, :name => _place_name, :location_key => location_key)
-      city.update_city_data
-    else
+      city = City.create!(:lat => lat, :lng => lng, :name => place_name, :location_key => location_key)
       city.update_city_data
     end
     return city

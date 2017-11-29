@@ -35,6 +35,7 @@ class CitiesController < ApplicationController
     
     def city_data
       city = City.obtain_stored_city(params[:geo]["lat"], params[:geo]["lng"], params[:name])
+      city.update_city_data
       # prepare data
       @data = [city.name, city.daily_data]
       
