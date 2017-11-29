@@ -19,36 +19,6 @@ RSpec.describe CitiesController, type: :controller do
             end
         end 
 
-        describe '#map_search' do
-            it 'when a user searches for a city' do
-               # attempt to query city
-               # post map_search 
-               lat = "37.8716"
-               lng = "-122.2727"
-               
-               post :map_search, {:lat => lat, :lng => lng}
-               expect(response.status).to eq(200)
-               
-               new_lat = "32.2332"
-               new_lng = "-42.3231"
-               post :map_search, {:lat => new_lat, :lng => new_lng}
-               expect(response.status).to eq(201)
-               
-               new_lat = "32.2332"
-               new_lng = "-42.3231"
-               post :map_search, {:geo =>{:lat => new_lat, :lng => new_lng}}
-               expect(response.status).to eq(200)
-            end
-            
-            it 'when a user searches for a city, he/she has searched before' do
-               lat = "37.8716"
-               lng = "-122.2727"
-
-               post :map_search, {:geo =>{:lat => lat, :lng => lng}}
-               expect(response.status).to eq(200)
-            end
-        end
-
         describe '#city_data' do
             it 'when the recent searches does not contain the city being searched' do
                 get :cached_city_data, name: @city.name, format:'js'
@@ -156,20 +126,6 @@ RSpec.describe CitiesController, type: :controller do
         end
         
         describe '#city_data_back' do
-                     before :each do
-                OmniAuth.config.test_mode = true
-                @user_hash = {
-                    provider: 'google_oauth2', 
-                    uid: 101,
-                    info: {name: "test user", email: "test@xxxx.com"},
-                    credentials: {token: 'some_token', expires_at: (Time.now + 10.day).round}
-                }
-                OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(@user_hash)
-                Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
-                @user = User.create_user_from_omniauth(@user_hash)
-            end
-
-            
             it 'less that 5 cities have been searched for' do
                 request.session[:cities] = [{"name" => '1'}]
                 get :city_data_back, format: 'js'
@@ -221,8 +177,8 @@ RSpec.describe CitiesController, type: :controller do
         
     end
     
+    # Pivotal Tracker ID#152020968
     describe 'client_searches feature' do
-        
         before :each do
             OmniAuth.config.test_mode = true
             @user_hash = {

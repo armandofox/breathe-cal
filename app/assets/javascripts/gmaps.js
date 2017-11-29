@@ -1,44 +1,16 @@
 // This example requires the Places library. Include the libraries=places
 // parameter when you first load the API. For example:
 // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-<<<<<<< HEAD
-=======
 var fetchedMarkers = {};
 var map;
 
 function initAutocomplete() {
->>>>>>> [feat] Recent Cities
   
     var map = null;
     var geocoder = null;
     var markers = [];
     var recentMarker = null;
   
-<<<<<<< HEAD
-    // Loads the map and page attributes
-    function loadMap() {
-        // Initialize map, set css attributes, search boxes, and buttons
-        $('#marker-cta').css('cursor','pointer');
-        $('#left-col').css('height', (window.innerHeight).toString());
-        $('#right-col').css('height', (window.innerHeight).toString());
-        $('#detail-box').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
-        $('#detail-box-mask').css('height', (window.innerHeight - 50 - 50 - 50 - 50).toString());
-      
-        map = new google.maps.Map(document.getElementById('map'), {
-            // TODO: Set location to user's current location
-            center: {
-                lat: 37.8716,
-                lng: -122.2727
-            },
-            zoom: 13,
-            mapTypeId: 'roadmap'
-        });
-        geocoder = new google.maps.Geocoder();
-    
-        var input = document.getElementById('pac-input');
-        var searchBox = new google.maps.places.SearchBox(input);
-        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-=======
   function point2LatLng(point, map) {
     var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
     var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
@@ -169,7 +141,6 @@ function initAutocomplete() {
           console.log(place);
         }
       });
->>>>>>> [not working] in the process of map_search modification. redirect currently does not work
       
         var markerEnabler = document.getElementById('marker-cta');
         map.controls[google.maps.ControlPosition.LEFT_TOP].push(markerEnabler);

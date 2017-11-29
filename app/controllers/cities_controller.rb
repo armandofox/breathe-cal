@@ -70,7 +70,7 @@ class CitiesController < ApplicationController
     def city_data_back
       @text = "Recent Searches"
       @user = current_or_guest_user
-      @cities = @user.recent_cities.reverse_order!
+      @cities = @user.recent_cities.reverse!
       @cities ||= []
       
       respond_to do |format|

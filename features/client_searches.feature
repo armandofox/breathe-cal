@@ -22,6 +22,7 @@ Scenario: Having searched for a city I should see it displayed on the page
     Then I should see "Kansas City"
     Then I should not see "Vancouver"
     Then I should not see "Boston"
+    
 
 @javascript   
 Scenario: Having searched for two cities I should see the most recent one on top
@@ -46,12 +47,5 @@ Scenario: Having searched for cities, I should retain my recent searches even if
 @javascript    
 Scenario: Having searched for more than 5 cities I should only see the last 5 ones displayed
     Given I go to the landing page
-    And I visit multiple locations: Berkeley, Albany, Oakland, Richmond, San Jose, Los Angeles
-    Then I expect to see a list of cities
-    Then I should see a link "Albany"
-    Then I should see a link "Oakland"
-    Then I should see a link "Richmond"
-    Then I should see a link "San jose"
-    Then I should see a link "Los angeles"
+    And I visit multiple locations: Berkeley,Albany,Oakland,Richmond,San Jose, Los Angeles
     Then I should not see a link "Berkeley"
- 

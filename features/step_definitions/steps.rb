@@ -24,7 +24,6 @@ end
 
 And /^I wait for page to load/ do
   wait_for_ajax
-  save_screenshot('/home/ubuntu/workspace/fall17breathecal/breathe-cal/coverage/cool.png', :full => true)
 end
 
 Then /I should see the details of "(.*)"/ do |city_name|
@@ -40,16 +39,6 @@ end
 
 Then /I expect to see a list of cities$/ do
   page.find('#list-box', visible: :all)
-end
-
-Then /I expect to see a list of cities$/ do
-  page.find('#list-box', visible: :all)
-end
-
-Then /I expect to see a list of cities$/ do
-  wait_for_ajax
-  list_box = page.find('#list-box', visible: :all)
-  puts list_box.text
 end
 
 Given(/^I touch the add marker CTA$/) do
