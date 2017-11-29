@@ -44,8 +44,3 @@ Scenario: Having searched for cities, I should retain my recent searches even if
     Then I should see "Berkeley"
     Then I should see "New York"
 
-@javascript    
-Scenario: Having searched for more than 5 cities I should only see the last 5 ones displayed
-    Given I go to the landing page
-    And I visit multiple locations: Berkeley,Albany,Oakland,Richmond,San Jose, Los Angeles
-    Then I should not see a link "Berkeley"
