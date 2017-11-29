@@ -33,12 +33,23 @@ class CitiesController < ApplicationController
       return false
     end
     
+    # Helper method to reduce code complexity
+    def update_recent_cities(user, rec_cities)
+      if rec_cities.length > 5
+        rec_cities = rec_cities[rec_cities.length - 5, rec_cities.length - 1]
+      end
+      if user.provider.nil?
+        user.update_attributes(recent_cities: rec_cities)
+        user.save(:validate => false)
+      else
+        user.update_attributes!(recent_cities: rec_cities)
+      end
+      user.recent_cities.reverse
+    end
+    
     def city_data
       city = City.obtain_stored_city(params[:geo]["lat"], params[:geo]["lng"], params[:name])
-      city.update_city_data
-      # prepare data
       @data = [city.name, city.daily_data]
-      
       @user = current_or_guest_user
       @recent_cities = @user.recent_cities
       
@@ -49,16 +60,7 @@ class CitiesController < ApplicationController
         @recent_cities << { "name" => city.name, "quality" => @quality, "id" => city.id }
       end
       
-      if @recent_cities.length > 5
-        @recent_cities = @recent_cities[@recent_cities.length - 5, @recent_cities.length - 1]
-      end
-      if @user.provider.nil?
-        @user.update_attributes(recent_cities: @recent_cities)
-        @user.save(:validate => false)
-      else
-        @user.update_attributes!(recent_cities: @recent_cities)
-      end
-      @cities = @user.recent_cities.reverse
+      @cities = update_recent_cities(@user, @recent_cities)
 
       respond_to do |format|
         format.js {
