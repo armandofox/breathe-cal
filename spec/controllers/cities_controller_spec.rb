@@ -5,6 +5,7 @@ RSpec.describe CitiesController, type: :controller do
     describe 'flow of one city' do
         before :each do
             @city = City.new(name: "Berkeley", lat: "37.8716", lng: "-122.2727", location_key: "332044")
+            @city.id = 1
             @city.save!
             @city2 = City.new(name: "Fort Lauderdale", lat: "26.1224", lng: "-80.1373", location_key: "328168")
             @city2.save!
@@ -13,7 +14,7 @@ RSpec.describe CitiesController, type: :controller do
    
         describe '#cached_city_data' do
             it 'should render the correct template' do
-                get :cached_city_data, name: @city.name, format: 'js'
+                get :cached_city_data, id: 1, format: 'js'
                 expect(true).to eq(true)
                 expect(response).to render_template("cities/city_data.js.erb")
             end
@@ -21,7 +22,7 @@ RSpec.describe CitiesController, type: :controller do
 
         describe '#city_data' do
             it 'when the recent searches does not contain the city being searched' do
-                get :cached_city_data, name: @city.name, format:'js'
+                get :cached_city_data, id: 1, format:'js'
                 latlng = {"lng" => @city.lng, "lat" => @city.lat}
                 request.session[:cities] = [{"name" => "not Berkeley"}]
                 controller.instance_variable_set(:@quality, 'something')
@@ -33,7 +34,7 @@ RSpec.describe CitiesController, type: :controller do
                 latlng = {"lng" => @city.lng, "lat" => @city.lat}
                 request.session[:cities] = [{"name" => "Berkeley"}]
                 controller.instance_variable_set(:@quality, 'something')
-                get :city_data, name: @city.name, geo: latlng, format: 'js'
+                get :city_data, id: 1, geo: latlng, format: 'js'
                 expect(response).to render_template('cities/city_data.js.erb')
             end
             
