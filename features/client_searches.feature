@@ -27,6 +27,7 @@ Scenario: Having searched for two cities I should see the most recent one on top
     Given I go to the landing page
     And my location is set to "Berkeley"
     And my location is set to "Albany"
+    And I follow "Back"
     Then I expect to see "Albany" before "Berkeley"
     Then I expect to see a list of cities
     
