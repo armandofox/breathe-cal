@@ -41,7 +41,8 @@ class CitiesController < ApplicationController
     end
     
     def city_data
-      city = City.obtain_stored_city(params[:geo]["lat"], params[:geo]["lng"], params[:name])
+      @geo = [params[:geo]["lat"], params[:geo]["lng"]]
+      city = City.obtain_stored_city(@geo[0], @geo[1], params[:name])
       @data = [city.name, city.daily_data]
       @user = current_or_guest_user
       @recent_cities = @user.recent_cities
@@ -52,6 +53,7 @@ class CitiesController < ApplicationController
         end
         @recent_cities << { "name" => city.name, "quality" => @quality, "id" => city.id }
       end
+      
       
       @cities = update_recent_cities(@user, @recent_cities)
 
