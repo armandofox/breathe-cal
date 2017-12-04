@@ -10,12 +10,11 @@ class CitiesController < ApplicationController
     
     # Start storing city data and send city data to be rendered. 
     def cached_city_data
-      city = City.find_by(name: params[:name])
+      city = City.find(params[:id])
       # Calls AccuWeather API
       city.update_city_data
       @geo = [city.lat, city.lng]
       @data = [city.name, city.daily_data]
-      @cached = true
       respond_to do |format|
         format.js {
           render :template => "cities/city_data.js.erb"
@@ -35,15 +34,9 @@ class CitiesController < ApplicationController
     
     # Helper method to reduce code complexity
     def update_recent_cities(user, rec_cities)
-      if rec_cities.length > 5
-        rec_cities = rec_cities[rec_cities.length - 5, rec_cities.length - 1]
-      end
-      if user.provider.nil?
-        user.update_attributes(recent_cities: rec_cities)
-        user.save(:validate => false)
-      else
-        user.update_attributes!(recent_cities: rec_cities)
-      end
+      rec_cities = rec_cities.pop(5)
+      user.recent_cities = rec_cities
+      user.save(:validate => false)
       user.recent_cities.reverse
     end
     

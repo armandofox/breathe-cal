@@ -8,7 +8,6 @@ RSpec.describe CitiesController, type: :controller do
             @city.save!
             @city2 = City.new(name: "Fort Lauderdale", lat: "26.1224", lng: "-80.1373", location_key: "328168")
             @city2.save!
-            @city3 = City.new(name: "")
         end
         
    
