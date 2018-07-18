@@ -31,50 +31,19 @@ module WithinHelpers
 end
 World(WithinHelpers)
 
-
-Given(/^I am on the landing page$/) do  
-  visit root_path
-end  
-
 # Single-line step scoper
 When /^(.*) within (.*[^:])$/ do |step, parent|
   with_scope(parent) { When step }
 end
-
-
-And(/^(?:I expect a Google map to load|the map has been loaded)$/) do  
-  page.evaluate_script('map') 
-end  
-
-Then (/^I should see "(.*)" next to "(.*)"$/) do |rating, category|
-      find("#" + category, :visible => true).has_text?(rating) 
-  end
-
-Then(/^the center of the map should be approximately "([^"]*)"$/) do |place|  
-  find('#fox-box').has_text?(place)
-end  
-
-
-Then(/^the center of the map should not be approximately "([^"]*)"$/) do |place|  
-  not find('#fox-box').has_text?(place)
-end  
-And(/^my location is set to "([^"]*)"$/) do |place| 
-  find('#pac-input').set(place)
-  find('#pac-input').native.send_keys(:Enter)
-end
-
-Then (/^I should see "(.*)" next to "(.*)"$/) do |rating, category|
-      find("#" + category, :visible => true).has_text?(rating) 
-  end
 
 # Multi-line step scoper
 When /^(.*) within (.*[^:]):$/ do |step, parent, table_or_string|
   with_scope(parent) { When "#{step}:", table_or_string }
 end
 
-# Given /^(?:|I )am on (.+)$/ do |page_name|
-#   visit path_to(page_name)
-# end
+Given /^(?:|I )am on (.+)$/ do |page_name|
+  visit path_to(page_name)
+end
 
 When /^(?:|I )go to (.+)$/ do |page_name|
   visit path_to(page_name)
@@ -84,16 +53,20 @@ When /^(?:|I )press "([^"]*)"$/ do |button|
   click_button(button)
 end
 
-When /^(?:|I )press on the text "([^"]*)"$/ do |text|
-  find("#heading" + text).click
-end
-
-
 When /^(?:|I )follow "([^"]*)"$/ do |link|
   click_link(link)
 end
 
-When /^(?:|I )fill in "([^"]*)" with "([^"]*)"$/ do |field, value|
+# TODO Implement method to follow cache'd data
+When /^(?:|I )follow a recently searched link: "([^\"]*)"$/ do |name|
+  visit(cached_city_data_path(:name => name))
+end
+
+When /^(?:|I )follow "([^\"]*)" within "([^\"]*)"$/ do |link, parent|
+  click_link_within(parent, link)
+end
+
+When /^(?:|I )fill in "([^\"]*)" with "([^\"]*)"$/ do |field, value|
   fill_in(field, :with => value)
 end
 
@@ -139,6 +112,7 @@ When /^(?:|I )attach the file "([^"]*)" to "([^"]*)"$/ do |path, field|
 end
 
 Then /^(?:|I )should see "([^"]*)"$/ do |text|
+  # wait_for_ajax
   if page.respond_to? :should
     page.should have_content(text)
   else
@@ -146,14 +120,13 @@ Then /^(?:|I )should see "([^"]*)"$/ do |text|
   end
 end
 
-
-Then /^(?:|I )should see \/([^\/]*)\/$/ do |regexp|
-  regexp = Regexp.new(regexp)
-
-  if page.respond_to? :should
-    page.should have_xpath('//*', :text => regexp)
-  else
-    assert page.has_xpath?('//*', :text => regexp)
+Then /^(?:|I )should see "([^\"]*)" within "([^\"]*)"$/ do |text, selector|
+  within(selector) do |content|
+    if defined?(Spec::Rails::Matchers)
+      content.should contain(text)
+    else
+      assert content.include?(text)
+    end
   end
 end
 
@@ -164,6 +137,25 @@ Then /^(?:|I )should not see "([^"]*)"$/ do |text|
     assert page.has_no_content?(text)
   end
 end
+
+# Then /^(?:|I )should see \/([^\/]*)\/$/ do |regexp|
+#   regexp = Regexp.new(regexp)
+
+#   if page.respond_to? :should
+#     page.should have_xpath('//*', :text => regexp)
+#   else
+#     assert page.has_xpath?('//*', :text => regexp)
+#   end
+# end
+
+# Then /^(?:|I )should not see "([^"]*)"$/ do |text|
+#   if page.respond_to? :should
+#     page.should have_no_content(text)
+#   else
+#     assert page.has_no_content?(text)
+#   end
+# end
+
 
 Then /^(?:|I )should not see \/([^\/]*)\/$/ do |regexp|
   regexp = Regexp.new(regexp)
@@ -253,8 +245,6 @@ Then /^the "([^"]*)" checkbox(?: within (.*))? should be checked$/ do |label, pa
   end
 end
 
-
-
 Then /^the "([^"]*)" checkbox(?: within (.*))? should not be checked$/ do |label, parent|
   with_scope(parent) do
     field_checked = find_field(label)['checked']
@@ -292,74 +282,12 @@ Then /^show me the page$/ do
   save_and_open_page
 end
 
+  # def wait_for_ajax
+  #   Timeout.timeout(Capybara.default_max_wait_time) do
+  #     loop until finished_all_ajax_requests?
+  #   end
+  # end
 
-Given(/^I open a new page$/) do
-  
-end
-
-Then(/^I should see a "map"$/) do
-  assert page.find("#map")
-end
-
-Then(/^I should see an "search box" in the map$/) do
-  assert page.find("#pac-input")
-end
-
-Then(/^I should see the right toolbar with the text "([^"]*)"$/) do |arg1|
-  assert_equal(page.find("#pac-input").text, arg1)
-end
-
-When(/^I should see a "(.+)"$/) do |image|
-  page.should have_xpath("//img[contains(@src, \"#{image.split('-')[0]}\")]")
-end
-
-
-When(/^I should see a "date"$/) do
-  
-end
-
-Given(/^I have searched for "([^"]*)"$/) do |arg1|
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-When(/^I should see a "(.+)"$/) do |image|
-  page.should have_xpath("//img[contains(@src, \"#{image.split('-')[0]}\")]")
-end
-
-And(/^I should see an icon "(.+)"$/) do |image|
-  page.should have_xpath("//img[contains(@src, \"#{image.split('-')[0]}\")]")
-end
-
-
-And(/^I should see a weather icon inside/) do 
-  page.should have_xpath("//img[contains(@src, \"#{"-s".split('-')[0]}\")]")
-end
-
-And(/^I should see the weather section/) do 
-  page.should have_css('div#weather-box')
-end
-
-And(/^I should see the greeting section/) do 
-  page.should have_css('div#fox-box')
-end
-
-And(/^I should see the alert section/) do 
-  page.should have_css('div#fox-box')
-end
-
-And(/^I should see the date/) do 
-  page.should have_css('div.datetime-box')
-end
-
-Then(/^I should see a map$/) do
-  page.evaluate_script('map') 
-end
-
-Then /^(?:|I )should see the text on the side "([^"]*)"$/ do |text|
-  if page.respond_to? :should
-    page.should have_content(text)
-  else
-    assert page.has_content?(text)
-  end
-end
-
+  # def finished_all_ajax_requests?
+  #   page.evaluate_script('jQuery.active').zero?
+  # end

@@ -25,7 +25,6 @@ engines:
 ratings:
   paths:
   - app/**
-  - Gemfile.lock
   - "**.erb"
   - "**.haml"
   - "**.rb"
@@ -46,4 +45,6 @@ exclude_paths:
 - script/
 - spec/
 - vendor/
-- app/helpers/breathe_helper.rb
+- public/
+- app/assets/
+- Gemfile.lock

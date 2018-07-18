@@ -1,33 +1,28 @@
 class SessionsController < ApplicationController
-    # after_filter:database_cleanup
-    
-  def create 
-    test_check = params[:test_check]
-    if test_check
-      client = Client.new()
-      client.name = params[:name]
-      client.provider = 'some provider'
-      client.oauth_token = 'some token'
-      client.oauth_expires_at = Time.at(Time.new(2017, 10, 30))
-      client.save!
-    else
-      client = Client.from_omniauth(env["omniauth.auth"])
-    end 
-    session[:client_id] = client.id
+
+  # Creates a user from an auth_hash stored by omniauth gem during login
+  def create
+    @user = User.find_or_create_from_auth_hash(auth_hash)
+    session[:user_id] = @user.id
     redirect_to root_path
   end
   
+  # Logs out user by setting session[:user_id] to nil
   def destroy
-    session[:client_id] = nil
+    session[:user_id] = nil
     redirect_to root_path
   end
   
-  def checklogged
-    data = {}
-    if session[:client_id] != nil
-      data["authorized"] = true;
-    end      
-    render :json => data
+  # Triggers when authentication fails. Sets failure message
+  def auth_failure
+    flash[:auth_failure] = params[:message] || "Failed to Login"
+    redirect_to root_path
+  end
+
+  protected
+
+  def auth_hash
+    request.env['omniauth.auth']
   end
     
     
